@@ -1,0 +1,28 @@
+<.header>
+  Watched list {@watched_list.id}
+  <:subtitle>This is a watched_list record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/watchedlist/#{@watched_list}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit watched_list</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Urating">{@watched_list.urating}</:item>
+  <:item title="Udescription">{@watched_list.udescription}</:item>
+  <:item title="Uwatcheddate">{@watched_list.uwatcheddate}</:item>
+</.list>
+
+<.back navigate={~p"/watchedlist"}>Back to watchedlist</.back>
+
+<.modal :if={@live_action == :edit} id="watched_list-modal" show on_cancel={JS.patch(~p"/watchedlist/#{@watched_list}")}>
+  <.live_component
+    module={SmovieWeb.WatchedListLive.FormComponent}
+    id={@watched_list.id}
+    title={@page_title}
+    action={@live_action}
+    watched_list={@watched_list}
+    patch={~p"/watchedlist/#{@watched_list}"}
+  />
+</.modal>

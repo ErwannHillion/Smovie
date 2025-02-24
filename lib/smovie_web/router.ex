@@ -68,6 +68,14 @@ defmodule SmovieWeb.Router do
       on_mount: [{SmovieWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      live "/watchedlist", WatchedListLive.Index, :index
+      live "/watchedlist/new", WatchedListLive.Index, :new
+      live "/watchedlist/:id/edit", WatchedListLive.Index, :edit
+
+      live "/watchedlist/:id", WatchedListLive.Show, :show
+      live "/watchedlist/:id/show/edit", WatchedListLive.Show, :edit
+      live "/search", MovieSearchLive
     end
   end
 

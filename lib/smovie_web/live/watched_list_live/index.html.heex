@@ -1,0 +1,43 @@
+<.header>
+  Listing Watchedlist
+  <:actions>
+    <.link patch={~p"/watchedlist/new"}>
+      <.button>New Watched list</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="watchedlist"
+  rows={@streams.watchedlist}
+  row_click={fn {_id, watched_list} -> JS.navigate(~p"/watchedlist/#{watched_list}") end}
+>
+  <:col :let={{_id, watched_list}} label="Urating">{watched_list.urating}</:col>
+  <:col :let={{_id, watched_list}} label="Udescription">{watched_list.udescription}</:col>
+  <:col :let={{_id, watched_list}} label="Uwatcheddate">{watched_list.uwatcheddate}</:col>
+  <:action :let={{_id, watched_list}}>
+    <div class="sr-only">
+      <.link navigate={~p"/watchedlist/#{watched_list}"}>Show</.link>
+    </div>
+    <.link patch={~p"/watchedlist/#{watched_list}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, watched_list}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: watched_list.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="watched_list-modal" show on_cancel={JS.patch(~p"/watchedlist")}>
+  <.live_component
+    module={SmovieWeb.WatchedListLive.FormComponent}
+    id={@watched_list.id || :new}
+    title={@page_title}
+    action={@live_action}
+    watched_list={@watched_list}
+    patch={~p"/watchedlist"}
+  />
+</.modal>
