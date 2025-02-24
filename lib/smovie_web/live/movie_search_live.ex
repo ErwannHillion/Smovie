@@ -68,8 +68,6 @@ defmodule SmovieWeb.MovieSearchLive do
       id_movie: socket.assigns.selected_movie["id"]
     }
 
-    IO.inspect(watched_list, label: "Watched List to Insert")
-
     case Repo.insert(watched_list) do
       {:ok, _record} ->
         {:noreply, assign(socket, show_modal: false, selected_movie: nil)}
