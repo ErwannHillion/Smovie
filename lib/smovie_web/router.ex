@@ -19,8 +19,6 @@ defmodule SmovieWeb.Router do
 
   scope "/", SmovieWeb do
     pipe_through :browser
-
-    live "/", HomeLive, :index
   end
 
   # Other scopes may use custom stacks.
@@ -87,6 +85,7 @@ defmodule SmovieWeb.Router do
 
     live_session :current_user,
       on_mount: [{SmovieWeb.UserAuth, :mount_current_user}] do
+      live "/", HomeLive, :index
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
     end
