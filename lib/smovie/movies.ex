@@ -21,6 +21,10 @@ defmodule Smovie.Movies do
     Repo.all(WatchedList)
   end
 
+  def list_watched_lists_for_user(user_id) do
+    Repo.all(from w in WatchedList, where: w.user_id == ^user_id)
+  end
+
   @doc """
   Gets a single watched_list.
 
