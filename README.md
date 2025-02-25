@@ -1,18 +1,47 @@
-# Smovie
+# 📽️ MonProjet
 
-To start your Phoenix server:
+MonProjet est une plateforme innovante inspirée de Letterboxd, offrant une interface plus intuitive et une meilleure expérience utilisateur pour les cinéphiles.
 
-  * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+## 🚀 Fonctionnalités
+- 🎬 **Catalogue de films** : Explorez et découvrez de nouveaux films avec des fiches détaillées.
+- ⭐ **Système de notation et critique** : Donnez votre avis et attribuez des notes aux films.
+- 📝 **Listes personnalisées** : Créez et partagez des listes de films selon vos envies.
+- 🔍 **Recherche optimisée** : Trouvez rapidement des films grâce à un moteur de recherche performant.
+- 👥 **Interaction sociale** : Suivez vos amis et échangez sur vos films préférés.
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+## 🛠️ Technologies utilisées
+- **Frontend** : Salad UI
+- **Backend** : Elixir Phoenix
+- **Base de données** : PostgreSQL
+- **Authentification** : OAuth / JWT
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## 📦 Installation
+1. Clonez le dépôt :
+   ```bash
+   git clone https://github.com/utilisateur/monprojet.git
+   ```
+2. Accédez au dossier du projet :
+   ```bash
+   cd monprojet
+   ```
+3. Installez les dépendances :
+   ```bash
+   mix deps.get
+   ```
+4. Lancez le projet :
+   ```bash
+   mix phx.server
+   ```
 
-## Learn more
+## 📌 Roadmap
+- [ ] Ajout de recommandations personnalisées
+- [ ] Développement d’une application mobile
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+## 🤝 Contribuer
+Les contributions sont les bienvenues ! N’hésitez pas à ouvrir une issue ou à proposer une pull request.
+
+## 📄 Licence
+Ce projet est sous licence MIT.
+Tout droit réservé à SHDXW et SHDXWCORP
+
+
