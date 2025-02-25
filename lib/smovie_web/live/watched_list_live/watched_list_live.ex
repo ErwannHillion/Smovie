@@ -14,6 +14,7 @@ defmodule SmovieWeb.WatchedListLive do
     {:noreply, assign(socket, watched_list: watched_list, movie_details: movie_details)}
   end
 
+  # ici on fetch les films à partir de l'id du film
   defp fetch_movie_details(watched_list) do
     Enum.reduce(watched_list, %{}, fn entry, acc ->
       case TMDB.get_movie_details(entry.id_movie) do
