@@ -31,6 +31,9 @@ defmodule SmovieWeb.UserRegistrationLive do
           Oops, something went wrong! Please check the errors below.
         </.error>
 
+        <.input field={@form[:username]} type="text" label="Username" required />
+        <.input field={@form[:first_name]} type="text" label="FistName" required />
+        <.input field={@form[:last_name]} type="text" label="LastName" required />
         <.input field={@form[:email]} type="email" label="Email" required />
         <.input field={@form[:password]} type="password" label="Password" required />
 
