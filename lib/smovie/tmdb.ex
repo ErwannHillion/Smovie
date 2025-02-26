@@ -36,7 +36,6 @@ defmodule Smovie.TMDB do
 
   # get the latest movies released in the last 7 days
   def get_latest_movies do
-    @api_key |> IO.inspect(label: "Latest")
     url = "#{@base_url}/movie/now_playing?api_key=#{@api_key}"
 
     case HTTPoison.get(url) do
