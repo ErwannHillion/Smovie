@@ -18,11 +18,11 @@ MonProjet est une plateforme innovante inspirée de Letterboxd, offrant une inte
 ## 📦 Installation
 1. Clonez le dépôt :
    ```bash
-   git clone https://github.com/utilisateur/monprojet.git
+   git clone https://github.com/ErwannHillion/Smovie.git
    ```
 2. Accédez au dossier du projet :
    ```bash
-   cd monprojet
+   cd Smovie
    ```
 3. Installez les dépendances :
    ```bash
