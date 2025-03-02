@@ -1,0 +1,43 @@
+<.header>
+  Listing Watchelater
+  <:actions>
+    <.link patch={~p"/watchelater/new"}>
+      <.button>New Watch later</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="watchelater"
+  rows={@streams.watchelater}
+  row_click={fn {_id, watch_later} -> JS.navigate(~p"/watchelater/#{watch_later}") end}
+>
+  <:col :let={{_id, watch_later}} label="Id movie">{watch_later.id_movie}</:col>
+  <:col :let={{_id, watch_later}} label="Movie description">{watch_later.movie_description}</:col>
+  <:col :let={{_id, watch_later}} label="Movie title">{watch_later.movie_title}</:col>
+  <:action :let={{_id, watch_later}}>
+    <div class="sr-only">
+      <.link navigate={~p"/watchelater/#{watch_later}"}>Show</.link>
+    </div>
+    <.link patch={~p"/watchelater/#{watch_later}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, watch_later}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: watch_later.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="watch_later-modal" show on_cancel={JS.patch(~p"/watchelater")}>
+  <.live_component
+    module={SmovieWeb.WatchLaterLive.FormComponent}
+    id={@watch_later.id || :new}
+    title={@page_title}
+    action={@live_action}
+    watch_later={@watch_later}
+    patch={~p"/watchelater"}
+  />
+</.modal>

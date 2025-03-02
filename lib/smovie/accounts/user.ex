@@ -13,6 +13,7 @@ defmodule Smovie.Accounts.User do
     field :confirmed_at, :utc_datetime
 
     has_many :watched_list, Smovie.Movies.WatchedList
+    has_many :watche_later, Smovie.Movies.WatchedLater
 
     timestamps(type: :utc_datetime)
   end

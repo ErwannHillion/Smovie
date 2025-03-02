@@ -75,6 +75,15 @@ defmodule SmovieWeb.Router do
       live "/watchedlist/:id/show/edit", WatchedListLive.Show, :edit
       live "/search", MovieSearchLive, :index
       live "/watched_list", WatchedListLive, :index
+
+      live "/watchelater", WatchLaterLive.Index, :index
+      live "/watchelater/new", WatchLaterLive.Index, :new
+      live "/watchelater/:id/edit", WatchLaterLive.Index, :edit
+
+      live "/watchelater/:id", WatchLaterLive.Show, :show
+      live "/watchelater/:id/show/edit", WatchLaterLive.Show, :edit
+
+      live "/watch_later", WatchLaterLive, :index
     end
   end
 
