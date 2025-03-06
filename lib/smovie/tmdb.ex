@@ -1,5 +1,7 @@
 defmodule Smovie.TMDB do
-  @api_key System.get_env("API_TMDB")
+  # ici big effet de bord a voir
+  # @api_key System.get_env("API_TMDB")
+  @api_key "3b27f2809e11b60591c81a8eb4014c35"
   @base_url "https://api.themoviedb.org/3"
 
   # make a search by query and return a list of film

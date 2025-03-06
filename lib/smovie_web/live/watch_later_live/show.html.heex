@@ -1,0 +1,28 @@
+<.header>
+  Watch later {@watch_later.id}
+  <:subtitle>This is a watch_later record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/watchelater/#{@watch_later}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit watch_later</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Id movie">{@watch_later.id_movie}</:item>
+  <:item title="Movie description">{@watch_later.movie_description}</:item>
+  <:item title="Movie title">{@watch_later.movie_title}</:item>
+</.list>
+
+<.back navigate={~p"/watchelater"}>Back to watchelater</.back>
+
+<.modal :if={@live_action == :edit} id="watch_later-modal" show on_cancel={JS.patch(~p"/watchelater/#{@watch_later}")}>
+  <.live_component
+    module={SmovieWeb.WatchLaterLive.FormComponent}
+    id={@watch_later.id}
+    title={@page_title}
+    action={@live_action}
+    watch_later={@watch_later}
+    patch={~p"/watchelater/#{@watch_later}"}
+  />
+</.modal>

@@ -19,4 +19,20 @@ defmodule Smovie.MoviesFixtures do
 
     watched_list
   end
+
+  @doc """
+  Generate a watch_later.
+  """
+  def watch_later_fixture(attrs \\ %{}) do
+    {:ok, watch_later} =
+      attrs
+      |> Enum.into(%{
+        id_movie: 42,
+        movie_description: "some movie_description",
+        movie_title: "some movie_title"
+      })
+      |> Smovie.Movies.create_watch_later()
+
+    watch_later
+  end
 end
