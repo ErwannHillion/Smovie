@@ -66,19 +66,34 @@ defmodule SmovieWeb.MovieSearchLive do
       id_movie: socket.assigns.selected_movie["id"]
     }
 
-    case Repo.insert(watched_list) do
-      {:ok, _record} ->
-        {:noreply, assign(socket, show_modal: false, selected_movie: nil, modal_type: nil)}
+    existing_entry =
+      Repo.get_by(WatchedList,
+        user_id: socket.assigns.current_user.id,
+        id_movie: socket.assigns.selected_movie["id"]
+      )
 
-      {:error, changeset} ->
-        IO.inspect(changeset, label: "Failed to Insert Watched List")
+    if existing_entry do
+      {:noreply,
+       assign(socket,
+         show_modal: true,
+         modal_message: "Film déjà dans la watchlist",
+         modal_type: "watchlist"
+       )}
+    else
+      case Repo.insert(watched_list) do
+        {:ok, _record} ->
+          {:noreply, assign(socket, show_modal: false, selected_movie: nil, modal_type: nil)}
 
-        {:noreply,
-         assign(socket,
-           show_modal: true,
-           selected_movie: socket.assigns.selected_movie,
-           modal_type: "watchlist"
-         )}
+        {:error, changeset} ->
+          IO.inspect(changeset, label: "Failed to Insert Watched List")
+
+          {:noreply,
+           assign(socket,
+             show_modal: true,
+             selected_movie: socket.assigns.selected_movie,
+             modal_type: "watchlist"
+           )}
+      end
     end
   end
 
@@ -87,31 +102,43 @@ defmodule SmovieWeb.MovieSearchLive do
       Enum.find(socket.assigns.results, fn m -> m["id"] == String.to_integer(movie_id) end)
 
     if movie do
-      watch_later = %WatchLater{
-        id_movie: movie["id"],
-        movie_title: movie["title"],
-        movie_description: movie["overview"],
-        user_id: socket.assigns.current_user.id
-      }
+      existing_entry =
+        Repo.get_by(WatchLater, user_id: socket.assigns.current_user.id, id_movie: movie["id"])
 
-      case Repo.insert(watch_later) do
-        {:ok, _record} ->
-          {:noreply,
-           assign(socket,
-             show_modal: true,
-             modal_message: "Film ajouté avec succès",
-             modal_type: "watch_later"
-           )}
+      if existing_entry do
+        {:noreply,
+         assign(socket,
+           show_modal: true,
+           modal_message: "Film déjà dans la liste à regarder plus tard",
+           modal_type: "watch_later"
+         )}
+      else
+        watch_later = %WatchLater{
+          id_movie: movie["id"],
+          movie_title: movie["title"],
+          movie_description: movie["overview"],
+          user_id: socket.assigns.current_user.id
+        }
 
-        {:error, changeset} ->
-          IO.inspect(changeset, label: "Failed to Insert Watch Later")
+        case Repo.insert(watch_later) do
+          {:ok, _record} ->
+            {:noreply,
+             assign(socket,
+               show_modal: true,
+               modal_message: "Film ajouté avec succès",
+               modal_type: "watch_later"
+             )}
 
-          {:noreply,
-           assign(socket,
-             show_modal: true,
-             modal_message: "Erreur lors de l'ajout du film",
-             modal_type: "watch_later"
-           )}
+          {:error, changeset} ->
+            IO.inspect(changeset, label: "Failed to Insert Watch Later")
+
+            {:noreply,
+             assign(socket,
+               show_modal: true,
+               modal_message: "Erreur lors de l'ajout du film",
+               modal_type: "watch_later"
+             )}
+        end
       end
     else
       {:noreply,

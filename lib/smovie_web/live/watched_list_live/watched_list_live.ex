@@ -24,10 +24,32 @@ defmodule SmovieWeb.WatchedListLive do
     end)
   end
 
+  def handle_event("delete", %{"id" => entry_id}, socket) do
+    current_user_id = socket.assigns.current_user.id
+
+    entry = Movies.get_watched_list!(entry_id)
+
+    if entry.user_id == current_user_id do
+      Movies.delete_watched_list(entry)
+
+      watched_list = Movies.list_watched_lists_for_user(current_user_id)
+      movie_details = fetch_movie_details(watched_list)
+
+      {:noreply, assign(socket, watched_list: watched_list, movie_details: movie_details)}
+    else
+      {:noreply, put_flash(socket, :error, "Vous n'êtes pas autorisé à supprimer ce film.")}
+    end
+  end
+
   def render(assigns) do
     ~H"""
     <div>
       <h1>Ma Liste de Films Regardés</h1>
+      <%= if @flash[:error] do %>
+        <div class="alert alert-danger">
+          {@flash[:error]}
+        </div>
+      <% end %>
       <table>
         <thead>
           <tr>
@@ -36,6 +58,7 @@ defmodule SmovieWeb.WatchedListLive do
             <th>Note</th>
             <th>Description</th>
             <th>Date de Visionnage</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -58,6 +81,7 @@ defmodule SmovieWeb.WatchedListLive do
               <td>{entry.urating}</td>
               <td>{entry.udescription}</td>
               <td>{entry.uwatcheddate}</td>
+              <td><button phx-click="delete" phx-value-id={entry.id}>Supprimer</button></td>
             </tr>
           <% end %>
         </tbody>

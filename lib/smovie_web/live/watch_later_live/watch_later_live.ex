@@ -23,16 +23,39 @@ defmodule SmovieWeb.WatchLaterLive do
     end)
   end
 
+  def handle_event("delete", %{"id" => entry_id}, socket) do
+    current_user_id = socket.assigns.current_user.id
+
+    entry = Movies.get_watch_later!(entry_id)
+
+    if entry.user_id == current_user_id do
+      Movies.delete_watch_later(entry)
+
+      watch_later_list = Movies.list_watch_later_for_user(current_user_id)
+      movie_details = fetch_movie_details(watch_later_list)
+
+      {:noreply, assign(socket, watch_later_list: watch_later_list, movie_details: movie_details)}
+    else
+      {:noreply, put_flash(socket, :error, "Vous n'êtes pas autorisé à supprimer ce film.")}
+    end
+  end
+
   def render(assigns) do
     ~H"""
     <div>
       <h1>Ma Liste de Films à Regarder Plus Tard</h1>
+      <%= if @flash[:error] do %>
+        <div class="alert alert-danger">
+          {@flash[:error]}
+        </div>
+      <% end %>
       <table>
         <thead>
           <tr>
             <th>Image</th>
             <th>Titre</th>
             <th>Description</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -53,6 +76,9 @@ defmodule SmovieWeb.WatchLaterLive do
                 <% end %>
               </td>
               <td>{entry.movie_description}</td>
+              <td>
+                <button phx-click="delete" phx-value-id={entry.id}>Supprimer</button>
+              </td>
             </tr>
           <% end %>
         </tbody>
