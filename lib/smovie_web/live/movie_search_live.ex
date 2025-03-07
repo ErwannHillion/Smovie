@@ -5,6 +5,9 @@ defmodule SmovieWeb.MovieSearchLive do
   alias Smovie.Movies.WatchedList
   alias Phoenix.HTML
   alias Smovie.Movies.WatchLater
+  alias Phoenix.LiveView.JS
+
+  import SmovieWeb.CoreComponents
 
   def mount(_params, _session, socket) do
     current_user = socket.assigns.current_user
@@ -52,34 +55,35 @@ defmodule SmovieWeb.MovieSearchLive do
         %{"urating" => urating, "udescription" => udescription, "uwatcheddate" => uwatcheddate},
         socket
       ) do
-    urating =
-      urating
-      |> String.trim()
-      |> (fn x -> if String.contains?(x, "."), do: x, else: x <> ".0" end).()
-      |> String.to_float()
+    user_id = socket.assigns.current_user.id
+    movie_id = socket.assigns.selected_movie["id"]
 
-    watched_list = %WatchedList{
-      urating: urating,
-      udescription: udescription,
-      uwatcheddate: Date.from_iso8601!(uwatcheddate),
-      user_id: socket.assigns.current_user.id,
-      id_movie: socket.assigns.selected_movie["id"]
-    }
-
+    # Vérifie si le film existe déjà dans la watchlist
     existing_entry =
-      Repo.get_by(WatchedList,
-        user_id: socket.assigns.current_user.id,
-        id_movie: socket.assigns.selected_movie["id"]
-      )
+      Repo.get_by(WatchedList, user_id: user_id, id_movie: movie_id)
 
     if existing_entry do
       {:noreply,
        assign(socket,
          show_modal: true,
-         modal_message: "Film déjà dans la watchlist",
-         modal_type: "watchlist"
+         modal_message: "Ce film est déjà dans votre watchlist.",
+         modal_type: "error"
        )}
     else
+      urating =
+        urating
+        |> String.trim()
+        |> (fn x -> if String.contains?(x, "."), do: x, else: x <> ".0" end).()
+        |> String.to_float()
+
+      watched_list = %WatchedList{
+        urating: urating,
+        udescription: udescription,
+        uwatcheddate: Date.from_iso8601!(uwatcheddate),
+        user_id: user_id,
+        id_movie: movie_id
+      }
+
       case Repo.insert(watched_list) do
         {:ok, _record} ->
           {:noreply, assign(socket, show_modal: false, selected_movie: nil, modal_type: nil)}
@@ -182,35 +186,47 @@ defmodule SmovieWeb.MovieSearchLive do
       </ul>
 
       <%= if @show_modal do %>
-        <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
-            <%= if @modal_type == "watchlist" do %>
-              <h2 class="text-lg font-bold">Ajouter {@selected_movie["title"]} à votre watchlist</h2>
-              <form phx-submit="save_to_watchlist">
-                <label>Note :</label>
-                <input type="number" step="0.1" name="urating" required />
-                <label>Description :</label>
-                <textarea name="udescription"></textarea>
-                <label>Date de visionnage :</label>
-                <input type="date" name="uwatcheddate" required />
-                <div class="flex justify-end space-x-2 mt-4">
-                  <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
-                    Enregistrer
-                  </button>
-                  <button
-                    type="button"
-                    phx-click="close_modal"
-                    class="bg-gray-500 text-white px-4 py-2 rounded"
-                  >
-                    Annuler
-                  </button>
-                </div>
-              </form>
+        <.modal id="modal" show={@show_modal} on_cancel={JS.push("close_modal")}>
+          <%= if @modal_type == "watchlist" do %>
+            <h2 class="text-lg font-bold">Ajouter {@selected_movie["title"]} à votre watchlist</h2>
+            <form phx-submit="save_to_watchlist">
+              <label>Note :</label>
+              <input type="number" step="0.1" name="urating" required />
+              <label>Description :</label>
+              <textarea name="udescription"></textarea>
+              <label>Date de visionnage :</label>
+              <input type="date" name="uwatcheddate" required />
+              <div class="flex justify-end space-x-2 mt-4">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+                  Enregistrer
+                </button>
+                <button
+                  type="button"
+                  phx-click="close_modal"
+                  class="bg-gray-500 text-white px-4 py-2 rounded"
+                >
+                  Annuler
+                </button>
+              </div>
+            </form>
+          <% else %>
+            <%= if @modal_type == "watch_later" do %>
+              <h2 class="text-lg font-bold">
+                Ajouter {@selected_movie["title"]} à regarder plus tard
+              </h2>
+              <p>{@modal_message}</p>
+              <div class="flex justify-end space-x-2 mt-4">
+                <button
+                  type="button"
+                  phx-click="close_modal"
+                  class="bg-gray-500 text-white px-4 py-2 rounded"
+                >
+                  Fermer
+                </button>
+              </div>
             <% else %>
-              <%= if @modal_type == "watch_later" do %>
-                <h2 class="text-lg font-bold">
-                  Ajouter {@selected_movie["title"]} à regarder plus tard
-                </h2>
+              <%= if @modal_type == "error" do %>
+                <h2 class="text-lg font-bold">Erreur</h2>
                 <p>{@modal_message}</p>
                 <div class="flex justify-end space-x-2 mt-4">
                   <button
@@ -223,8 +239,8 @@ defmodule SmovieWeb.MovieSearchLive do
                 </div>
               <% end %>
             <% end %>
-          </div>
-        </div>
+          <% end %>
+        </.modal>
       <% end %>
     </div>
     """

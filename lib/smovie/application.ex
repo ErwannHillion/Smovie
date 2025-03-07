@@ -17,6 +17,11 @@ defmodule Smovie.Application do
       # Start a worker by calling: Smovie.Worker.start_link(arg)
       # {Smovie.Worker, arg},
       # Start to serve requests, typically the last entry
+
+      # SALAD UI NEED THIS
+      TwMerge.Cache,
+
+      #
       SmovieWeb.Endpoint
     ]
 

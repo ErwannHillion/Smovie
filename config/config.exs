@@ -22,6 +22,8 @@ config :smovie, SmovieWeb.Endpoint,
   pubsub_server: Smovie.PubSub,
   live_view: [signing_salt: "dobOaJCk"]
 
+config :smovie, TMDB, api_key: System.get_env("API_TMDB")
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails

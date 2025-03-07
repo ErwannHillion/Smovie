@@ -6,6 +6,8 @@ defmodule SmovieWeb.HomeLive do
   alias Smovie.Movies.WatchedList
   alias Smovie.Movies.WatchLater
 
+  import SaladUI.Card
+
   def mount(_params, _session, socket) do
     current_user = Map.get(socket.assigns, :current_user, nil)
 
@@ -53,67 +55,98 @@ defmodule SmovieWeb.HomeLive do
         %{"urating" => urating, "udescription" => udescription, "uwatcheddate" => uwatcheddate},
         socket
       ) do
-    urating =
-      urating
-      |> String.trim()
-      |> (fn x -> if String.contains?(x, "."), do: x, else: x <> ".0" end).()
-      |> String.to_float()
+    user_id = socket.assigns.current_user.id
+    movie_id = socket.assigns.selected_movie["id"]
 
-    watched_list = %WatchedList{
-      urating: urating,
-      udescription: udescription,
-      uwatcheddate: Date.from_iso8601!(uwatcheddate),
-      user_id: socket.assigns.current_user.id,
-      id_movie: socket.assigns.selected_movie["id"]
-    }
+    # Vérifie si le film existe déjà dans la watchlist
+    existing_entry =
+      Repo.get_by(WatchedList, user_id: user_id, id_movie: movie_id)
 
-    case Repo.insert(watched_list) do
-      {:ok, _record} ->
-        {:noreply, assign(socket, show_modal: false, selected_movie: nil, modal_type: nil)}
+    if existing_entry do
+      {:noreply,
+       assign(socket,
+         show_modal: true,
+         modal_message: "Ce film est déjà dans votre watchlist.",
+         modal_type: "error"
+       )}
+    else
+      urating =
+        urating
+        |> String.trim()
+        |> (fn x -> if String.contains?(x, "."), do: x, else: x <> ".0" end).()
+        |> String.to_float()
 
-      {:error, changeset} ->
-        IO.inspect(changeset, label: "Failed to Insert Watched List")
+      watched_list = %WatchedList{
+        urating: urating,
+        udescription: udescription,
+        uwatcheddate: Date.from_iso8601!(uwatcheddate),
+        user_id: user_id,
+        id_movie: movie_id
+      }
 
-        {:noreply,
-         assign(socket,
-           show_modal: true,
-           selected_movie: socket.assigns.selected_movie,
-           modal_type: "watchlist"
-         )}
+      case Repo.insert(watched_list) do
+        {:ok, _record} ->
+          {:noreply, assign(socket, show_modal: false, selected_movie: nil, modal_type: nil)}
+
+        {:error, changeset} ->
+          IO.inspect(changeset, label: "Failed to Insert Watched List")
+
+          {:noreply,
+           assign(socket,
+             show_modal: true,
+             selected_movie: socket.assigns.selected_movie,
+             modal_type: "watchlist"
+           )}
+      end
     end
   end
 
   # Add the movie to the watch later list
   def handle_event("add_to_watch_later", %{"movie_id" => movie_id}, socket) do
+    user_id = socket.assigns.current_user.id
+    movie_id = String.to_integer(movie_id)
+
     movie =
-      Enum.find(socket.assigns.latest_movies, fn m -> m["id"] == String.to_integer(movie_id) end)
+      Enum.find(socket.assigns.latest_movies, fn m -> m["id"] == movie_id end)
 
     if movie do
-      watch_later = %WatchLater{
-        id_movie: movie["id"],
-        movie_title: movie["title"],
-        movie_description: movie["overview"],
-        user_id: socket.assigns.current_user.id
-      }
+      existing_entry =
+        Repo.get_by(WatchLater, user_id: user_id, id_movie: movie_id)
 
-      case Repo.insert(watch_later) do
-        {:ok, _record} ->
-          {:noreply,
-           assign(socket,
-             show_modal: true,
-             modal_message: "Film ajouté avec succès",
-             modal_type: "watch_later"
-           )}
+      if existing_entry do
+        {:noreply,
+         assign(socket,
+           show_modal: true,
+           modal_message: "Ce film est déjà dans votre liste à regarder plus tard.",
+           modal_type: "error"
+         )}
+      else
+        watch_later = %WatchLater{
+          id_movie: movie["id"],
+          movie_title: movie["title"],
+          movie_description: movie["overview"],
+          user_id: user_id
+        }
 
-        {:error, changeset} ->
-          IO.inspect(changeset, label: "Failed to Insert Watch Later")
+        case Repo.insert(watch_later) do
+          {:ok, _record} ->
+            {:noreply,
+             assign(socket,
+               show_modal: true,
+               modal_message: "Film ajouté avec succès",
+               modal_type: "watch_later"
+             )}
 
-          {:noreply,
-           assign(socket,
-             show_modal: true,
-             modal_message: "Erreur lors de l'ajout du film",
-             modal_type: "watch_later"
-           )}
+          {:error, changeset} ->
+            IO.inspect(changeset, label: "Failed to Insert Watch Later")
+
+            {:noreply,
+             assign(socket,
+               show_modal: true,
+               modal_message: "Erreur lors de l'ajout du film",
+               modal_type: "watch_later"
+             )}
+        end
       end
     else
       {:noreply,
@@ -131,58 +164,88 @@ defmodule SmovieWeb.HomeLive do
     <div>
       <h1>Derniers Films Sortis</h1>
       <ul>
-        <%= for movie <- @latest_movies do %>
-          <li>
-            <img src={"https://image.tmdb.org/t/p/w500#{movie["poster_path"]}"} alt={movie["title"]} />
-            <h2>{movie["title"]}</h2>
-            <p>Date de sortie : {movie["release_date"]}</p>
-            <p>Note : {movie["vote_average"]}</p>
-            <%= if @current_user do %>
-              <button
-                phx-click="open_modal"
-                phx-value-movie_id={movie["id"]}
-                phx-value-modal_type="watchlist"
-              >
-                Ajouter à la watchlist
-              </button>
-              <button phx-click="add_to_watch_later" phx-value-movie_id={movie["id"]}>
-                Ajouter à regarder plus tard
-              </button>
-            <% end %>
-          </li>
-        <% end %>
+        <div class="grid grid-cols-4 gap-4">
+          <%= for movie <- @latest_movies do %>
+            <.card class="">
+              <.card_header>
+                <.card_title class="mb-6">{movie["title"]}</.card_title>
+                <.card_description class="min-h-[10rem] max-h-[20rem]">
+                  {movie["overview"]}
+                </.card_description>
+              </.card_header>
+              <.card_content>
+                <p>Date de sortie : {movie["release_date"]}</p>
+                <p>Note : {movie["vote_average"]}/10 ⭐️</p>
+                <img
+                  class="w100 mt-10"
+                  src={"https://image.tmdb.org/t/p/w500#{movie["poster_path"]}"}
+                  alt={movie["title"]}
+                />
+              </.card_content>
+              <.card_footer class="flex justify-between">
+                <.button
+                  phx-click="open_modal"
+                  phx-value-movie_id={movie["id"]}
+                  phx-value-modal_type="watchlist"
+                  class="px-2 py-1 text-xs"
+                >
+                  Ajouter à la watchlist
+                </.button>
+                <.button
+                  phx-click="add_to_watch_later"
+                  phx-value-movie_id={movie["id"]}
+                  class="px-2 py-1 text-xs"
+                >
+                  Ajouter à regarder plus tard
+                </.button>
+              </.card_footer>
+            </.card>
+          <% end %>
+        </div>
       </ul>
 
       <%= if @show_modal do %>
-        <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
-            <%= if @modal_type == "watchlist" do %>
-              <h2 class="text-lg font-bold">Ajouter {@selected_movie["title"]} à votre watchlist</h2>
-              <form phx-submit="save_to_watchlist">
-                <label>Note :</label>
-                <input type="number" step="0.1" name="urating" required />
-                <label>Description :</label>
-                <textarea name="udescription"></textarea>
-                <label>Date de visionnage :</label>
-                <input type="date" name="uwatcheddate" required />
-                <div class="flex justify-end space-x-2 mt-4">
-                  <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
-                    Enregistrer
-                  </button>
-                  <button
-                    type="button"
-                    phx-click="close_modal"
-                    class="bg-gray-500 text-white px-4 py-2 rounded"
-                  >
-                    Annuler
-                  </button>
-                </div>
-              </form>
+        <.modal id="modal" show={@show_modal} on_cancel={JS.push("close_modal")}>
+          <%= if @modal_type == "watchlist" do %>
+            <h2 class="text-lg font-bold">Ajouter {@selected_movie["title"]} à votre watchlist</h2>
+            <form phx-submit="save_to_watchlist">
+              <label>Note :</label>
+              <input type="number" step="0.1" name="urating" required />
+              <label>Description :</label>
+              <textarea name="udescription"></textarea>
+              <label>Date de visionnage :</label>
+              <input type="date" name="uwatcheddate" required />
+              <div class="flex justify-end space-x-2 mt-4">
+                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+                  Enregistrer
+                </button>
+                <button
+                  type="button"
+                  phx-click="close_modal"
+                  class="bg-gray-500 text-white px-4 py-2 rounded"
+                >
+                  Annuler
+                </button>
+              </div>
+            </form>
+          <% else %>
+            <%= if @modal_type == "watch_later" do %>
+              <h2 class="text-lg font-bold">
+                Ajouter {@selected_movie["title"]} à regarder plus tard
+              </h2>
+              <p>{@modal_message}</p>
+              <div class="flex justify-end space-x-2 mt-4">
+                <button
+                  type="button"
+                  phx-click="close_modal"
+                  class="bg-gray-500 text-white px-4 py-2 rounded"
+                >
+                  Fermer
+                </button>
+              </div>
             <% else %>
-              <%= if @modal_type == "watch_later" do %>
-                <h2 class="text-lg font-bold">
-                  Ajouter {@selected_movie["title"]} à regarder plus tard
-                </h2>
+              <%= if @modal_type == "error" do %>
+                <h2 class="text-lg font-bold">Erreur</h2>
                 <p>{@modal_message}</p>
                 <div class="flex justify-end space-x-2 mt-4">
                   <button
@@ -195,8 +258,8 @@ defmodule SmovieWeb.HomeLive do
                 </div>
               <% end %>
             <% end %>
-          </div>
-        </div>
+          <% end %>
+        </.modal>
       <% end %>
     </div>
     """

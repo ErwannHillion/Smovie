@@ -3,6 +3,9 @@ defmodule SmovieWeb.WatchLaterLive do
   alias Smovie.Movies
   alias Smovie.TMDB
 
+  import SaladUI.Button
+  import SaladUI.Table
+
   def mount(_params, _session, %{assigns: %{current_user: current_user}} = socket) do
     if connected?(socket), do: send(self(), :load_watch_later_list)
     {:ok, assign(socket, current_user: current_user, watch_later_list: [], movie_details: %{})}
@@ -77,7 +80,13 @@ defmodule SmovieWeb.WatchLaterLive do
               </td>
               <td>{entry.movie_description}</td>
               <td>
-                <button phx-click="delete" phx-value-id={entry.id}>Supprimer</button>
+                <.button
+                  phx-click="delete"
+                  phx-value-id={entry.id}
+                  class="rounded-full bg-red-500 hover:bg-red-600"
+                >
+                  Supprimer
+                </.button>
               </td>
             </tr>
           <% end %>
