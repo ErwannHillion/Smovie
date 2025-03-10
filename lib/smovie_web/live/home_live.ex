@@ -20,7 +20,9 @@ defmodule SmovieWeb.HomeLive do
        show_modal: false,
        modal_type: nil,
        selected_movie: nil,
-       modal_message: nil
+       modal_message: nil,
+       grid_columns: 3,
+       mobile_columns: 2
      )}
   end
 
@@ -47,6 +49,20 @@ defmodule SmovieWeb.HomeLive do
   # Close modal
   def handle_event("close_modal", _, socket) do
     {:noreply, assign(socket, show_modal: false, selected_movie: nil, modal_type: nil)}
+  end
+
+  # Change the grid columns between 3 and 4
+  def handle_event("toggle_grid", _params, socket) do
+    IO.puts("Toggle grid called, current: #{socket.assigns.grid_columns}")
+    new_columns = if socket.assigns.grid_columns == 3, do: 4, else: 3
+    IO.puts("New columns: #{new_columns}")
+    {:noreply, assign(socket, :grid_columns, new_columns)}
+  end
+
+  # Change the mobile grid columns between 1 and 2
+  def handle_event("toggle_mobile_grid", _params, socket) do
+    new_mobile_columns = if socket.assigns.mobile_columns == 2, do: 1, else: 2
+    {:noreply, assign(socket, :mobile_columns, new_mobile_columns)}
   end
 
   # Add the movie to the watched list
@@ -158,29 +174,67 @@ defmodule SmovieWeb.HomeLive do
     end
   end
 
-  # Render function using HEEx
   def render(assigns) do
     ~H"""
     <div>
       <h1>Derniers Films Sortis</h1>
+      <!-- Contrôle desktop (caché sur mobile) -->
+      <div class="hidden md:flex items-center mb-4">
+        <span class="mr-2">Petit (4 colonnes)</span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            class="sr-only peer"
+            checked={@grid_columns == 3}
+            phx-click="toggle_grid"
+          />
+          <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
+          </div>
+        </label>
+        <span class="ml-2">Grand (3 colonnes)</span>
+      </div>
+      
+    <!-- Contrôle mobile (caché sur desktop) -->
+      <div class="flex md:hidden items-center mb-4 justify-center">
+        <span class="mr-2 text-sm">1 colonne</span>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input
+            type="checkbox"
+            class="sr-only peer"
+            checked={@mobile_columns == 2}
+            phx-click="toggle_mobile_grid"
+          />
+          <div class="w-9 h-5 bg-gray-300 rounded-full peer peer-checked:bg-blue-500 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all">
+          </div>
+        </label>
+        <span class="ml-2 text-sm">2 colonnes</span>
+      </div>
+
       <ul>
-        <div class="grid grid-cols-4 gap-4">
+        <!-- Grille responsive:
+           - Sur mobile: 1 ou 2 colonnes selon préférence
+           - Sur écran moyen: 3 colonnes
+           - Sur grand écran: 3 ou 4 colonnes selon préférence
+      -->
+        <div class={"grid gap-4 grid-cols-#{@mobile_columns} sm:grid-cols-2 md:grid-cols-#{@grid_columns}"}>
           <%= for movie <- @latest_movies do %>
-            <.card class="bg-black text-white border-none">
+            <.card class="bg-black text-white border-none flex flex-col justify-between">
               <.card_header>
-                <.card_title class="mb-6">{movie["title"]}</.card_title>
-                <.card_description class="min-h-[10rem] max-h-[20rem]">
+                <.card_title class="mb-6 text-base md:text-lg">{movie["title"]}</.card_title>
+                <.card_description class="h-[100px] md:h-[150px] overflow-y-auto text-sm md:text-base">
                   {movie["overview"]}
                 </.card_description>
               </.card_header>
-              <.card_content>
+              <.card_content class="flex-grow">
                 <p>Date de sortie : {movie["release_date"]}</p>
                 <p>Note : {movie["vote_average"]}/10 ⭐️</p>
-                <img
-                  class="w100 mt-10"
-                  src={"https://image.tmdb.org/t/p/w500#{movie["poster_path"]}"}
-                  alt={movie["title"]}
-                />
+                <div class="flex-grow flex items-center justify-center">
+                  <img
+                    class="h-dvw w-auto mt-10 object-cover"
+                    src={"https://image.tmdb.org/t/p/w500#{movie["poster_path"]}"}
+                    alt={movie["title"]}
+                  />
+                </div>
               </.card_content>
               <.card_footer class="flex justify-between">
                 <.button
