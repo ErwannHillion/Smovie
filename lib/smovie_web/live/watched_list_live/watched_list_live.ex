@@ -1,5 +1,5 @@
 defmodule SmovieWeb.WatchedListLive do
-  use Phoenix.LiveView
+  use Phoenix.LiveView, layout: {SmovieWeb.Layouts, :app}
   alias Smovie.Movies
   alias Smovie.TMDB
 

@@ -166,7 +166,7 @@ defmodule SmovieWeb.HomeLive do
       <ul>
         <div class="grid grid-cols-4 gap-4">
           <%= for movie <- @latest_movies do %>
-            <.card class="">
+            <.card class="bg-black text-white border-none">
               <.card_header>
                 <.card_title class="mb-6">{movie["title"]}</.card_title>
                 <.card_description class="min-h-[10rem] max-h-[20rem]">
@@ -187,14 +187,14 @@ defmodule SmovieWeb.HomeLive do
                   phx-click="open_modal"
                   phx-value-movie_id={movie["id"]}
                   phx-value-modal_type="watchlist"
-                  class="px-2 py-1 text-xs"
+                  class="px-2 py-1 text-xs text-black !bg-stone-300"
                 >
                   Ajouter à la watchlist
                 </.button>
                 <.button
                   phx-click="add_to_watch_later"
                   phx-value-movie_id={movie["id"]}
-                  class="px-2 py-1 text-xs"
+                  class="px-2 py-1 text-xs text-black !bg-stone-300"
                 >
                   Ajouter à regarder plus tard
                 </.button>
@@ -205,7 +205,7 @@ defmodule SmovieWeb.HomeLive do
       </ul>
 
       <%= if @show_modal do %>
-        <.modal id="modal" show={@show_modal} on_cancel={JS.push("close_modal")}>
+        <.dark_modal id="modal" show={@show_modal} on_cancel={JS.push("close_modal")}>
           <%= if @modal_type == "watchlist" do %>
             <h2 class="text-lg font-bold">Ajouter {@selected_movie["title"]} à votre watchlist</h2>
             <form phx-submit="save_to_watchlist">
@@ -259,7 +259,7 @@ defmodule SmovieWeb.HomeLive do
               <% end %>
             <% end %>
           <% end %>
-        </.modal>
+        </.dark_modal>
       <% end %>
     </div>
     """
