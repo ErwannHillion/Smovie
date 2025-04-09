@@ -179,7 +179,7 @@ defmodule SmovieWeb.HomeLive do
     <div>
       <h1>Derniers Films Sortis</h1>
       <!-- Contrôle desktop (caché sur mobile) -->
-      <div class="hidden md:flex items-center mb-4">
+      <div class="hidden md:flex items-center mb-4 place-content-end">
         <span class="mr-2">Petit (4 colonnes)</span>
         <label class="relative inline-flex items-center cursor-pointer">
           <input
@@ -216,7 +216,7 @@ defmodule SmovieWeb.HomeLive do
            - Sur écran moyen: 3 colonnes
            - Sur grand écran: 3 ou 4 colonnes selon préférence
       -->
-        <div class={"grid gap-4 grid-cols-#{@mobile_columns} sm:grid-cols-2 md:grid-cols-#{@grid_columns}"}>
+        <div class="grid gap-4 grid-cols-1 md:grid-cols-4">
           <%= for movie <- @latest_movies do %>
             <.card class="bg-black text-white border-none flex flex-col justify-between">
               <.card_header>
@@ -241,16 +241,18 @@ defmodule SmovieWeb.HomeLive do
                   phx-click="open_modal"
                   phx-value-movie_id={movie["id"]}
                   phx-value-modal_type="watchlist"
-                  class="px-2 py-1 text-xs text-black !bg-stone-300"
+                  class="px-1 py-0.5 text-[8px] sm:text-xs text-black !bg-stone-300 w-full sm:w-auto min-h-[20px] sm:min-h-0 mr-2 sm:mr-0"
                 >
-                  Ajouter à la watchlist
+                  <span class="hidden sm:inline">Ajouter à la watchlist</span>
+                  <span class="sm:hidden">+WatchList</span>
                 </.button>
                 <.button
                   phx-click="add_to_watch_later"
                   phx-value-movie_id={movie["id"]}
-                  class="px-2 py-1 text-xs text-black !bg-stone-300"
+                  class="px-1 py-0.5 text-[8px] sm:text-xs text-black !bg-stone-300 w-full sm:w-auto min-h-[20px] sm:min-h-0 ml-2 sm:ml-0"
                 >
-                  Ajouter à regarder plus tard
+                  <span class="hidden sm:inline">Ajouter à regarder plus tard</span>
+                  <span class="sm:hidden">+WatchLater</span>
                 </.button>
               </.card_footer>
             </.card>
