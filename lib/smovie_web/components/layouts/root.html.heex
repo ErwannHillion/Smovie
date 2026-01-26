@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <meta name="theme-color" content="#1a1a2e" />
+    <.live_title default="SMovie" suffix=" - Votre cinéma personnel">
+      {assigns[:page_title]}
+    </.live_title>
+    <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
+    </script>
+    <script>
+      (() => {
+        const setTheme = (theme) => {
+          if (theme === "system") {
+            const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+            theme = prefersDark ? "dark" : "light";
+          }
+          localStorage.setItem("phx:theme", theme);
+          document.documentElement.setAttribute("data-theme", theme);
+          // Update theme-color meta for mobile browsers
+          const themeColor = theme === "dark" ? "#0d0d12" : "#f9f9fb";
+          document.querySelector('meta[name="theme-color"]').setAttribute("content", themeColor);
+        };
+        // Set initial theme
+        const savedTheme = localStorage.getItem("phx:theme") || "dark";
+        setTheme(savedTheme);
+        // Listen for theme changes
+        window.addEventListener("storage", (e) => e.key === "phx:theme" && setTheme(e.newValue || "dark"));
+        window.addEventListener("phx:set-theme", ({ detail: { theme } }) => setTheme(theme));
+      })();
+    </script>
+  </head>
+  <body class="bg-base-100 text-base-content antialiased">
+    {@inner_content}
+  </body>
+</html>

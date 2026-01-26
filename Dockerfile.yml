@@ -1,0 +1,16 @@
+FROM postgres:latest
+
+# Copie du script shell
+COPY testbdd.sh /testbdd.sh
+
+# Copie du script SQL d'initialisation
+COPY testbdd.sh /testbdd.sh
+
+
+# Définir les variables d'environnement pour la base de données
+ENV POSTGRES_USER=${{ secrets.POSTGRES_USR }}
+ENV POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWD }}
+
+
+# Point d'entrée
+ENTRYPOINT [ "/testbdd.sh" ]
