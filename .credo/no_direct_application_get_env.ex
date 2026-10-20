@@ -1,28 +1,25 @@
 defmodule Credo.Check.Warning.NoDirectApplicationGetEnv do
   @moduledoc """
-  Interdit l'appel direct a `Application.get_env(:intranet, ...)` dans le code
+  Interdit la lecture directe de la configuration applicative dans le code
   metier.
 
   Toute lecture de configuration applicative doit passer par le module
-  centralise `Intranet.Config`.
+  centralise `Smovie.Config`.
 
-  ## Fichiers exclus
+  ## Fichier exclu
 
-  - `lib/intranet/config.ex`  (le module centralise lui-meme)
-  - `lib/intranet/application.ex` (demarrage OTP)
+  - `lib/smovie/config.ex` (le module centralise lui-meme)
 
   ## Exemple invalide
 
-      def send_email do
-        sender = Application.get_env(:intranet, :email_sender)
-        ...
+      def api_key do
+        Application.get_env(:smovie, :tmdb)[:api_key]
       end
 
   ## Exemple valide
 
-      def send_email do
-        sender = Intranet.Config.email_sender()
-        ...
+      def api_key do
+        Smovie.Config.tmdb_api_key()
       end
   """
 
@@ -32,13 +29,15 @@ defmodule Credo.Check.Warning.NoDirectApplicationGetEnv do
 
   alias Credo.SourceFile
 
-  @pattern "Application.get_env(:intranet"
-
-  # Fichiers autorises a utiliser Application.get_env(:intranet, ...) directement
-  @excluded_suffixes [
-    "lib/intranet/config.ex",
-    "lib/intranet/application.ex"
+  # Couvre get_env/2, get_env/3, fetch_env!/2 et fetch_env/2.
+  @patterns [
+    "Application.get_env(:smovie",
+    "Application.fetch_env!(:smovie",
+    "Application.fetch_env(:smovie"
   ]
+
+  # Seul Smovie.Config lit la configuration applicative.
+  @excluded_suffixes ["lib/smovie/config.ex"]
 
   @doc false
   def run(%SourceFile{} = source_file, _params) do
@@ -56,7 +55,7 @@ defmodule Credo.Check.Warning.NoDirectApplicationGetEnv do
   defp check_line({line_no, line}, source_file) do
     trimmed = String.trim_leading(line)
 
-    if String.contains?(trimmed, @pattern) and not comment_or_string?(trimmed) do
+    if Enum.any?(@patterns, &String.contains?(trimmed, &1)) and not comment_or_string?(trimmed) do
       [issue_for(source_file, line_no, String.trim(line))]
     else
       []
@@ -88,8 +87,8 @@ defmodule Credo.Check.Warning.NoDirectApplicationGetEnv do
     format_issue(
       source_file,
       message:
-        "Appel direct a Application.get_env(:intranet, ...) interdit. " <>
-          "Utiliser Intranet.Config a la place.",
+        "Lecture directe de la configuration applicative interdite. " <>
+          "Utiliser Smovie.Config a la place.",
       trigger: trigger,
       line_no: line_no
     )

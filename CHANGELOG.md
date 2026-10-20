@@ -7,6 +7,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- `Smovie.Config`, point de lecture unique de la configuration applicative
 - Oban pour les traitements de fond : synchronisation du catalogue, tendances,
   notifications ; quatre files dimensionnées par ce qu'elles appellent
 - Cachex pour le cache des réponses TMDB et OMDb
@@ -36,6 +37,8 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 - Navigation du scaffold Phoenix dans le layout applicatif
 
 ### Fixed
+- Le check Credo sur la lecture de configuration cherchait `:intranet` en dur et
+  ne détectait donc rien ; il couvre `:smovie`, `fetch_env!/2` et `fetch_env/2`
 - Un mode sudo expiré renvoie vers une reconnexion au lieu de sortir en 500
 - L'application démarre sur un poste neuf sans fichier `.env`
 - La clé API TMDB est lue au démarrage et non plus figée à la compilation
