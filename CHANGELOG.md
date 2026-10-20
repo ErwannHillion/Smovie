@@ -7,6 +7,12 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- Design system : palette violet Elixir, trois accents sémantiques (communauté,
+  presse, tendance), typographies Instrument Serif / Archivo / IBM Plex Mono
+  hébergées par l'application
+- Navigation mobile-first : barre basse jusqu'à `md:`, barre haute au-delà
+- Composants d'œuvre : affiche, grille, carrousel, étoiles, sélecteur de note,
+  bloc des trois notes
 - Interface bilingue français / anglais : résolution de la langue par préférence
   de compte, cookie, puis en-tête du navigateur ; sélecteur de langue dans l'en-tête
 - HTTPS forcé en production, avec HSTS d'un an
