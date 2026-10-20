@@ -38,6 +38,8 @@ defmodule SmovieWeb.Router do
       live "/u/:username/abonnements", NetworkLive, :following
       live "/u/:username/abonnes", NetworkLive, :followers
 
+      live "/review/:id", ReviewLive.Show
+
       live "/film/:slug", WorkLive.Show, :movie
       live "/serie/:slug", WorkLive.Show, :tv_show
       live "/serie/:slug/saison/:number", WorkLive.Season

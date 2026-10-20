@@ -11,6 +11,9 @@ defmodule SmovieWeb.WorkLive.Show do
   alias Smovie.Catalog
   alias Smovie.Catalog.Work
   alias Smovie.Library
+  alias Smovie.Accounts.Visibility
+  alias Smovie.Reviews
+  alias Smovie.Reviews.Review
   alias Smovie.Repo
   alias SmovieWeb.Layouts
 
@@ -44,13 +47,66 @@ defmodule SmovieWeb.WorkLive.Show do
       cast: Catalog.list_cast(work),
       press: Catalog.press_rating(work),
       my_rating: Library.get_rating(scope, work),
+      my_review: Reviews.get_user_review(scope, work),
+      popular_reviews: Reviews.list_popular_for_work(work),
       watched?: Library.watched?(scope, work),
       in_watchlist?: Library.in_watchlist?(scope, work),
       liked?: Library.liked?(scope, work)
     )
+    |> assign_new(:editing_review, fn -> false end)
+    |> then(&assign(&1, review_form: review_form(&1)))
+  end
+
+  defp review_form(%{assigns: %{my_review: review}}) do
+    to_form(Reviews.change_review(review || %Review{}))
   end
 
   @impl true
+  def handle_event("edit_review", _params, %{assigns: %{current_scope: nil}} = socket) do
+    {:noreply, redirect_to_login(socket)}
+  end
+
+  def handle_event("edit_review", _params, socket) do
+    {:noreply, assign(socket, editing_review: true)}
+  end
+
+  def handle_event("cancel_review", _params, socket) do
+    {:noreply, assign(socket, editing_review: false)}
+  end
+
+  def handle_event(
+        "save_review",
+        %{"review" => params},
+        %{assigns: %{current_scope: scope, work: work}} = socket
+      ) do
+    case Reviews.publish(scope, work, params) do
+      {:ok, _review} ->
+        {:noreply,
+         socket
+         |> assign(editing_review: false)
+         |> assign_work(Repo.reload!(work))
+         |> put_flash(:info, gettext("Review publiee."))}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, review_form: to_form(changeset))}
+    end
+  end
+
+  def handle_event(
+        "delete_review",
+        _params,
+        %{assigns: %{current_scope: scope, work: work}} = socket
+      ) do
+    case Reviews.get_user_review(scope, work) do
+      nil ->
+        {:noreply, socket}
+
+      review ->
+        Reviews.delete(scope, review)
+        {:noreply, assign_work(socket, Repo.reload!(work))}
+    end
+  end
+
   def handle_event("rate", %{"value" => value}, socket) do
     with_scope(socket, &Library.toggle_rating(&1, &2, value))
   end
@@ -76,16 +132,19 @@ defmodule SmovieWeb.WorkLive.Show do
   # Un visiteur non connecte est renvoye vers la connexion plutot que de voir
   # son geste ignore sans explication.
   defp with_scope(%{assigns: %{current_scope: nil}} = socket, _fun) do
-    {:noreply,
-     socket
-     |> put_flash(:info, gettext("Connectez-vous pour noter et suivre vos films."))
-     |> push_navigate(to: ~p"/users/log-in")}
+    {:noreply, redirect_to_login(socket)}
   end
 
   defp with_scope(%{assigns: %{current_scope: scope, work: work}} = socket, fun) do
     fun.(scope, work)
 
     {:noreply, assign_work(socket, Repo.reload!(work))}
+  end
+
+  defp redirect_to_login(socket) do
+    socket
+    |> put_flash(:info, gettext("Connectez-vous pour noter et suivre vos films."))
+    |> push_navigate(to: ~p"/users/log-in")
   end
 
   @impl true
@@ -115,6 +174,89 @@ defmodule SmovieWeb.WorkLive.Show do
           <p :if={@work.overview} class="text-base-content/80 max-w-prose leading-relaxed">
             {@work.overview}
           </p>
+
+          <section>
+            <h2 class="text-base-content/70 font-mono text-[0.65rem] font-medium tracking-[0.15em] uppercase">
+              {gettext("Votre review")}
+            </h2>
+
+            <.form
+              :if={@editing_review}
+              for={@review_form}
+              id="review_form"
+              phx-submit="save_review"
+              class="mt-3"
+            >
+              <.input
+                field={@review_form[:body]}
+                type="textarea"
+                label={gettext("Ce que vous en avez pense")}
+                rows="6"
+                required
+              />
+              <div class="flex flex-wrap items-center gap-4">
+                <.input
+                  field={@review_form[:contains_spoilers]}
+                  type="checkbox"
+                  label={gettext("Contient des spoilers")}
+                />
+                <.input
+                  field={@review_form[:visibility]}
+                  type="select"
+                  options={Visibility.options()}
+                  label={gettext("Visible par")}
+                />
+              </div>
+              <div class="flex gap-2">
+                <.button variant="primary" phx-disable-with={gettext("Publication...")}>
+                  {gettext("Publier")}
+                </.button>
+                <button type="button" phx-click="cancel_review" class="btn btn-ghost">
+                  {gettext("Annuler")}
+                </button>
+              </div>
+            </.form>
+
+            <div :if={not @editing_review} class="mt-3">
+              <.review_card :if={@my_review} review={@my_review} full revealed>
+                <:actions>
+                  <button type="button" phx-click="edit_review" class="hover:text-base-content">
+                    {gettext("Modifier")}
+                  </button>
+                  <button
+                    type="button"
+                    phx-click="delete_review"
+                    data-confirm={gettext("Supprimer cette review ?")}
+                    class="hover:text-heat"
+                  >
+                    {gettext("Supprimer")}
+                  </button>
+                </:actions>
+              </.review_card>
+
+              <button
+                :if={is_nil(@my_review)}
+                type="button"
+                phx-click="edit_review"
+                class="btn btn-ghost btn-sm"
+              >
+                {gettext("Ecrire une review")}
+              </button>
+            </div>
+          </section>
+
+          <section :if={@popular_reviews != []}>
+            <h2 class="text-base-content/70 font-mono text-[0.65rem] font-medium tracking-[0.15em] uppercase">
+              {gettext("Reviews populaires")}
+            </h2>
+            <div class="mt-3 flex flex-col gap-3">
+              <.review_card
+                :for={review <- @popular_reviews}
+                review={review}
+                navigate={~p"/review/#{review.id}"}
+              />
+            </div>
+          </section>
 
           <section :if={@seasons != []}>
             <h2 class="text-base-content/70 font-mono text-[0.65rem] font-medium tracking-[0.15em] uppercase">
