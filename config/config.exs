@@ -92,7 +92,13 @@ config :smovie, Oban,
   ],
   plugins: [
     # Les jobs termines sont purges au bout d'une semaine.
-    {Oban.Plugins.Pruner, max_age: 60 * 60 * 24 * 7}
+    {Oban.Plugins.Pruner, max_age: 60 * 60 * 24 * 7},
+    {Oban.Plugins.Cron,
+     crontab: [
+       # 4 h du matin : TMDB a publie les sorties de la veille, et le trafic
+       # est au plus bas.
+       {"0 4 * * *", Smovie.Workers.SyncTrendingCatalogWorker}
+     ]}
   ]
 
 # Import environment specific config. This must remain at the bottom
