@@ -75,6 +75,8 @@ defmodule Smovie.Catalog.Work do
 
     belongs_to :parent, __MODULE__
     has_many :children, __MODULE__, foreign_key: :parent_id
+    has_many :credits, Smovie.Catalog.Credit
+    many_to_many :genres, Smovie.Catalog.Genre, join_through: Smovie.Catalog.WorkGenre
 
     timestamps(type: :utc_datetime)
   end
