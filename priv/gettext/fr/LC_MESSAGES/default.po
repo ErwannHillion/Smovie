@@ -1,0 +1,260 @@
+## "msgid"s in this file come from POT (.pot) files.
+###
+### Do not add, change, or remove "msgid"s manually here as
+### they're tied to the ones in the corresponding POT file
+### (with the same domain).
+###
+### Use "mix gettext.extract --merge" or "mix gettext.merge"
+### to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n>1);\n"
+
+#: lib/smovie_web/components/core_components.ex:339
+#, elixir-autogen, elixir-format
+msgid "Actions"
+msgstr "Actions"
+
+#: lib/smovie_web/live/user_live/login.ex:56
+#: lib/smovie_web/live/user_live/login.ex:80
+#: lib/smovie_web/live/user_live/registration.ex:30
+#: lib/smovie_web/live/user_live/settings.ex:25
+#, elixir-autogen, elixir-format
+msgid "Adresse e-mail"
+msgstr "Adresse e-mail"
+
+#: lib/smovie_web/live/user_live/settings.ex:77
+#, elixir-autogen, elixir-format
+msgid "Adresse e-mail modifiee."
+msgstr "Adresse e-mail modifiee."
+
+#: lib/smovie_web/controllers/user_session_controller.ex:43
+#, elixir-autogen, elixir-format
+msgid "Adresse e-mail ou mot de passe incorrect"
+msgstr "Adresse e-mail ou mot de passe incorrect"
+
+#: lib/smovie_web/components/layouts.ex:125
+#, elixir-autogen, elixir-format
+msgid "Attempting to reconnect"
+msgstr "Attempting to reconnect"
+
+#: lib/smovie_web/live/user_live/settings.ex:83
+#, elixir-autogen, elixir-format
+msgid "Ce lien de changement d'adresse est invalide ou a expire."
+msgstr "Ce lien de changement d'adresse est invalide ou a expire."
+
+#: lib/smovie_web/live/user_live/confirmation.ex:74
+#, elixir-autogen, elixir-format
+msgid "Ce lien de connexion est invalide ou a expire."
+msgstr "Ce lien de connexion est invalide ou a expire."
+
+#: lib/smovie_web/controllers/locale_controller.ex:23
+#, elixir-autogen, elixir-format
+msgid "Cette langue n'est pas disponible."
+msgstr "Cette langue n'est pas disponible."
+
+#: lib/smovie_web/live/user_live/confirmation.ex:32
+#, elixir-autogen, elixir-format
+msgid "Confirmation..."
+msgstr "Confirmation..."
+
+#: lib/smovie_web/live/user_live/settings.ex:62
+#, elixir-autogen, elixir-format
+msgid "Confirmer le nouveau mot de passe"
+msgstr "Confirmer le nouveau mot de passe"
+
+#: lib/smovie_web/live/user_live/confirmation.ex:33
+#, elixir-autogen, elixir-format
+msgid "Confirmer mon compte"
+msgstr "Confirmer mon compte"
+
+#: lib/smovie_web/live/user_live/registration.ex:21
+#, elixir-autogen, elixir-format
+msgid "Connectez-vous"
+msgstr "Connectez-vous"
+
+#: lib/smovie_web/components/layouts.ex:45
+#: lib/smovie_web/live/user_live/login.ex:16
+#, elixir-autogen, elixir-format
+msgid "Connexion"
+msgstr "Connexion"
+
+#: lib/smovie_web/live/user_live/confirmation.ex:52
+#, elixir-autogen, elixir-format
+msgid "Connexion..."
+msgstr "Connexion..."
+
+#: lib/smovie_web/live/user_live/registration.ex:38
+#, elixir-autogen, elixir-format
+msgid "Creation du compte..."
+msgstr "Creation du compte..."
+
+#: lib/smovie_web/live/user_live/registration.ex:41
+#, elixir-autogen, elixir-format
+msgid "Creer mon compte"
+msgstr "Creer mon compte"
+
+#: lib/smovie_web/live/user_live/registration.ex:17
+#, elixir-autogen, elixir-format
+msgid "Creer un compte"
+msgstr "Creer un compte"
+
+#: lib/smovie_web/components/layouts.ex:41
+#, elixir-autogen, elixir-format
+msgid "Deconnexion"
+msgstr "Deconnexion"
+
+#: lib/smovie_web/live/user_live/registration.ex:19
+#, elixir-autogen, elixir-format
+msgid "Deja inscrit ?"
+msgstr "Deja inscrit ?"
+
+#: lib/smovie_web/live/user_live/settings.ex:65
+#, elixir-autogen, elixir-format
+msgid "Enregistrement..."
+msgstr "Enregistrement..."
+
+#: lib/smovie_web/live/user_live/settings.ex:66
+#, elixir-autogen, elixir-format
+msgid "Enregistrer le mot de passe"
+msgstr "Enregistrer le mot de passe"
+
+#: lib/smovie_web/live/user_live/settings.ex:18
+#, elixir-autogen, elixir-format
+msgid "Gerez votre adresse e-mail et votre mot de passe"
+msgstr "Gerez votre adresse e-mail et votre mot de passe"
+
+#: lib/smovie_web/components/layouts.ex:137
+#, elixir-autogen, elixir-format
+msgid "Hang in there while we get back on track"
+msgstr "Hang in there while we get back on track"
+
+#: lib/smovie_web/components/layouts.ex:48
+#, elixir-autogen, elixir-format
+msgid "Inscription"
+msgstr "Inscription"
+
+#: lib/smovie_web/live/user_live/login.ex:27
+#, elixir-autogen, elixir-format
+msgid "Inscrivez-vous"
+msgstr "Inscrivez-vous"
+
+#: lib/smovie_web/live/user_live/login.ex:35
+#, elixir-autogen, elixir-format
+msgid "L'adaptateur mail local est actif."
+msgstr "L'adaptateur mail local est actif."
+
+#: lib/smovie_web/live/user_live/login.ex:37
+#, elixir-autogen, elixir-format
+msgid "Les messages envoyes sont consultables sur"
+msgstr "Les messages envoyes sont consultables sur"
+
+#: lib/smovie_web/live/user_live/settings.ex:29
+#, elixir-autogen, elixir-format
+msgid "Modification..."
+msgstr "Modification..."
+
+#: lib/smovie_web/live/user_live/settings.ex:30
+#, elixir-autogen, elixir-format
+msgid "Modifier mon adresse"
+msgstr "Modifier mon adresse"
+
+#: lib/smovie_web/live/user_live/login.ex:87
+#, elixir-autogen, elixir-format
+msgid "Mot de passe"
+msgstr "Mot de passe"
+
+#: lib/smovie_web/controllers/user_session_controller.ex:64
+#, elixir-autogen, elixir-format
+msgid "Mot de passe mis a jour."
+msgstr "Mot de passe mis a jour."
+
+#: lib/smovie_web/live/user_live/settings.ex:55
+#, elixir-autogen, elixir-format
+msgid "Nouveau mot de passe"
+msgstr "Nouveau mot de passe"
+
+#: lib/smovie_web/components/layouts.ex:38
+#, elixir-autogen, elixir-format
+msgid "Parametres"
+msgstr "Parametres"
+
+#: lib/smovie_web/live/user_live/settings.ex:17
+#, elixir-autogen, elixir-format
+msgid "Parametres du compte"
+msgstr "Parametres du compte"
+
+#: lib/smovie_web/live/user_live/login.ex:23
+#, elixir-autogen, elixir-format
+msgid "Pas encore de compte ?"
+msgstr "Pas encore de compte ?"
+
+#: lib/smovie_web/live/user_live/login.ex:62
+#, elixir-autogen, elixir-format
+msgid "Recevoir un lien de connexion"
+msgstr "Recevoir un lien de connexion"
+
+#: lib/smovie_web/live/user_live/confirmation.ex:30
+#: lib/smovie_web/live/user_live/confirmation.ex:50
+#: lib/smovie_web/live/user_live/login.ex:94
+#, elixir-autogen, elixir-format
+msgid "Rester connecte"
+msgstr "Rester connecte"
+
+#: lib/smovie_web/live/user_live/confirmation.ex:53
+#: lib/smovie_web/live/user_live/login.ex:97
+#, elixir-autogen, elixir-format
+msgid "Se connecter"
+msgstr "Se connecter"
+
+#: lib/smovie_web/live/user_live/login.ex:128
+#, elixir-autogen, elixir-format
+msgid "Si cette adresse est enregistree, vous recevrez sous peu les instructions de connexion."
+msgstr "Si cette adresse est enregistree, vous recevrez sous peu les instructions de connexion."
+
+#: lib/smovie_web/components/layouts.ex:132
+#, elixir-autogen, elixir-format
+msgid "Something went wrong!"
+msgstr "Something went wrong!"
+
+#: lib/smovie_web/live/user_live/settings.ex:132
+#, elixir-autogen, elixir-format
+msgid "Un lien de confirmation a ete envoye a la nouvelle adresse."
+msgstr "Un lien de confirmation a ete envoye a la nouvelle adresse."
+
+#: lib/smovie_web/live/user_live/registration.ex:73
+#, elixir-autogen, elixir-format
+msgid "Un message a ete envoye a %{email}. Ouvrez-le pour confirmer votre compte."
+msgstr "Un message a ete envoye a %{email}. Ouvrez-le pour confirmer votre compte."
+
+#: lib/smovie_web/controllers/user_session_controller.ex:67
+#: lib/smovie_web/live/user_live/settings.ex:189
+#, elixir-autogen, elixir-format
+msgid "Votre session a expire. Reconnectez-vous pour continuer."
+msgstr "Votre session a expire. Reconnectez-vous pour continuer."
+
+#: lib/smovie_web/live/user_live/login.ex:19
+#, elixir-autogen, elixir-format
+msgid "Vous devez vous reconnecter pour effectuer une action sensible sur votre compte."
+msgstr "Vous devez vous reconnecter pour effectuer une action sensible sur votre compte."
+
+#: lib/smovie_web/components/layouts.ex:120
+#, elixir-autogen, elixir-format
+msgid "We can't find the internet"
+msgstr "We can't find the internet"
+
+#: lib/smovie_web/components/core_components.ex:78
+#, elixir-autogen, elixir-format
+msgid "close"
+msgstr "close"
+
+#: lib/smovie_web/live/user_live/login.ex:40
+#, elixir-autogen, elixir-format
+msgid "la page mailbox"
+msgstr "la page mailbox"
+
+#: lib/smovie_web/live/user_live/login.ex:66
+#, elixir-autogen, elixir-format
+msgid "ou"
+msgstr "ou"
