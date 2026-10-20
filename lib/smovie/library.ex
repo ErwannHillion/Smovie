@@ -12,10 +12,10 @@ defmodule Smovie.Library do
   alias Ecto.Multi
   alias Smovie.Accounts.Scope
   alias Smovie.Accounts.User
-  alias Smovie.Catalog.Work
   alias Smovie.Catalog.Credit
   alias Smovie.Catalog.Genre
   alias Smovie.Catalog.Person
+  alias Smovie.Catalog.Work
   alias Smovie.Catalog.WorkGenre
   alias Smovie.Config
   alias Smovie.Library.Rating
