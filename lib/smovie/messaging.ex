@@ -383,6 +383,25 @@ defmodule Smovie.Messaging do
   ## Diffusion
 
   @doc """
+  Bascule un identifiant de conversation dans un ensemble de selection.
+
+  La conversion vit ici : l'identifiant vient du DOM, et une valeur illisible
+  doit laisser la selection intacte plutot que de lever.
+  """
+  def toggle_selection(selected, id) when is_binary(id) do
+    case Integer.parse(id) do
+      {parsed, ""} -> toggle_selection(selected, parsed)
+      _other -> selected
+    end
+  end
+
+  def toggle_selection(selected, id) when is_integer(id) do
+    if MapSet.member?(selected, id),
+      do: MapSet.delete(selected, id),
+      else: MapSet.put(selected, id)
+  end
+
+  @doc """
   Sujet PubSub d'une conversation.
   """
   def topic(%Conversation{id: id}), do: "conversation:#{id}"

@@ -12,6 +12,7 @@ defmodule SmovieWeb.WorkLive.Show do
   alias Smovie.Catalog
   alias Smovie.Catalog.Work
   alias Smovie.Library
+  alias Smovie.Messaging
   alias Smovie.Reviews
   alias Smovie.Reviews.Review
   alias SmovieWeb.Layouts
@@ -53,6 +54,9 @@ defmodule SmovieWeb.WorkLive.Show do
       liked?: Library.liked?(scope, work)
     )
     |> assign_new(:editing_review, fn -> false end)
+    |> assign_new(:sharing, fn -> false end)
+    |> assign_new(:share_targets, fn -> [] end)
+    |> assign_new(:share_selected, fn -> MapSet.new() end)
     |> then(&assign(&1, review_form: review_form(&1)))
   end
 
@@ -61,6 +65,54 @@ defmodule SmovieWeb.WorkLive.Show do
   end
 
   @impl true
+  def handle_event("open_share", _params, %{assigns: %{current_scope: nil}} = socket) do
+    {:noreply, redirect_to_login(socket)}
+  end
+
+  def handle_event("open_share", _params, %{assigns: %{current_scope: scope}} = socket) do
+    {:noreply,
+     assign(socket,
+       sharing: true,
+       share_targets: Messaging.list_conversations(scope),
+       share_selected: MapSet.new()
+     )}
+  end
+
+  def handle_event("close_share", _params, socket), do: {:noreply, assign(socket, sharing: false)}
+
+  def handle_event(
+        "toggle_share",
+        %{"id" => id},
+        %{assigns: %{share_selected: selected}} = socket
+      ) do
+    {:noreply, assign(socket, share_selected: Messaging.toggle_selection(selected, id))}
+  end
+
+  def handle_event(
+        "confirm_share",
+        _params,
+        %{
+          assigns: %{
+            current_scope: scope,
+            work: work,
+            share_targets: targets,
+            share_selected: selected
+          }
+        } =
+          socket
+      ) do
+    targets
+    |> Enum.filter(&MapSet.member?(selected, &1.id))
+    |> Enum.each(
+      &Messaging.send_message(scope, &1, %{"kind" => "work_share", "shared_work_id" => work.id})
+    )
+
+    {:noreply,
+     socket
+     |> assign(sharing: false)
+     |> put_flash(:info, gettext("Partage envoye."))}
+  end
+
   def handle_event("edit_review", _params, %{assigns: %{current_scope: nil}} = socket) do
     {:noreply, redirect_to_login(socket)}
   end
@@ -324,7 +376,7 @@ defmodule SmovieWeb.WorkLive.Show do
 
           <.rating_input value={@my_rating && @my_rating.value} event="rate" />
 
-          <div class="bg-base-300 grid grid-cols-3 gap-px overflow-hidden rounded-xl">
+          <div class="bg-base-300 grid grid-cols-4 gap-px overflow-hidden rounded-xl">
             <.work_action
               event="toggle_watched"
               active={@watched?}
@@ -338,6 +390,12 @@ defmodule SmovieWeb.WorkLive.Show do
               label={if @in_watchlist?, do: gettext("Dans la liste"), else: gettext("Watchlist")}
             />
             <.work_action
+              event="open_share"
+              active={false}
+              icon="hero-arrow-up-tray"
+              label={gettext("Partager")}
+            />
+            <.work_action
               event="toggle_like"
               active={@liked?}
               icon="hero-heart"
@@ -347,6 +405,13 @@ defmodule SmovieWeb.WorkLive.Show do
           </div>
         </aside>
       </div>
+      <.share_sheet
+        :if={@sharing}
+        conversations={@share_targets}
+        selected={@share_selected}
+        current_scope={@current_scope}
+        title={gettext("Partager %{work}", work: @work.title)}
+      />
     </Layouts.app>
     """
   end

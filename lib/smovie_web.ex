@@ -88,6 +88,7 @@ defmodule SmovieWeb do
       import SmovieWeb.CoreComponents
       import SmovieWeb.ActivityComponents
       import SmovieWeb.ReviewComponents
+      import SmovieWeb.ShareComponents
       import SmovieWeb.UserComponents
       import SmovieWeb.WorkComponents
 

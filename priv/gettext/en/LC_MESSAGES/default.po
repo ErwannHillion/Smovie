@@ -355,7 +355,7 @@ msgstr "Your rating"
 #: lib/smovie_web/live/user_live/settings.ex:80
 #: lib/smovie_web/live/watchlist_live.ex:16
 #: lib/smovie_web/live/watchlist_live.ex:65
-#: lib/smovie_web/live/work_live/show.ex:338
+#: lib/smovie_web/live/work_live/show.ex:390
 #, elixir-autogen, elixir-format
 msgid "Watchlist"
 msgstr "Watchlist"
@@ -436,50 +436,50 @@ msgid "Visibilite par defaut d'une nouvelle review"
 msgstr "Default visibility for new reviews"
 
 #: lib/smovie_web/live/work_live/season.ex:216
-#: lib/smovie_web/live/work_live/show.ex:430
+#: lib/smovie_web/live/work_live/show.ex:495
 #, elixir-autogen, elixir-format
 msgid "%{count} min"
 msgstr "%{count} min"
 
 #: lib/smovie_web/live/work_live/season.ex:88
-#: lib/smovie_web/live/work_live/show.ex:145
+#: lib/smovie_web/live/work_live/show.ex:197
 #, elixir-autogen, elixir-format
 msgid "Connectez-vous pour noter et suivre vos films."
 msgstr "Log in to rate and track your films."
 
-#: lib/smovie_web/live/work_live/show.ex:338
+#: lib/smovie_web/live/work_live/show.ex:390
 #, elixir-autogen, elixir-format
 msgid "Dans la liste"
 msgstr "In your list"
 
-#: lib/smovie_web/live/work_live/show.ex:294
+#: lib/smovie_web/live/work_live/show.ex:346
 #, elixir-autogen, elixir-format
 msgid "Distribution"
 msgstr "Cast"
 
-#: lib/smovie_web/live/work_live/show.ex:345
+#: lib/smovie_web/live/work_live/show.ex:403
 #, elixir-autogen, elixir-format
 msgid "J'aime"
 msgstr "Like"
 
 #: lib/smovie_web/live/work_live/season.ex:150
-#: lib/smovie_web/live/work_live/show.ex:332
+#: lib/smovie_web/live/work_live/show.ex:384
 #, elixir-autogen, elixir-format
 msgid "Marquer vu"
 msgstr "Mark watched"
 
-#: lib/smovie_web/live/work_live/show.ex:332
+#: lib/smovie_web/live/work_live/show.ex:384
 #, elixir-autogen, elixir-format
 msgid "Vu"
 msgstr "Watched"
 
-#: lib/smovie_web/live/work_live/show.ex:382
+#: lib/smovie_web/live/work_live/show.ex:447
 #, elixir-autogen, elixir-format
 msgid "de"
 msgstr "by"
 
 #: lib/smovie_web/live/work_live/season.ex:127
-#: lib/smovie_web/live/work_live/show.ex:448
+#: lib/smovie_web/live/work_live/show.ex:513
 #, elixir-autogen, elixir-format
 msgid "%{count} episode"
 msgid_plural "%{count} episodes"
@@ -487,7 +487,7 @@ msgstr[0] "%{count} episode"
 msgstr[1] "%{count} episodes"
 
 #: lib/smovie_web/live/work_live/season.ex:127
-#: lib/smovie_web/live/work_live/show.ex:449
+#: lib/smovie_web/live/work_live/show.ex:514
 #, elixir-autogen, elixir-format
 msgid "%{watched} vus"
 msgstr "%{watched} watched"
@@ -497,7 +497,7 @@ msgstr "%{watched} watched"
 msgid "Les episodes de cette saison ne sont pas encore disponibles."
 msgstr "The episodes of this season are not available yet."
 
-#: lib/smovie_web/live/work_live/show.ex:263
+#: lib/smovie_web/live/work_live/show.ex:315
 #, elixir-autogen, elixir-format
 msgid "Saisons"
 msgstr "Seasons"
@@ -560,23 +560,23 @@ msgstr "followers"
 msgid "Afficher les spoilers"
 msgstr "Show spoilers"
 
-#: lib/smovie_web/live/work_live/show.ex:215
+#: lib/smovie_web/live/work_live/show.ex:267
 #, elixir-autogen, elixir-format
 msgid "Annuler"
 msgstr "Cancel"
 
-#: lib/smovie_web/live/work_live/show.ex:193
+#: lib/smovie_web/live/work_live/show.ex:245
 #, elixir-autogen, elixir-format
 msgid "Ce que vous en avez pense"
 msgstr "What you thought of it"
 
 #: lib/smovie_web/components/review_components.ex:62
-#: lib/smovie_web/live/work_live/show.ex:201
+#: lib/smovie_web/live/work_live/show.ex:253
 #, elixir-autogen, elixir-format
 msgid "Contient des spoilers"
 msgstr "Contains spoilers"
 
-#: lib/smovie_web/live/work_live/show.ex:243
+#: lib/smovie_web/live/work_live/show.ex:295
 #, elixir-autogen, elixir-format
 msgid "Ecrire une review"
 msgstr "Write a review"
@@ -586,49 +586,49 @@ msgstr "Write a review"
 msgid "Lire"
 msgstr "Read"
 
-#: lib/smovie_web/live/work_live/show.ex:224
+#: lib/smovie_web/live/work_live/show.ex:276
 #, elixir-autogen, elixir-format
 msgid "Modifier"
 msgstr "Edit"
 
-#: lib/smovie_web/live/work_live/show.ex:211
+#: lib/smovie_web/live/work_live/show.ex:263
 #, elixir-autogen, elixir-format
 msgid "Publication..."
 msgstr "Publishing…"
 
-#: lib/smovie_web/live/work_live/show.ex:212
+#: lib/smovie_web/live/work_live/show.ex:264
 #, elixir-autogen, elixir-format
 msgid "Publier"
 msgstr "Publish"
 
-#: lib/smovie_web/live/work_live/show.ex:87
+#: lib/smovie_web/live/work_live/show.ex:139
 #, elixir-autogen, elixir-format
 msgid "Review publiee."
 msgstr "Review published."
 
-#: lib/smovie_web/live/work_live/show.ex:250
+#: lib/smovie_web/live/work_live/show.ex:302
 #, elixir-autogen, elixir-format
 msgid "Reviews populaires"
 msgstr "Popular reviews"
 
-#: lib/smovie_web/live/messaging_live/show.ex:124
+#: lib/smovie_web/live/messaging_live/show.ex:131
 #: lib/smovie_web/live/review_live/show.ex:225
-#: lib/smovie_web/live/work_live/show.ex:232
+#: lib/smovie_web/live/work_live/show.ex:284
 #, elixir-autogen, elixir-format
 msgid "Supprimer"
 msgstr "Delete"
 
-#: lib/smovie_web/live/work_live/show.ex:229
+#: lib/smovie_web/live/work_live/show.ex:281
 #, elixir-autogen, elixir-format
 msgid "Supprimer cette review ?"
 msgstr "Delete this review?"
 
-#: lib/smovie_web/live/work_live/show.ex:207
+#: lib/smovie_web/live/work_live/show.ex:259
 #, elixir-autogen, elixir-format
 msgid "Visible par"
 msgstr "Visible to"
 
-#: lib/smovie_web/live/work_live/show.ex:180
+#: lib/smovie_web/live/work_live/show.ex:232
 #, elixir-autogen, elixir-format
 msgid "Votre review"
 msgstr "Your review"
@@ -870,6 +870,7 @@ msgstr "Films and series"
 msgid "Importer"
 msgstr "Import"
 
+#: lib/smovie_web/live/messaging_live/new.ex:83
 #: lib/smovie_web/live/search_live.ex:123
 #, elixir-autogen, elixir-format
 msgid "Membres"
@@ -1047,7 +1048,7 @@ msgid "moyenne %{value}"
 msgstr "average %{value}"
 
 #: lib/smovie_web/live/messaging_live/index.ex:108
-#: lib/smovie_web/live/messaging_live/show.ex:256
+#: lib/smovie_web/live/messaging_live/show.ex:263
 #, elixir-autogen, elixir-format
 msgid "%{count} membre"
 msgid_plural "%{count} membres"
@@ -1059,63 +1060,112 @@ msgstr[1] "%{count} members"
 msgid "Aucune conversation. Ouvrez-en une depuis le profil d'un membre."
 msgstr "No conversations. Start one from a member's profile."
 
-#: lib/smovie_web/live/messaging_live/show.ex:73
+#: lib/smovie_web/live/messaging_live/show.ex:80
 #, elixir-autogen, elixir-format
 msgid "Ce message n'a pas pu etre envoye."
 msgstr "This message could not be sent."
 
-#: lib/smovie_web/live/messaging_live/show.ex:69
+#: lib/smovie_web/live/messaging_live/show.ex:76
 #, elixir-autogen, elixir-format
 msgid "Cette review n'est pas visible par tous les membres de la conversation."
 msgstr "This review is not visible to everyone in this conversation."
 
-#: lib/smovie_web/live/messaging_live/show.ex:230
+#: lib/smovie_web/live/messaging_live/show.ex:237
 #, elixir-autogen, elixir-format
 msgid "Contenu partage indisponible"
 msgstr "Shared content unavailable"
 
 #: lib/smovie_web/live/messaging_live/index.ex:111
-#: lib/smovie_web/live/messaging_live/show.ex:259
+#: lib/smovie_web/live/messaging_live/show.ex:266
 #, elixir-autogen, elixir-format
 msgid "Conversation privee"
 msgstr "Direct conversation"
 
-#: lib/smovie_web/live/messaging_live/show.ex:181
+#: lib/smovie_web/live/messaging_live/show.ex:188
 #, elixir-autogen, elixir-format
 msgid "Film partage"
 msgstr "Shared film"
 
-#: lib/smovie_web/live/messaging_live/show.ex:159
+#: lib/smovie_web/live/messaging_live/show.ex:166
 #, elixir-autogen, elixir-format
 msgid "Message supprime"
 msgstr "Message deleted"
 
 #: lib/smovie_web/live/messaging_live/index.ex:39
+#: lib/smovie_web/live/messaging_live/new.ex:18
+#: lib/smovie_web/live/messaging_live/new.ex:69
 #, elixir-autogen, elixir-format
 msgid "Nouveau groupe"
 msgstr "New group"
 
-#: lib/smovie_web/live/messaging_live/show.ex:209
+#: lib/smovie_web/live/messaging_live/show.ex:216
 #, elixir-autogen, elixir-format
 msgid "Review partagee"
 msgstr "Shared review"
 
-#: lib/smovie_web/live/messaging_live/show.ex:142
+#: lib/smovie_web/live/messaging_live/show.ex:149
 #, elixir-autogen, elixir-format
 msgid "Un message…"
 msgstr "A message…"
 
-#: lib/smovie_web/live/messaging_live/show.ex:72
+#: lib/smovie_web/live/messaging_live/show.ex:79
 #, elixir-autogen, elixir-format
 msgid "Vous avez quitte cette conversation."
 msgstr "You have left this conversation."
 
-#: lib/smovie_web/live/messaging_live/show.ex:71
+#: lib/smovie_web/live/messaging_live/show.ex:78
 #, elixir-autogen, elixir-format
 msgid "Vous ne faites pas partie de cette conversation."
 msgstr "You are not part of this conversation."
 
-#: lib/smovie_web/live/messaging_live/show.ex:212
+#: lib/smovie_web/live/messaging_live/show.ex:219
 #, elixir-autogen, elixir-format
 msgid "par %{member}"
 msgstr "by %{member}"
+
+#: lib/smovie_web/components/share_components.ex:66
+#, elixir-autogen, elixir-format
+msgid "Aucune conversation ouverte. Ecrivez d'abord a quelqu'un."
+msgstr "No open conversation. Write to someone first."
+
+#: lib/smovie_web/live/messaging_live/new.ex:109
+#, elixir-autogen, elixir-format
+msgid "Creer le groupe"
+msgstr "Create group"
+
+#: lib/smovie_web/live/messaging_live/new.ex:50
+#, elixir-autogen, elixir-format
+msgid "Donnez un nom a ce groupe."
+msgstr "Give this group a name."
+
+#: lib/smovie_web/components/share_components.ex:75
+#, elixir-autogen, elixir-format
+msgid "Envoyer a %{count} conversation"
+msgid_plural "Envoyer a %{count} conversations"
+msgstr[0] "Send to %{count} conversation"
+msgstr[1] "Send to %{count} conversations"
+
+#: lib/smovie_web/live/messaging_live/new.ex:78
+#, elixir-autogen, elixir-format
+msgid "Nom du groupe"
+msgstr "Group name"
+
+#: lib/smovie_web/live/work_live/show.ex:113
+#, elixir-autogen, elixir-format
+msgid "Partage envoye."
+msgstr "Share sent."
+
+#: lib/smovie_web/live/work_live/show.ex:396
+#, elixir-autogen, elixir-format
+msgid "Partager"
+msgstr "Share"
+
+#: lib/smovie_web/live/work_live/show.ex:413
+#, elixir-autogen, elixir-format
+msgid "Partager %{work}"
+msgstr "Share %{work}"
+
+#: lib/smovie_web/live/messaging_live/new.ex:105
+#, elixir-autogen, elixir-format
+msgid "Suivez d'abord quelques membres pour pouvoir les reunir dans un groupe."
+msgstr "Follow a few members first so you can gather them in a group."

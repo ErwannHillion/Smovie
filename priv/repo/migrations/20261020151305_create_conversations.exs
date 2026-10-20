@@ -64,12 +64,16 @@ defmodule Smovie.Repo.Migrations.CreateConversations do
              check: "kind <> 'text' OR body IS NOT NULL OR deleted_at IS NOT NULL"
            )
 
+    # Une oeuvre supprimee met shared_work_id a NULL : la contrainte doit
+    # l'autoriser, sinon supprimer une oeuvre deviendrait impossible des
+    # qu'elle a ete partagee une fois. Elle garantit seulement qu'un message
+    # d'un autre type ne porte pas de reference.
     create constraint(:messages, :messages_work_share,
-             check: "(kind = 'work_share') = (shared_work_id IS NOT NULL)"
+             check: "kind = 'work_share' OR shared_work_id IS NULL"
            )
 
     create constraint(:messages, :messages_review_share,
-             check: "(kind = 'review_share') = (shared_review_id IS NOT NULL)"
+             check: "kind = 'review_share' OR shared_review_id IS NULL"
            )
   end
 
