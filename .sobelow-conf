@@ -1,0 +1,24 @@
+# Configuration Sobelow.
+#
+# Config.CSP est ignore sciemment. Le check inspecte le pipeline du routeur et
+# n'y reconnait une CSP que sous la forme littérale
+# `plug :put_secure_browser_headers, %{"content-security-policy" => "..."}`.
+#
+# L'application pose la sienne depuis SmovieWeb.Plugs.ContentSecurityPolicy,
+# parce qu'elle a besoin d'un nonce different a chaque requete : une politique
+# ecrite en dur dans le pipeline devrait autoriser `script-src 'unsafe-inline'`
+# pour le script de theme, ce qui reviendrait a poser une CSP sans la
+# protection qu'on en attend.
+#
+# L'en-tete est verifie par test/smovie_web/plugs/content_security_policy_test.exs,
+# qui controle sa presence, son contenu et la correspondance du nonce.
+[
+  verbose: false,
+  private: false,
+  skip: false,
+  router: "lib/smovie_web/router.ex",
+  exit: "low",
+  format: "txt",
+  ignore: ["Config.CSP"],
+  ignore_files: []
+]

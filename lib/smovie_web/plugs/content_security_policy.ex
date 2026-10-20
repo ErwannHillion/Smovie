@@ -2,6 +2,11 @@ defmodule SmovieWeb.Plugs.ContentSecurityPolicy do
   @moduledoc """
   Pose un en-tete `content-security-policy` et un nonce par requete.
 
+  Le pipeline appelle `:put_secure_browser_headers` juste avant : ce plug le
+  rappelle avec la CSP en en-tete supplementaire. L'appel est idempotent sur
+  les en-tetes standards, et c'est la forme que sobelow reconnait comme une
+  CSP effectivement posee.
+
   Le nonce evite le recours a `script-src 'unsafe-inline'`, qui reviendrait a
   poser une CSP sans la protection qu'on en attend : le seul script en ligne de
   l'application est celui qui applique le theme avant le premier rendu, et il

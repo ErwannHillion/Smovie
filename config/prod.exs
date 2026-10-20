@@ -13,6 +13,19 @@ config :swoosh, api_client: Swoosh.ApiClient.Req
 # Disable Swoosh Local Memory Storage
 config :swoosh, local: false
 
+# HTTPS obligatoire en production.
+#
+# `force_ssl` redirige le trafic en clair et pose un Strict-Transport-Security
+# d'un an. `rewrite_on` fait confiance aux en-tetes du reverse proxy : sans lui,
+# l'application se croit en HTTP derriere un terminateur TLS et redirige en
+# boucle.
+config :smovie, SmovieWeb.Endpoint,
+  force_ssl: [
+    hsts: true,
+    max_age: 31_536_000,
+    rewrite_on: [:x_forwarded_proto, :x_forwarded_host, :x_forwarded_port]
+  ]
+
 # Do not print debug messages in production
 config :logger, level: :info
 
