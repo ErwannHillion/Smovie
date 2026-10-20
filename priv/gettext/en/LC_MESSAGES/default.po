@@ -266,6 +266,7 @@ msgstr[1] "%{count} ratings"
 #: lib/smovie_web/components/work_components.ex:161
 #: lib/smovie_web/components/work_components.ex:171
 #: lib/smovie_web/components/work_components.ex:209
+#: lib/smovie_web/live/work_live/season.ex:199
 #, elixir-autogen, elixir-format
 msgid "%{stars} sur 5"
 msgstr "%{stars} out of 5"
@@ -439,12 +440,13 @@ msgstr "Visibility saved."
 msgid "Visibilite par defaut d'une nouvelle review"
 msgstr "Default visibility for new reviews"
 
-#: lib/smovie_web/live/work_live/season.ex:109
+#: lib/smovie_web/live/work_live/season.ex:216
 #: lib/smovie_web/live/work_live/show.ex:288
 #, elixir-autogen, elixir-format
 msgid "%{count} min"
 msgstr "%{count} min"
 
+#: lib/smovie_web/live/work_live/season.ex:89
 #: lib/smovie_web/live/work_live/show.ex:81
 #, elixir-autogen, elixir-format
 msgid "Connectez-vous pour noter et suivre vos films."
@@ -465,6 +467,7 @@ msgstr "Cast"
 msgid "J'aime"
 msgstr "Like"
 
+#: lib/smovie_web/live/work_live/season.ex:150
 #: lib/smovie_web/live/work_live/show.ex:190
 #, elixir-autogen, elixir-format
 msgid "Marquer vu"
@@ -480,7 +483,7 @@ msgstr "Watched"
 msgid "de"
 msgstr "by"
 
-#: lib/smovie_web/live/work_live/season.ex:67
+#: lib/smovie_web/live/work_live/season.ex:127
 #: lib/smovie_web/live/work_live/show.ex:306
 #, elixir-autogen, elixir-format
 msgid "%{count} episode"
@@ -488,13 +491,13 @@ msgid_plural "%{count} episodes"
 msgstr[0] "%{count} episode"
 msgstr[1] "%{count} episodes"
 
-#: lib/smovie_web/live/work_live/season.ex:67
+#: lib/smovie_web/live/work_live/season.ex:127
 #: lib/smovie_web/live/work_live/show.ex:307
 #, elixir-autogen, elixir-format
 msgid "%{watched} vus"
 msgstr "%{watched} watched"
 
-#: lib/smovie_web/live/work_live/season.ex:94
+#: lib/smovie_web/live/work_live/season.ex:175
 #, elixir-autogen, elixir-format
 msgid "Les episodes de cette saison ne sont pas encore disponibles."
 msgstr "The episodes of this season are not available yet."
@@ -503,3 +506,8 @@ msgstr "The episodes of this season are not available yet."
 #, elixir-autogen, elixir-format
 msgid "Saisons"
 msgstr "Seasons"
+
+#: lib/smovie_web/live/work_live/season.ex:171
+#, elixir-autogen, elixir-format
+msgid "Marquer toute la saison comme vue"
+msgstr "Mark the whole season as watched"
