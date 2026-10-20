@@ -38,6 +38,7 @@ defmodule SmovieWeb.HomeLive do
       locale={@locale}
       current_path={@current_path}
       unread_count={@unread_count}
+      unread_messages={@unread_messages}
       full_bleed
     >
       <.hero :if={@headline} work={@headline} />

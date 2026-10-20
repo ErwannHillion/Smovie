@@ -9,6 +9,7 @@ defmodule SmovieWeb.MessagingLive.Show do
   use SmovieWeb, :live_view
 
   alias Smovie.Messaging
+  alias SmovieWeb.Presence
 
   @impl true
   def mount(%{"id" => id}, _session, %{assigns: %{current_scope: scope}} = socket) do
@@ -16,6 +17,8 @@ defmodule SmovieWeb.MessagingLive.Show do
       {:ok, conversation} ->
         if connected?(socket) do
           Phoenix.PubSub.subscribe(Smovie.PubSub, Messaging.topic(conversation))
+          Phoenix.PubSub.subscribe(Smovie.PubSub, Presence.conversation_topic(conversation.id))
+          Presence.track_conversation(self(), conversation.id, scope.user)
         end
 
         Messaging.mark_read(scope, conversation)
@@ -24,6 +27,7 @@ defmodule SmovieWeb.MessagingLive.Show do
          socket
          |> assign(conversation: conversation, page_title: Messaging.title(conversation, scope))
          |> assign(admin?: Messaging.admin?(scope, conversation))
+         |> assign(typing: [])
          |> stream(:messages, Messaging.list_messages(conversation))}
 
       {:error, reason} ->
@@ -41,6 +45,24 @@ defmodule SmovieWeb.MessagingLive.Show do
       {:ok, _message} -> {:noreply, socket}
       {:error, reason} -> {:noreply, put_flash(socket, :error, error_label(reason))}
     end
+  end
+
+  # La frappe s'eteint apres trois secondes d'inactivite : sans minuterie, un
+  # indicateur reste allume indefiniment des qu'on abandonne un message.
+  def handle_event("typing", _params, %{assigns: %{current_scope: nil}} = socket) do
+    {:noreply, socket}
+  end
+
+  def handle_event(
+        "typing",
+        _params,
+        %{assigns: %{conversation: conversation, current_scope: scope}} = socket
+      ) do
+    Presence.set_typing(self(), conversation.id, scope.user, true)
+
+    if timer = socket.assigns[:typing_timer], do: Process.cancel_timer(timer)
+
+    {:noreply, assign(socket, typing_timer: Process.send_after(self(), :stop_typing, 3_000))}
   end
 
   def handle_event(
@@ -70,6 +92,22 @@ defmodule SmovieWeb.MessagingLive.Show do
     {:noreply, stream_insert(socket, :messages, message)}
   end
 
+  def handle_info(
+        %{event: "presence_diff"},
+        %{assigns: %{conversation: conversation, current_scope: scope}} = socket
+      ) do
+    {:noreply, assign(socket, typing: Presence.typing_names(conversation.id, scope.user))}
+  end
+
+  def handle_info(
+        :stop_typing,
+        %{assigns: %{conversation: conversation, current_scope: scope}} = socket
+      ) do
+    Presence.set_typing(self(), conversation.id, scope.user, false)
+
+    {:noreply, assign(socket, typing_timer: nil)}
+  end
+
   def handle_info(_message, socket), do: {:noreply, socket}
 
   defp error_label(:review_not_visible_to_all),
@@ -88,6 +126,7 @@ defmodule SmovieWeb.MessagingLive.Show do
       locale={@locale}
       current_path={@current_path}
       unread_count={@unread_count}
+      unread_messages={@unread_messages}
     >
       <header class="border-base-300 flex items-center gap-3 border-b py-3">
         <.link navigate={~p"/messages"} class="text-base-content/50 hover:text-base-content">
@@ -134,11 +173,19 @@ defmodule SmovieWeb.MessagingLive.Show do
         </div>
       </div>
 
+      <p
+        :if={@typing != []}
+        class="text-base-content/50 flex items-center gap-2 px-1 pb-1 font-mono text-[0.65rem]"
+      >
+        {typing_label(@typing)}
+      </p>
+
       <.form
         for={%{}}
         as={:message}
         id="composer"
         phx-submit="send"
+        phx-change="typing"
         class="bg-base-100 border-base-300 sticky bottom-0 flex items-center gap-2 border-t py-3"
       >
         <input
@@ -250,6 +297,14 @@ defmodule SmovieWeb.MessagingLive.Show do
     </p>
     """
   end
+
+  # Au-dela de deux noms, les enumerer prend plus de place que le fil.
+  defp typing_label([name]), do: gettext("%{member} ecrit…", member: name)
+
+  defp typing_label([first, second]),
+    do: gettext("%{first} et %{second} ecrivent…", first: first, second: second)
+
+  defp typing_label(names), do: gettext("%{count} personnes ecrivent…", count: length(names))
 
   defp mine?(%{sender_id: sender_id}, %{user: %{id: id}}), do: sender_id == id
   defp mine?(_message, _scope), do: false

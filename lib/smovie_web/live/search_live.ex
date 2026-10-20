@@ -58,6 +58,7 @@ defmodule SmovieWeb.SearchLive do
       locale={@locale}
       current_path={@current_path}
       unread_count={@unread_count}
+      unread_messages={@unread_messages}
     >
       <form id="search-form" phx-change="search" phx-submit="search" class="py-4">
         <label class="sr-only" for="search-input">{gettext("Rechercher")}</label>

@@ -9,25 +9,35 @@ defmodule SmovieWeb.Hooks.Unread do
   import Phoenix.Component, only: [assign: 3]
   import Phoenix.LiveView, only: [attach_hook: 4, connected?: 1]
 
+  alias Smovie.Messaging
   alias Smovie.Social
 
   def on_mount(:default, _params, _session, socket) do
-    socket = assign(socket, :unread_count, Social.unread_count(socket.assigns[:current_scope]))
+    scope = socket.assigns[:current_scope]
+    socket = assign_counts(socket, scope)
 
-    if connected?(socket), do: subscribe(socket.assigns[:current_scope])
+    if connected?(socket), do: subscribe(socket, scope)
 
     {:cont, attach_hook(socket, :unread, :handle_info, &refresh/2)}
   end
 
-  defp subscribe(nil), do: :ok
+  defp subscribe(_socket, nil), do: :ok
 
-  defp subscribe(scope) do
+  defp subscribe(socket, scope) do
     Phoenix.PubSub.subscribe(Smovie.PubSub, Social.inbox_topic(scope.user.id))
+    SmovieWeb.Presence.track_online(self(), scope.user)
+    socket
   end
 
   defp refresh(:unread_changed, socket) do
-    {:halt, assign(socket, :unread_count, Social.unread_count(socket.assigns[:current_scope]))}
+    {:halt, assign_counts(socket, socket.assigns[:current_scope])}
   end
 
   defp refresh(_message, socket), do: {:cont, socket}
+
+  defp assign_counts(socket, scope) do
+    socket
+    |> assign(:unread_count, Social.unread_count(scope))
+    |> assign(:unread_messages, Messaging.unread_count(scope))
+  end
 end

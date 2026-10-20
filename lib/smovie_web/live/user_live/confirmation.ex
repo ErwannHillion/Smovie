@@ -11,6 +11,7 @@ defmodule SmovieWeb.UserLive.Confirmation do
       locale={@locale}
       current_path={@current_path}
       unread_count={@unread_count}
+      unread_messages={@unread_messages}
     >
       <div class="mx-auto max-w-sm">
         <.header class="text-center">Welcome {@user.email}</.header>

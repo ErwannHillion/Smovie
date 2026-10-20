@@ -41,6 +41,7 @@ defmodule SmovieWeb.Layouts do
   attr :locale, :string, default: nil
   attr :current_path, :string, default: "/"
   attr :unread_count, :integer, default: 0
+  attr :unread_messages, :integer, default: 0
   attr :full_bleed, :boolean, default: false, doc: "colle le contenu aux bords (heros)"
   slot :inner_block, required: true
 
@@ -62,7 +63,11 @@ defmodule SmovieWeb.Layouts do
       {render_slot(@inner_block)}
     </main>
 
-    <.bottom_nav current_scope={@current_scope} current_path={@current_path} />
+    <.bottom_nav
+      current_scope={@current_scope}
+      current_path={@current_path}
+      unread_messages={@unread_messages}
+    />
     <.flash_group flash={@flash} />
     """
   end
@@ -171,6 +176,7 @@ defmodule SmovieWeb.Layouts do
   """
   attr :current_scope, :map, default: nil
   attr :current_path, :string, default: "/"
+  attr :unread_messages, :integer, default: 0
 
   def bottom_nav(assigns) do
     ~H"""
@@ -185,7 +191,16 @@ defmodule SmovieWeb.Layouts do
           !active?(@current_path, path) && "text-base-content/40"
         ]}
       >
-        <.icon name={icon} class={icon_class(active?(@current_path, path))} />
+        <span class="relative">
+          <.icon name={icon} class={icon_class(active?(@current_path, path))} />
+          <span
+            :if={path == "/messages" and @unread_messages > 0}
+            data-role="messages-badge"
+            class="bg-heat border-base-100 absolute -top-1 -right-2 grid min-w-4 place-items-center rounded-full border-2 px-1 font-mono text-[0.55rem] font-semibold text-[#2a0613]"
+          >
+            {@unread_messages}
+          </span>
+        </span>
         {label}
       </.link>
     </nav>

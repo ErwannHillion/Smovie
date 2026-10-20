@@ -18,6 +18,7 @@ defmodule Smovie.Application do
       # synchronisation s'en servent des leur premiere execution.
       {Cachex, name: :smovie_http_cache},
       {Oban, Config.oban()},
+      SmovieWeb.Presence,
       # Start to serve requests, typically the last entry
       SmovieWeb.Endpoint
     ]
