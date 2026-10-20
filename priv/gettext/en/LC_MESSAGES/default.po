@@ -354,7 +354,7 @@ msgstr "Your rating"
 
 #: lib/smovie_web/components/layouts.ex:178
 #: lib/smovie_web/live/user_live/settings.ex:79
-#: lib/smovie_web/live/work_live/show.ex:161
+#: lib/smovie_web/live/work_live/show.ex:196
 #, elixir-autogen, elixir-format
 msgid "Watchlist"
 msgstr "Watchlist"
@@ -439,42 +439,67 @@ msgstr "Visibility saved."
 msgid "Visibilite par defaut d'une nouvelle review"
 msgstr "Default visibility for new reviews"
 
-#: lib/smovie_web/live/work_live/show.ex:253
+#: lib/smovie_web/live/work_live/season.ex:109
+#: lib/smovie_web/live/work_live/show.ex:288
 #, elixir-autogen, elixir-format
 msgid "%{count} min"
 msgstr "%{count} min"
 
-#: lib/smovie_web/live/work_live/show.ex:77
+#: lib/smovie_web/live/work_live/show.ex:81
 #, elixir-autogen, elixir-format
 msgid "Connectez-vous pour noter et suivre vos films."
 msgstr "Log in to rate and track your films."
 
-#: lib/smovie_web/live/work_live/show.ex:161
+#: lib/smovie_web/live/work_live/show.ex:196
 #, elixir-autogen, elixir-format
 msgid "Dans la liste"
 msgstr "In your list"
 
-#: lib/smovie_web/live/work_live/show.ex:117
+#: lib/smovie_web/live/work_live/show.ex:152
 #, elixir-autogen, elixir-format
 msgid "Distribution"
 msgstr "Cast"
 
-#: lib/smovie_web/live/work_live/show.ex:168
+#: lib/smovie_web/live/work_live/show.ex:203
 #, elixir-autogen, elixir-format
 msgid "J'aime"
 msgstr "Like"
 
-#: lib/smovie_web/live/work_live/show.ex:155
+#: lib/smovie_web/live/work_live/show.ex:190
 #, elixir-autogen, elixir-format
 msgid "Marquer vu"
 msgstr "Mark watched"
 
-#: lib/smovie_web/live/work_live/show.ex:155
+#: lib/smovie_web/live/work_live/show.ex:190
 #, elixir-autogen, elixir-format
 msgid "Vu"
 msgstr "Watched"
 
-#: lib/smovie_web/live/work_live/show.ex:205
+#: lib/smovie_web/live/work_live/show.ex:240
 #, elixir-autogen, elixir-format
 msgid "de"
 msgstr "by"
+
+#: lib/smovie_web/live/work_live/season.ex:67
+#: lib/smovie_web/live/work_live/show.ex:306
+#, elixir-autogen, elixir-format
+msgid "%{count} episode"
+msgid_plural "%{count} episodes"
+msgstr[0] "%{count} episode"
+msgstr[1] "%{count} episodes"
+
+#: lib/smovie_web/live/work_live/season.ex:67
+#: lib/smovie_web/live/work_live/show.ex:307
+#, elixir-autogen, elixir-format
+msgid "%{watched} vus"
+msgstr "%{watched} watched"
+
+#: lib/smovie_web/live/work_live/season.ex:94
+#, elixir-autogen, elixir-format
+msgid "Les episodes de cette saison ne sont pas encore disponibles."
+msgstr "The episodes of this season are not available yet."
+
+#: lib/smovie_web/live/work_live/show.ex:121
+#, elixir-autogen, elixir-format
+msgid "Saisons"
+msgstr "Seasons"

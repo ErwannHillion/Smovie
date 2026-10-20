@@ -38,6 +38,7 @@ defmodule SmovieWeb.Router do
 
       live "/film/:slug", WorkLive.Show, :movie
       live "/serie/:slug", WorkLive.Show, :tv_show
+      live "/serie/:slug/saison/:number", WorkLive.Season
     end
   end
 
