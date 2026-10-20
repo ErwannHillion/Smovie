@@ -545,6 +545,104 @@ defmodule Smovie.Library do
     |> Repo.one()
   end
 
+  ## Progression dans une serie
+
+  @doc """
+  Progression d'un membre sur une saison : episodes vus sur total.
+
+  Les deux chiffres sont renvoyes ensemble : « 7 vus » seul ne dit rien, et le
+  total seul ne dit pas ou on en est.
+  """
+  def season_progress(%Scope{user: %User{id: user_id}}, %Work{kind: :season, id: season_id}) do
+    total =
+      Repo.aggregate(
+        from(w in Work, where: w.parent_id == ^season_id and w.kind == :episode),
+        :count
+      )
+
+    watched =
+      from(e in WatchEntry,
+        join: w in Work,
+        on: w.id == e.work_id,
+        where: e.user_id == ^user_id and w.parent_id == ^season_id and w.kind == :episode,
+        select: count(e.work_id, :distinct)
+      )
+      |> Repo.one()
+
+    %{watched: watched, total: total}
+  end
+
+  def season_progress(nil, %Work{kind: :season, id: season_id}) do
+    total =
+      Repo.aggregate(
+        from(w in Work, where: w.parent_id == ^season_id and w.kind == :episode),
+        :count
+      )
+
+    %{watched: 0, total: total}
+  end
+
+  @doc """
+  Progression sur plusieurs saisons, indexee par identifiant de saison.
+
+  Une requete pour toute la serie plutot qu'une par saison.
+  """
+  def season_progress_by_id(%Scope{user: %User{id: user_id}}, seasons) when is_list(seasons) do
+    ids = Enum.map(seasons, & &1.id)
+
+    totals =
+      from(w in Work,
+        where: w.parent_id in ^ids and w.kind == :episode,
+        group_by: w.parent_id,
+        select: {w.parent_id, count(w.id)}
+      )
+      |> Repo.all()
+      |> Map.new()
+
+    watched =
+      from(e in WatchEntry,
+        join: w in Work,
+        on: w.id == e.work_id,
+        where: e.user_id == ^user_id and w.parent_id in ^ids and w.kind == :episode,
+        group_by: w.parent_id,
+        select: {w.parent_id, count(e.work_id, :distinct)}
+      )
+      |> Repo.all()
+      |> Map.new()
+
+    Map.new(ids, fn id ->
+      {id, %{watched: Map.get(watched, id, 0), total: Map.get(totals, id, 0)}}
+    end)
+  end
+
+  def season_progress_by_id(nil, seasons) when is_list(seasons) do
+    ids = Enum.map(seasons, & &1.id)
+
+    totals =
+      from(w in Work,
+        where: w.parent_id in ^ids and w.kind == :episode,
+        group_by: w.parent_id,
+        select: {w.parent_id, count(w.id)}
+      )
+      |> Repo.all()
+      |> Map.new()
+
+    Map.new(ids, &{&1, %{watched: 0, total: Map.get(totals, &1, 0)}})
+  end
+
+  @doc """
+  Progression sur toute une serie.
+  """
+  def show_progress(scope, %Work{kind: :tv_show} = show) do
+    show
+    |> Smovie.Catalog.list_seasons()
+    |> then(&season_progress_by_id(scope, &1))
+    |> Map.values()
+    |> Enum.reduce(%{watched: 0, total: 0}, fn progress, acc ->
+      %{watched: acc.watched + progress.watched, total: acc.total + progress.total}
+    end)
+  end
+
   ## Coups de coeur
 
   @doc """

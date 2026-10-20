@@ -20,6 +20,7 @@ defmodule Smovie.Catalog do
   alias Smovie.Config
   alias Smovie.Repo
   alias Smovie.Workers.FetchExternalRatingsWorker
+  alias Smovie.Workers.SyncSeasonsWorker
   alias Smovie.Workers.SyncWorkWorker
 
   ## Lecture
@@ -67,9 +68,20 @@ defmodule Smovie.Catalog do
   @doc """
   Une saison d'une serie, par son numero.
   """
-  def get_season(%Work{kind: :tv_show, id: id}, number) do
+  def get_season(%Work{kind: :tv_show, id: id}, number) when is_integer(number) do
     Repo.get_by(Work, parent_id: id, kind: :season, season_number: number)
   end
+
+  # Le numero vient de l'URL, donc de l'exterieur : un segment illisible doit
+  # donner une absence, pas une exception.
+  def get_season(%Work{kind: :tv_show} = show, number) when is_binary(number) do
+    case Integer.parse(number) do
+      {parsed, ""} -> get_season(show, parsed)
+      _other -> nil
+    end
+  end
+
+  def get_season(%Work{}, _number), do: nil
 
   @doc """
   Sorties recentes, classees par popularite TMDB.
@@ -484,14 +496,16 @@ defmodule Smovie.Catalog do
   """
   def fetch_seasons(%Work{kind: :tv_show} = show) do
     case list_seasons(show) do
-      [] -> import_and_list_seasons(show)
+      [] -> enqueue_seasons(show)
       seasons -> seasons
     end
   end
 
-  defp import_and_list_seasons(show) do
-    Importer.import_all_seasons(show)
-    list_seasons(show)
+  # Importer dans le cycle de requete ferait attendre un appel TMDB par
+  # saison : une serie de dix saisons bloquerait la page dix fois.
+  defp enqueue_seasons(show) do
+    SyncSeasonsWorker.enqueue(show)
+    []
   end
 
   @doc """
