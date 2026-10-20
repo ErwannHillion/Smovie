@@ -16,16 +16,18 @@ defmodule SmovieWeb.HomeLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <main class="mx-auto flex min-h-dvh max-w-2xl flex-col justify-center gap-4 px-4 py-16">
-      <h1 class="text-3xl font-semibold">Smovie</h1>
-      <p class="text-base-content/70">
-        Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watchlist
-        et messagerie.
-      </p>
-      <p class="text-base-content/50 text-sm">
-        Reconstruction en cours. La page d'accueil arrive avec SMOVIE-026.
-      </p>
-    </main>
+    <Layouts.app flash={@flash} current_scope={@current_scope}>
+      <div class="flex flex-col gap-4 py-12">
+        <h1 class="text-3xl font-semibold">Smovie</h1>
+        <p class="text-base-content/70">
+          Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watchlist
+          et messagerie.
+        </p>
+        <p class="text-base-content/50 text-sm">
+          Reconstruction en cours. La page d'accueil arrive avec SMOVIE-026.
+        </p>
+      </div>
+    </Layouts.app>
     """
   end
 end

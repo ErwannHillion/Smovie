@@ -92,10 +92,10 @@ defmodule SmovieWeb.UserLive.Login do
     """
   end
 
-  def mount(_params, _session, socket) do
+  def mount(_params, _session, %{assigns: %{flash: flash} = assigns} = socket) do
     email =
-      Phoenix.Flash.get(socket.assigns.flash, :email) ||
-        get_in(socket.assigns, [:current_scope, Access.key(:user), Access.key(:email)])
+      Phoenix.Flash.get(flash, :email) ||
+        get_in(assigns, [:current_scope, Access.key(:user), Access.key(:email)])
 
     form = to_form(%{"email" => email}, as: "user")
 
