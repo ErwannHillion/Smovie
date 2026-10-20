@@ -85,6 +85,16 @@ defmodule Smovie.Config do
   ## Infrastructure
 
   def dns_cluster_query, do: Application.get_env(@app, :dns_cluster_query) || :ignore
+
+  @doc """
+  Vrai si les messages restent sur la machine au lieu de partir.
+
+  La page de connexion s'en sert pour afficher le lien vers la boite locale :
+  en developpement, le lien de connexion n'arrive dans aucune vraie boite.
+  """
+  def local_mail_adapter?,
+    do: Application.get_env(@app, Smovie.Mailer)[:adapter] == Swoosh.Adapters.Local
+
   def oban, do: Application.fetch_env!(@app, Oban)
 
   defp get(key, subkey), do: Application.get_env(@app, key)[subkey]

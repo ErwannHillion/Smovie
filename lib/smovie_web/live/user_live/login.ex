@@ -135,7 +135,5 @@ defmodule SmovieWeb.UserLive.Login do
      |> push_navigate(to: ~p"/users/log-in")}
   end
 
-  defp local_mail_adapter? do
-    Application.get_env(:smovie, Smovie.Mailer)[:adapter] == Swoosh.Adapters.Local
-  end
+  defdelegate local_mail_adapter?, to: Smovie.Config
 end
