@@ -78,11 +78,10 @@ defmodule SmovieWeb.NavigationTest do
     end
   end
 
-  describe "sections en attente" do
-    test "chaque entree de navigation mene a une page, pas a une 404", %{conn: conn} do
+  describe "destinations de la navigation" do
+    test "chaque entree mene a une page, pas a une 404", %{conn: conn} do
       for path <- ["/reviews", "/recherche", "/watchlist", "/messages"] do
-        {:ok, _lv, html} = live(conn, path)
-        assert html =~ "SMOVIE-"
+        assert {:ok, _lv, _html} = live(conn, path)
       end
     end
   end
