@@ -170,9 +170,9 @@ defmodule Smovie.Accounts do
   defp visibility_of(user, :watchlist), do: user.watchlist_visibility
   defp visibility_of(user, :reviews), do: user.profile_visibility
 
-  # Les abonnements arrivent avec SMOVIE-019. D'ici la personne ne suit
-  # personne : `:followers` se comporte donc exactement comme `:private` pour
-  # les tiers, ce qui est le bon resultat et non un raccourci.
+  # Le reglage « abonnes » s'appuie sur le graphe social : un visiteur non
+  # connecte n'est abonne a personne, et n'a donc acces a rien de reserve.
+  defp follows?(%Scope{} = viewer, %User{} = owner), do: Smovie.Social.following?(viewer, owner)
   defp follows?(_viewer, _owner), do: false
 
   ## Settings

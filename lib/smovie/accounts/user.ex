@@ -21,6 +21,8 @@ defmodule Smovie.Accounts.User do
     # Prevu pour un televersement ulterieur : en attendant, l'avatar est
     # l'initiale du nom affiche sur une couleur derivee de l'identifiant.
     field :avatar_path, :string
+    field :followers_count, :integer, default: 0
+    field :following_count, :integer, default: 0
 
     field :profile_visibility, Visibility, default: :public
     field :watchlist_visibility, Visibility, default: :public
