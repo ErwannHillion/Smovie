@@ -6,6 +6,17 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 
 ## [Unreleased]
 
+### Added — application complète
+- Catalogue films et séries importé de TMDB, jusqu'aux épisodes
+- Notation en demi-étoiles sur toute œuvre, moyenne bayésienne
+- Journal de visionnage, watchlist, coups de cœur
+- Reviews avec likes, commentaires, spoilers et visibilités
+- Abonnements, fil d'activité, notifications en temps réel
+- Tendances en vue matérialisée, page d'accueil, recherche avec repli TMDB
+- Profils avec onglets et statistiques
+- Messagerie privée et de groupe, partage de films et de reviews, présence et frappe
+- Intégration continue, image Docker de production, pages d'erreur habillées
+
 ### Added
 - Table `works` unifiée : films, séries, saisons et épisodes dans un seul modèle,
   avec recherche plein texte et tolérance aux fautes de frappe

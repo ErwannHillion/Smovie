@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  MIX_ENV: test
+
+jobs:
+  nomenclature:
+    name: Nomenclature des commits
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verifie le prefixe SMOVIE-XXX et l absence de reference a une IA
+        run: |
+          base="origin/${{ github.base_ref }}"
+          git fetch --quiet origin "${{ github.base_ref }}"
+          erreurs=0
+
+          while IFS= read -r sujet; do
+            [ -z "$sujet" ] && continue
+
+            if ! printf '%s' "$sujet" | grep -qE '^SMOVIE-[0-9]+ (feat|fix|refacto|test|docs|style|chore|ops|perf)\([a-z-]+\): .+'; then
+              echo "::error::Message hors nomenclature : $sujet"
+              erreurs=1
+            fi
+          done < <(git log --format=%s "$base..HEAD")
+
+          # Les references a un assistant sont interdites dans tout le message,
+          # corps compris : une ligne Co-Authored-By ne passe pas plus qu'un titre.
+          if git log --format='%B' "$base..HEAD" | grep -inE 'claude|copilot|chatgpt|generated with|co-authored-by: *(claude|ai)'; then
+            echo "::error::Reference a un assistant dans un message de commit"
+            erreurs=1
+          fi
+
+          exit $erreurs
+
+  qualite:
+    name: Format, Credo, Sobelow et traductions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-
+
+      - run: mix deps.get
+      # --warnings-as-errors : un avertissement laisse passer devient un
+      # avertissement permanent, que plus personne ne lit.
+      - run: mix compile --warnings-as-errors
+      - run: mix format --check-formatted
+      - run: mix credo --strict
+      - run: mix sobelow --exit
+      - run: mix gettext.extract --check-up-to-date
+
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: smovie_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: erlef/setup-beam@v1
+        with:
+          version-file: .tool-versions
+          version-type: strict
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
+          restore-keys: ${{ runner.os }}-mix-
+
+      - run: mix deps.get
+      - run: mix ecto.create
+      - run: mix ecto.migrate
+      # Le rollback complet verifie que chaque migration sait revenir en
+      # arriere : une migration irreversible ne se decouvre qu'en production.
+      - run: mix ecto.rollback --all
+      - run: mix ecto.migrate
+      - run: mix test
