@@ -13,6 +13,9 @@ defmodule Smovie.Library do
   alias Smovie.Accounts.Scope
   alias Smovie.Accounts.User
   alias Smovie.Catalog.Work
+  alias Smovie.Catalog.Credit
+  alias Smovie.Catalog.Genre
+  alias Smovie.Catalog.Person
   alias Smovie.Catalog.WorkGenre
   alias Smovie.Config
   alias Smovie.Library.Rating
@@ -682,6 +685,75 @@ defmodule Smovie.Library do
   end
 
   def liked?(nil, %Work{}), do: false
+
+  @doc """
+  Genres favoris d'un membre, parmi ce qu'il a bien note.
+
+  Le seuil de 3,5 etoiles est volontaire : compter tous les genres vus
+  decrirait ce qu'on regarde, pas ce qu'on aime — et les deux different
+  souvent.
+  """
+  def favourite_genres(%User{id: user_id}, opts \\ []) do
+    limit = Keyword.get(opts, :limit, 5)
+
+    Repo.all(
+      from g in Genre,
+        join: wg in WorkGenre,
+        on: wg.genre_id == g.id,
+        join: r in Rating,
+        on: r.work_id == wg.work_id,
+        where: r.user_id == ^user_id and r.value >= 7,
+        group_by: g.id,
+        order_by: [desc: count(r.id)],
+        limit: ^limit,
+        select: {g.name, count(r.id)}
+    )
+  end
+
+  @doc """
+  Realisateurs favoris d'un membre.
+
+  Seuil plus eleve que pour les genres — quatre etoiles : on peut aimer un
+  genre par habitude, on ne cite un realisateur que pour ses reussites.
+  """
+  def favourite_directors(%User{id: user_id}, opts \\ []) do
+    limit = Keyword.get(opts, :limit, 5)
+
+    Repo.all(
+      from p in Person,
+        join: c in Credit,
+        on: c.person_id == p.id,
+        join: r in Rating,
+        on: r.work_id == c.work_id,
+        where: c.kind == :crew and c.job == "Director",
+        where: r.user_id == ^user_id and r.value >= 8,
+        group_by: p.id,
+        order_by: [desc: count(r.id)],
+        limit: ^limit,
+        select: {p.name, count(r.id)}
+    )
+  end
+
+  @doc """
+  Note moyenne donnee par un membre, en demi-etoiles.
+  """
+  def average_rating(%User{id: user_id}) do
+    case Repo.one(from r in Rating, where: r.user_id == ^user_id, select: avg(r.value)) do
+      nil -> nil
+      average -> Decimal.to_float(Decimal.round(average, 2))
+    end
+  end
+
+  @doc """
+  Nombre d'oeuvres revues au moins une fois.
+  """
+  def rewatch_count(%User{id: user_id}) do
+    from(e in WatchEntry,
+      where: e.user_id == ^user_id and e.rewatch == true,
+      select: count(e.work_id, :distinct)
+    )
+    |> Repo.one()
+  end
 
   @doc """
   Sujet PubSub des notes d'une oeuvre.

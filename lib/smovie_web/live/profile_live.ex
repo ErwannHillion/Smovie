@@ -13,7 +13,7 @@ defmodule SmovieWeb.ProfileLive do
   alias Smovie.Reviews
   alias Smovie.Social
 
-  @tabs ~w(apercu films series reviews)
+  @tabs ~w(apercu films series reviews stats)
 
   @impl true
   def mount(%{"username" => username}, _session, socket) do
@@ -49,8 +49,26 @@ defmodule SmovieWeb.ProfileLive do
       series: if(tab == "series", do: Library.list_watched_works(user, kind: :tv_show), else: []),
       reviews: if(tab == "reviews", do: Reviews.list_by_user(scope, user), else: []),
       activity: if(tab == "apercu", do: Social.list_user_activity(user, limit: 10), else: []),
-      stats: if(tab == "apercu", do: profile_stats(user), else: nil)
+      stats: if(tab == "apercu", do: profile_stats(user), else: nil),
+      detailed_stats: if(tab == "stats", do: detailed_stats(user), else: nil)
     )
+  end
+
+  defp detailed_stats(user) do
+    histogram = Library.rating_histogram(user)
+
+    %{
+      histogram: histogram,
+      # Sur un histogramme, l'echelle vient du cran le plus haut : sans lui,
+      # toutes les barres seraient a la meme hauteur ou invisibles.
+      peak: histogram |> Map.values() |> Enum.max(fn -> 0 end),
+      total: histogram |> Map.values() |> Enum.sum(),
+      average: Library.average_rating(user),
+      genres: Library.favourite_genres(user),
+      directors: Library.favourite_directors(user),
+      hours: div(Library.watched_minutes(user), 60),
+      rewatches: Library.rewatch_count(user)
+    }
   end
 
   defp profile_stats(user) do
@@ -229,6 +247,55 @@ defmodule SmovieWeb.ProfileLive do
           </p>
         </div>
 
+        <div :if={@tab == "stats"} class="flex flex-col gap-8 py-6">
+          <section :if={@detailed_stats.total > 0}>
+            <h2 class="text-base-content/70 font-mono text-[0.65rem] font-medium tracking-[0.15em] uppercase">
+              {gettext("Repartition de vos notes")}
+              <span :if={@detailed_stats.average} class="text-base-content/40 normal-case">
+                · {gettext("moyenne %{value}", value: format_average(@detailed_stats.average))}
+              </span>
+            </h2>
+            <div class="mt-3 flex h-28 max-w-lg items-end gap-1.5">
+              <div
+                :for={{half, count} <- Enum.sort(@detailed_stats.histogram)}
+                class="flex flex-1 flex-col items-center gap-1.5"
+                title={gettext("%{count} notes", count: count)}
+              >
+                <span
+                  class="from-smovie to-smovie/30 w-full rounded-t bg-gradient-to-b"
+                  style={"height: #{bar_height(count, @detailed_stats.peak)}px"}
+                ></span>
+                <span class="text-base-content/40 font-mono text-[0.55rem]">
+                  {format_stars(half)}
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <section :if={@detailed_stats.genres != []} class="max-w-lg">
+            <h2 class="text-base-content/70 font-mono text-[0.65rem] font-medium tracking-[0.15em] uppercase">
+              {gettext("Genres preferes")}
+            </h2>
+            <.bar_list rows={@detailed_stats.genres} />
+          </section>
+
+          <section :if={@detailed_stats.directors != []} class="max-w-lg">
+            <h2 class="text-base-content/70 font-mono text-[0.65rem] font-medium tracking-[0.15em] uppercase">
+              {gettext("Realisateurs preferes")}
+            </h2>
+            <.bar_list rows={@detailed_stats.directors} />
+          </section>
+
+          <div class="bg-base-300 grid grid-cols-2 gap-px overflow-hidden rounded-xl md:max-w-sm">
+            <.stat value={@detailed_stats.hours} label={gettext("Heures")} />
+            <.stat value={@detailed_stats.rewatches} label={gettext("Revus")} />
+          </div>
+
+          <p :if={@detailed_stats.total == 0} class="text-base-content/50 text-sm">
+            {gettext("Notez quelques oeuvres pour voir apparaitre vos statistiques.")}
+          </p>
+        </div>
+
         <div :if={@tab == "reviews"} class="grid gap-4 py-6 md:grid-cols-2 xl:grid-cols-3">
           <.review_card
             :for={review <- @reviews}
@@ -259,12 +326,46 @@ defmodule SmovieWeb.ProfileLive do
     """
   end
 
+  attr :rows, :list, required: true
+
+  defp bar_list(assigns) do
+    assigns =
+      assign(assigns, :peak, assigns.rows |> Enum.map(&elem(&1, 1)) |> Enum.max(fn -> 1 end))
+
+    ~H"""
+    <ul class="mt-3 flex flex-col gap-2">
+      <li :for={{label, count} <- @rows} class="flex items-center gap-3 text-sm">
+        <span class="w-36 shrink-0 truncate">{label}</span>
+        <span class="bg-base-300 h-1.5 flex-1 overflow-hidden rounded-full">
+          <span class="bg-press block h-full" style={"width: #{percent(count, @peak)}%"}></span>
+        </span>
+        <span class="text-base-content/50 w-7 shrink-0 text-right font-mono text-xs tabular-nums">
+          {count}
+        </span>
+      </li>
+    </ul>
+    """
+  end
+
+  defp percent(_count, 0), do: 0
+  defp percent(count, peak), do: round(count / peak * 100)
+
+  # Hauteur minimale de 2 px : un cran a une seule note doit rester visible,
+  # sinon l'histogramme ment par omission.
+  defp bar_height(_count, 0), do: 2
+  defp bar_height(count, peak), do: max(2, round(count / peak * 88))
+
+  defp format_average(value) do
+    value |> Kernel./(2) |> :erlang.float_to_binary(decimals: 1) |> String.replace(".", ",")
+  end
+
   defp tabs do
     [
       {"apercu", gettext("Apercu")},
       {"films", gettext("Films")},
       {"series", gettext("Series")},
-      {"reviews", gettext("Reviews")}
+      {"reviews", gettext("Reviews")},
+      {"stats", gettext("Stats")}
     ]
   end
 
