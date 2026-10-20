@@ -44,9 +44,7 @@ defmodule Smovie.Repo.Migrations.AddProfileFieldsToUsers do
     create unique_index(:users, [:username])
     create index(:users, [:display_name])
 
-    create constraint(:users, :users_username_format,
-             check: "username ~ '^[a-z0-9_]{3,30}$'"
-           )
+    create constraint(:users, :users_username_format, check: "username ~ '^[a-z0-9_]{3,30}$'")
   end
 
   def down do
