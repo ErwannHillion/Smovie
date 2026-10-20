@@ -30,6 +30,8 @@ defmodule Smovie.Reviews.Review do
 
     belongs_to :user, Smovie.Accounts.User
     belongs_to :work, Smovie.Catalog.Work
+    has_many :comments, Smovie.Reviews.ReviewComment
+    has_many :likes, Smovie.Reviews.ReviewLike
 
     timestamps(type: :utc_datetime)
   end
