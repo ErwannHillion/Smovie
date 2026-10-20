@@ -1,55 +1,26 @@
 import Config
 
-# env vars
+# Valeurs par defaut pour que `mix` tourne sur un poste neuf, sans fichier .env.
+# Les surcharges passent par l'environnement, ou par le docker-compose du depot.
+#
+# Rien ici ne doit etre lu par le code applicatif : la configuration se lit via
+# `Smovie.Config` (check .credo/no_direct_application_get_env.ex).
 
-env_db_user =
-  System.get_env("POSTGRES_USR") ||
-    raise """
-    environment variable POSTGRES_USR is missing.
-    """
-
-env_db_passwd =
-  System.get_env("POSTGRES_PASSWD") ||
-    raise """
-    environment variable POSTGRES_PASSWD is missing.
-    """
-
-env_db_hostname =
-  System.get_env("POSTGRES_HOSTNAME") ||
-    raise """
-    environment variable POSTGRES_HOSTNAME is missing.
-    Example: localhost
-    """
-
-env_db_dbname =
-  System.get_env("POSTGRES_DBNAME") ||
-    raise """
-    environment variable POSTGRES_DBNAME is missing.
-    Example: ig_intranet_dev
-    """
-
-env_db_pool_size =
-  System.get_env("POSTGRES_POOL_SIZE") ||
-    raise """
-    environment variable POSTGRES_POOL_SIZE is missing.
-    Example: 1
-    """
-
-env_secret_key_base =
-  System.get_env("SECRET_KEY_BASE") ||
-    raise """
-    environment variable SECRET_KEY_BASE is missing.
-    """
+db_username = System.get_env("POSTGRES_USR", "postgres")
+db_password = System.get_env("POSTGRES_PASSWD", "postgres")
+db_hostname = System.get_env("POSTGRES_HOSTNAME", "localhost")
+db_database = System.get_env("POSTGRES_DBNAME", "smovie_dev")
+db_pool_size = String.to_integer(System.get_env("POSTGRES_POOL_SIZE", "10"))
 
 # Configure your database
 config :smovie, Smovie.Repo,
-  username: env_db_user,
-  password: env_db_passwd,
-  database: env_db_dbname,
-  hostname: env_db_hostname,
+  username: db_username,
+  password: db_password,
+  database: db_database,
+  hostname: db_hostname,
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
-  pool_size: String.to_integer(env_db_pool_size)
+  pool_size: db_pool_size
 
 # For development, we disable any cache and enable
 # debugging and code reloading.

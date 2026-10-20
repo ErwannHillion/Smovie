@@ -1,5 +1,42 @@
 import Config
 
+# -----------------------------------------------------------------------------
+# Toutes les variables d'environnement se lisent ICI, et nulle part ailleurs.
+# Le code applicatif passe par `Smovie.Config`.
+# -----------------------------------------------------------------------------
+
+# --- TMDB : catalogue et images. Obligatoire. ---
+config :smovie, :tmdb,
+  api_key: System.get_env("TMDB_API_KEY"),
+  base_url: System.get_env("TMDB_BASE_URL", "https://api.themoviedb.org/3"),
+  image_base_url: System.get_env("TMDB_IMAGE_BASE_URL", "https://image.tmdb.org/t/p"),
+  language: System.get_env("TMDB_LANGUAGE", "fr-FR"),
+  region: System.get_env("TMDB_REGION", "FR")
+
+# --- OMDb : notes presse. Optionnel, coupable sans redeploiement. ---
+config :smovie, :omdb,
+  api_key: System.get_env("OMDB_API_KEY"),
+  base_url: System.get_env("OMDB_BASE_URL", "https://www.omdbapi.com"),
+  enabled: System.get_env("OMDB_IS_ACTIVE", "false") == "true",
+  daily_quota: String.to_integer(System.get_env("OMDB_DAILY_QUOTA", "1000"))
+
+# --- Classements et notation ---
+config :smovie, :trending,
+  window_days: String.to_integer(System.get_env("TRENDING_WINDOW_DAYS", "7")),
+  min_votes: String.to_integer(System.get_env("TRENDING_MIN_VOTES", "3"))
+
+config :smovie, :ratings,
+  prior_votes: String.to_integer(System.get_env("RATINGS_PRIOR_VOTES", "20"))
+
+config :smovie, :reviews,
+  popular_limit: String.to_integer(System.get_env("POPULAR_REVIEWS_LIMIT", "5")),
+  min_body_length: String.to_integer(System.get_env("REVIEWS_MIN_BODY_LENGTH", "80"))
+
+# --- Langues ---
+config :smovie, :i18n,
+  default_locale: System.get_env("DEFAULT_LOCALE", "fr"),
+  locales: String.split(System.get_env("LOCALES", "fr,en"), ",", trim: true)
+
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
 # system starts, so it is typically used to load production configuration

@@ -1,10 +1,25 @@
 services:
   database:
-    image: postgres:latest
+    # Image epinglee sur une version majeure : `postgres:latest` casse a chaque
+    # bump majeur, PostgreSQL refusant de demarrer sur un repertoire de donnees
+    # plus ancien.
+    image: postgres:17
     environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWD}
-      - POSTGRES_USER=${POSTGRES_USR}
+      - POSTGRES_USER=${POSTGRES_USR:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWD:-postgres}
+      - POSTGRES_DB=${POSTGRES_DBNAME:-smovie_dev}
     ports:
       - 5432:5432
     volumes:
-      - ./db:/var/lib/postgresql/data
+      # Volume nomme, et non ./db : un cluster PostgreSQL dans l'arbre source
+      # se retrouve dans les recherches, les sauvegardes et les outils de build,
+      # et son .gitignore ne protege que du commit.
+      - smovie_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USR:-postgres}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  smovie_pgdata:
