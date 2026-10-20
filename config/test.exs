@@ -27,9 +27,10 @@ config :smovie, SmovieWeb.Endpoint,
 # explicitement par `Oban.Testing`.
 config :smovie, Oban, testing: :manual
 
-# Les doublures Mox des clients externes sont declarees avec leurs
-# comportements : TMDB en SMOVIE-009, OMDb en SMOVIE-012. Aucun test ne doit
-# sortir sur le reseau.
+# Les clients externes passent par des doublures Mox : aucun test ne sort sur
+# le reseau. La cle est renseignee pour que le client ne court-circuite pas sur
+# :missing_api_key avant meme d'appeler la doublure.
+config :smovie, :tmdb, impl: Smovie.External.TMDBMock, api_key: "cle-de-test"
 
 # In test we don't send emails
 config :smovie, Smovie.Mailer, adapter: Swoosh.Adapters.Test
