@@ -25,7 +25,38 @@ defmodule Smovie.TMDBPayloads do
         "popularity" => 182.456,
         "vote_average" => 8.157,
         "vote_count" => 4821,
-        "external_ids" => %{"imdb_id" => "tt15239678"}
+        "external_ids" => %{"imdb_id" => "tt15239678"},
+        "genres" => [
+          %{"id" => 878, "name" => "Science-Fiction"},
+          %{"id" => 12, "name" => "Aventure"}
+        ],
+        "credits" => %{
+          "cast" => [
+            %{
+              "id" => 1_190_668,
+              "name" => "Timothée Chalamet",
+              "character" => "Paul Atreides",
+              "order" => 0,
+              "profile_path" => "/tc.jpg"
+            },
+            %{"id" => 505_710, "name" => "Zendaya", "character" => "Chani", "order" => 1}
+          ],
+          "crew" => [
+            %{
+              "id" => 137_427,
+              "name" => "Denis Villeneuve",
+              "job" => "Director",
+              "department" => "Directing"
+            },
+            %{
+              "id" => 9_545,
+              "name" => "Jon Spaihts",
+              "job" => "Screenplay",
+              "department" => "Writing"
+            },
+            %{"id" => 1, "name" => "Quelqu un", "job" => "Assistant Grip", "department" => "Crew"}
+          ]
+        }
       },
       overrides
     )

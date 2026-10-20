@@ -9,9 +9,13 @@ defmodule Smovie.Catalog do
 
   import Ecto.Query, warn: false
 
+  alias Smovie.Catalog.Credit
+  alias Smovie.Catalog.Genre
+  alias Smovie.Catalog.Person
   alias Smovie.Catalog.Slug
   alias Smovie.Catalog.Sync.Importer
   alias Smovie.Catalog.Work
+  alias Smovie.Catalog.WorkGenre
   alias Smovie.Config
   alias Smovie.Repo
   alias Smovie.Workers.SyncWorkWorker
@@ -237,6 +241,144 @@ defmodule Smovie.Catalog do
   end
 
   defp sync_window_days(%Work{}), do: 7
+
+  ## Genres, personnes et casting
+
+  @doc """
+  Cree ou met a jour des genres, et renvoie leurs enregistrements.
+  """
+  def upsert_genres(genre_attrs) when is_list(genre_attrs) do
+    Enum.flat_map(genre_attrs, fn attrs ->
+      case %Genre{} |> Genre.changeset(attrs) |> upsert_genre() do
+        {:ok, genre} -> [genre]
+        {:error, _changeset} -> []
+      end
+    end)
+  end
+
+  defp upsert_genre(changeset) do
+    Repo.insert(changeset,
+      on_conflict: {:replace, [:name, :slug, :updated_at]},
+      conflict_target: :tmdb_id,
+      returning: true
+    )
+  end
+
+  @doc """
+  Rattache une oeuvre a un ensemble de genres, en remplacant les precedents.
+
+  Remplacement et non ajout : un genre retire chez TMDB doit disparaitre ici,
+  sinon la fiche accumule des etiquettes que plus personne ne corrige.
+  """
+  def put_work_genres(%Work{id: work_id}, genres) when is_list(genres) do
+    Repo.transaction(fn ->
+      Repo.delete_all(from wg in WorkGenre, where: wg.work_id == ^work_id)
+
+      entries = Enum.map(genres, &%{work_id: work_id, genre_id: &1.id})
+      Repo.insert_all(WorkGenre, entries, on_conflict: :nothing)
+
+      length(entries)
+    end)
+  end
+
+  @doc """
+  Genres d'une oeuvre, par ordre alphabetique.
+  """
+  def list_work_genres(%Work{id: work_id}) do
+    Repo.all(
+      from g in Genre,
+        join: wg in WorkGenre,
+        on: wg.genre_id == g.id,
+        where: wg.work_id == ^work_id,
+        order_by: g.name
+    )
+  end
+
+  @doc """
+  Cree ou met a jour une personne.
+  """
+  def upsert_person(attrs) do
+    %Person{}
+    |> Person.changeset(attrs)
+    |> Repo.insert(
+      on_conflict: {:replace, [:name, :profile_path, :known_for_department, :updated_at]},
+      conflict_target: :tmdb_id,
+      returning: true
+    )
+  end
+
+  @doc """
+  Remplace les participations d'une oeuvre.
+
+  Remplacement plutot qu'ajout, pour la meme raison que les genres : un acteur
+  retire d'un generique doit disparaitre de la fiche.
+  """
+  def put_work_credits(%Work{id: work_id}, credit_attrs) when is_list(credit_attrs) do
+    Repo.transaction(fn ->
+      Repo.delete_all(from c in Credit, where: c.work_id == ^work_id)
+
+      credit_attrs
+      |> Enum.map(&insert_credit(&1, work_id))
+      |> Enum.count(&match?({:ok, _credit}, &1))
+    end)
+  end
+
+  defp insert_credit(%{person: person_attrs} = attrs, work_id) do
+    case upsert_person(person_attrs) do
+      {:ok, person} ->
+        attrs
+        |> Map.drop([:person])
+        |> Map.merge(%{work_id: work_id, person_id: person.id})
+        |> then(&Credit.changeset(%Credit{}, &1))
+        |> Repo.insert(on_conflict: :nothing)
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  @doc """
+  Interpretes d'une oeuvre, dans l'ordre du generique.
+  """
+  def list_cast(%Work{id: work_id}, opts \\ []) do
+    limit = Keyword.get(opts, :limit, 12)
+
+    Repo.all(
+      from c in Credit,
+        where: c.work_id == ^work_id and c.kind == :cast,
+        order_by: [asc_nulls_last: c.display_order],
+        limit: ^limit,
+        preload: [:person]
+    )
+  end
+
+  @doc """
+  Equipe technique d'une oeuvre.
+  """
+  def list_crew(%Work{id: work_id}) do
+    Repo.all(
+      from c in Credit,
+        where: c.work_id == ^work_id and c.kind == :crew,
+        order_by: [asc: c.job],
+        preload: [:person]
+    )
+  end
+
+  @doc """
+  Realisateurs d'une oeuvre.
+
+  Une oeuvre peut en avoir plusieurs — les Wachowski, les Coen, les Daniels —
+  et n'en afficher qu'un serait faux.
+  """
+  def list_directors(%Work{id: work_id}) do
+    Repo.all(
+      from c in Credit,
+        join: p in assoc(c, :person),
+        where: c.work_id == ^work_id and c.kind == :crew and c.job == "Director",
+        order_by: p.name,
+        select: p
+    )
+  end
 
   @doc """
   Recupere une oeuvre par slug, en l'important de TMDB si elle manque.

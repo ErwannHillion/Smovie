@@ -180,6 +180,92 @@ defmodule Smovie.Catalog.Sync.Mapper do
   defp imdb_id(_payload), do: nil
 
   @doc """
+  Genres d'une charge utile de detail.
+
+  TMDB renvoie `genres` sur un detail et `genre_ids` sur un resultat de
+  recherche : seul le premier porte les noms, le second n'a que des
+  identifiants qu'il faut resoudre contre la table.
+  """
+  def genre_attrs(payload) do
+    payload
+    |> Map.get("genres", [])
+    |> List.wrap()
+    |> Enum.filter(&is_map/1)
+    |> Enum.map(&%{tmdb_id: &1["id"], name: presence(&1["name"])})
+    |> Enum.reject(&(is_nil(&1.tmdb_id) or is_nil(&1.name)))
+  end
+
+  @doc """
+  Identifiants de genre d'un resultat de recherche.
+  """
+  def genre_ids(payload) do
+    payload |> Map.get("genre_ids", []) |> List.wrap() |> Enum.filter(&is_integer/1)
+  end
+
+  @doc """
+  Personnes et participations d'une charge utile de detail.
+
+  Le casting est tronque a vingt : au-dela, TMDB descend dans les silhouettes
+  et les figurants, que personne n'affiche. L'equipe technique est au
+  contraire filtree sur les postes qui interessent un cinephile — realisation,
+  scenario, image, musique — plutot que sur les deux cents lignes du generique.
+  """
+  @crew_jobs ~w(Director Screenplay Writer Story
+                Director of Photography Original Music Composer Editor Producer)
+  @cast_limit 20
+
+  def credit_attrs(payload) do
+    credits = Map.get(payload, "credits", %{})
+
+    cast =
+      credits
+      |> Map.get("cast", [])
+      |> List.wrap()
+      |> Enum.take(@cast_limit)
+      |> Enum.map(&cast_credit/1)
+
+    crew =
+      credits
+      |> Map.get("crew", [])
+      |> List.wrap()
+      |> Enum.filter(&(&1["job"] in @crew_jobs))
+      |> Enum.map(&crew_credit/1)
+
+    Enum.reject(cast ++ crew, &is_nil(&1.person.tmdb_id))
+  end
+
+  defp cast_credit(entry) do
+    %{
+      person: person_attrs(entry),
+      kind: :cast,
+      character: presence(entry["character"]),
+      department: "Acting",
+      job: nil,
+      display_order: entry["order"]
+    }
+  end
+
+  defp crew_credit(entry) do
+    %{
+      person: person_attrs(entry),
+      kind: :crew,
+      character: nil,
+      department: presence(entry["department"]),
+      job: presence(entry["job"]),
+      display_order: nil
+    }
+  end
+
+  defp person_attrs(entry) do
+    %{
+      tmdb_id: entry["id"],
+      name: presence(entry["name"]) || "Sans nom",
+      profile_path: presence(entry["profile_path"]),
+      known_for_department: presence(entry["known_for_department"])
+    }
+  end
+
+  @doc """
   Natures qu'un resultat de recherche peut prendre.
   """
   def searchable_kinds, do: WorkKind.roots()
