@@ -99,6 +99,7 @@ config :smovie, Oban,
        # est au plus bas.
        {"0 4 * * *", Smovie.Workers.SyncTrendingCatalogWorker},
        {"0 * * * *", Smovie.Workers.RefreshRatingStatsWorker},
+       {"*/15 * * * *", Smovie.Workers.RefreshTrendingWorker},
        {"30 4 * * 0", Smovie.Workers.PurgeActivitiesWorker}
      ]}
   ]
