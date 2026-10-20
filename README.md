@@ -216,6 +216,30 @@ préférence du compte → cookie → `accept-language` → `fr`.
 
 ## Déploiement
 
+### Image Docker
+
+```bash
+docker build -t smovie .
+docker run --rm -p 4000:4000 \
+  -e DATABASE_URL=ecto://user:pass@host/smovie_prod \
+  -e SECRET_KEY_BASE=$(mix phx.gen.secret) \
+  -e PHX_HOST=smovie.fr \
+  -e TMDB_API_KEY=... \
+  smovie
+```
+
+L'image est construite en deux étapes : la seconde ne contient ni Elixir, ni sources,
+seulement la release et ses dépendances système. Elle tourne sans privilèges.
+
+Les migrations se jouent séparément du démarrage, pour qu'un déploiement raté ne laisse
+pas la base à moitié migrée sans que personne ne le voie :
+
+```bash
+docker run --rm -e DATABASE_URL=... smovie /app/bin/migrate
+```
+
+### Release locale
+
 ```bash
 MIX_ENV=prod mix assets.deploy
 MIX_ENV=prod mix release
@@ -223,3 +247,16 @@ MIX_ENV=prod mix release
 
 Variables requises en production : `DATABASE_URL`, `SECRET_KEY_BASE`, `PHX_HOST`,
 `TMDB_API_KEY`, et `PHX_SERVER=true` si vous démarrez la release directement.
+
+## Intégration continue
+
+`.github/workflows/elixir.yml`, sur chaque PR et sur `main` :
+
+| Étape | Ce qu'elle vérifie |
+|---|---|
+| Nomenclature | préfixe `SMOVIE-XXX type(scope):` et absence de référence à un assistant |
+| Qualité | `compile --warnings-as-errors`, `format`, `credo --strict`, `sobelow`, traductions à jour |
+| Tests | la suite, **plus un `ecto.rollback --all` suivi d'un `ecto.migrate`** |
+
+Le rollback complet vérifie que chaque migration sait revenir en arrière : une migration
+irréversible ne se découvre qu'en production, et toujours au pire moment.

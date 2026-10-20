@@ -1,0 +1,10 @@
+_build
+deps
+.git
+.github
+.elixir_ls
+test
+db
+file_for_claude
+priv/static/assets
+*.md
