@@ -209,4 +209,49 @@ defmodule SmovieWeb.UserLive.SettingsTest do
       assert message == "You must log in to access this page."
     end
   end
+
+  describe "formulaire de profil" do
+    setup %{conn: conn} do
+      user = user_fixture()
+      %{conn: log_in_user(conn, user), user: user}
+    end
+
+    test "met a jour le profil", %{conn: conn, user: user} do
+      {:ok, lv, _html} = live(conn, ~p"/users/settings")
+
+      result =
+        lv
+        |> form("#profile_form", %{
+          "user" => %{
+            "username" => "cinephile",
+            "display_name" => "Cinephile",
+            "bio" => "Je note tout.",
+            "location" => "Montpellier"
+          }
+        })
+        |> render_submit()
+
+      assert result =~ "Profil mis a jour."
+      assert Smovie.Accounts.get_user!(user.id).username == "cinephile"
+    end
+
+    test "affiche l'erreur sur un identifiant invalide", %{conn: conn} do
+      {:ok, lv, _html} = live(conn, ~p"/users/settings")
+
+      result =
+        lv
+        |> form("#profile_form", %{
+          "user" => %{"username" => "jean dupont", "display_name" => "Jean"}
+        })
+        |> render_submit()
+
+      assert result =~ "lettres sans accent"
+    end
+
+    test "previsualise l'adresse publique", %{conn: conn, user: user} do
+      {:ok, _lv, html} = live(conn, ~p"/users/settings")
+
+      assert html =~ "smovie.fr/u/#{user.username}"
+    end
+  end
 end

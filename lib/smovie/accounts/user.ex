@@ -12,7 +12,100 @@ defmodule Smovie.Accounts.User do
     # NULL signifie « suivre le navigateur », pas « francais ».
     field :locale, :string
 
+    field :username, :string
+    field :display_name, :string
+    field :bio, :string
+    field :location, :string
+    # Prevu pour un televersement ulterieur : en attendant, l'avatar est
+    # l'initiale du nom affiche sur une couleur derivee de l'identifiant.
+    field :avatar_path, :string
+
     timestamps(type: :utc_datetime)
+  end
+
+  # Reserves parce qu'ils ressemblent a des sections de l'application ou a des
+  # comptes de service : un membre nomme « admin » ou « smovie » pretera a
+  # confusion, quand bien meme les profils vivent sous /u/.
+  @reserved_usernames ~w(
+    admin administrateur administrator root smovie support contact api www
+    help aide moderation moderateur staff equipe team official officiel
+    me moi user users utilisateur membre null undefined
+  )
+
+  @doc """
+  Changeset de profil public.
+
+  Le nom affiche et la bio sont libres ; le username est contraint parce qu'il
+  sert d'adresse (`/u/:username`) : il doit rester lisible, tapable au clavier
+  et stable d'une casse a l'autre.
+  """
+  def profile_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:username, :display_name, :bio, :location])
+    |> validate_required([:username, :display_name])
+    |> validate_username()
+    |> validate_length(:display_name, min: 1, max: 60)
+    |> validate_length(:bio, max: 500)
+    |> validate_length(:location, max: 80)
+  end
+
+  defp validate_username(changeset) do
+    changeset
+    |> update_change(:username, &String.downcase/1)
+    |> validate_length(:username, min: 3, max: 30)
+    |> validate_format(:username, ~r/^[a-z0-9_]+$/,
+      message: "ne peut contenir que des lettres sans accent, des chiffres et des tirets bas"
+    )
+    |> validate_exclusion(:username, @reserved_usernames, message: "n'est pas disponible")
+    |> unsafe_validate_unique(:username, Smovie.Repo)
+    |> unique_constraint(:username)
+    |> check_constraint(:username,
+      name: :users_username_format,
+      message: "ne respecte pas le format attendu"
+    )
+  end
+
+  @doc """
+  Derive un username disponible a partir d'une adresse e-mail.
+
+  Utilise a l'inscription : demander un username au moment ou l'on demande
+  deja une adresse ajoute une etape et un motif d'abandon. Le membre le change
+  ensuite dans ses parametres.
+  """
+  def suggest_username(email, taken? \\ fn _ -> false end) do
+    base =
+      email
+      |> String.split("@")
+      |> List.first()
+      |> String.downcase()
+      |> String.replace(~r/[^a-z0-9_]/, "")
+      |> String.slice(0, 26)
+      |> pad_if_short()
+
+    if base in @reserved_usernames or taken?.(base) do
+      first_available(base, taken?)
+    else
+      base
+    end
+  end
+
+  defp first_available(base, taken?) do
+    2..999
+    |> Stream.map(&"#{base}#{&1}")
+    |> Enum.find(&(not taken?.(&1)))
+  end
+
+  defp pad_if_short(base) when byte_size(base) >= 3, do: base
+  defp pad_if_short(base), do: base <> String.duplicate("0", 3 - byte_size(base))
+
+  @doc """
+  Nom affiche par defaut : la partie locale de l'adresse.
+  """
+  def suggest_display_name(email) do
+    case email |> String.split("@") |> List.first() do
+      "" -> "Membre"
+      local -> local
+    end
   end
 
   @doc """

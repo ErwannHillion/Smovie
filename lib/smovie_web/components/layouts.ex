@@ -91,11 +91,10 @@ defmodule SmovieWeb.Layouts do
 
         <%= if @current_scope do %>
           <.link
-            navigate={~p"/users/settings"}
-            class="bg-smovie grid size-8 place-items-center rounded-full font-mono text-sm font-semibold text-[#190f2b]"
-            title={@current_scope.user.email}
+            navigate={~p"/u/#{@current_scope.user.username}"}
+            title={@current_scope.user.display_name}
           >
-            {initial(@current_scope.user.email)}
+            <.avatar user={@current_scope.user} size={:small} class="size-8 text-sm" />
           </.link>
           <.link
             href={~p"/users/log-out"}
@@ -174,8 +173,6 @@ defmodule SmovieWeb.Layouts do
 
   defp icon_class(true), do: "size-5 text-smovie"
   defp icon_class(false), do: "size-5"
-
-  defp initial(email), do: email |> String.first() |> String.upcase()
 
   @doc """
   Selecteur de langue.

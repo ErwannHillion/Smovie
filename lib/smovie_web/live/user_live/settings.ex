@@ -4,6 +4,7 @@ defmodule SmovieWeb.UserLive.Settings do
   on_mount {SmovieWeb.UserAuth, :require_sudo_mode}
 
   alias Smovie.Accounts
+  alias Smovie.Accounts.Scope
 
   def render(assigns) do
     ~H"""
@@ -17,6 +18,45 @@ defmodule SmovieWeb.UserLive.Settings do
         {gettext("Parametres du compte")}
         <:subtitle>{gettext("Gerez votre adresse e-mail et votre mot de passe")}</:subtitle>
       </.header>
+
+      <.form
+        for={@profile_form}
+        id="profile_form"
+        phx-submit="update_profile"
+        phx-change="validate_profile"
+      >
+        <div class="flex items-center gap-4">
+          <.avatar user={@current_scope.user} size={:large} />
+          <p class="text-base-content/50 text-sm">
+            {gettext("L'avatar televersable arrive plus tard : pour l'instant, c'est votre initiale.")}
+          </p>
+        </div>
+
+        <.input
+          field={@profile_form[:display_name]}
+          type="text"
+          label={gettext("Nom affiche")}
+          required
+        />
+        <.input
+          field={@profile_form[:username]}
+          type="text"
+          label={gettext("Identifiant public")}
+          autocomplete="off"
+          required
+        />
+        <p class="text-base-content/50 -mt-2 font-mono text-xs">
+          smovie.fr/u/{@profile_form[:username].value}
+        </p>
+        <.input field={@profile_form[:location]} type="text" label={gettext("Lieu")} />
+        <.input field={@profile_form[:bio]} type="textarea" label={gettext("Bio")} />
+
+        <.button variant="primary" phx-disable-with={gettext("Enregistrement...")}>
+          {gettext("Enregistrer le profil")}
+        </.button>
+      </.form>
+
+      <div class="divider"></div>
 
       <.form for={@email_form} id="email_form" phx-submit="update_email" phx-change="validate_email">
         <.input
@@ -94,11 +134,46 @@ defmodule SmovieWeb.UserLive.Settings do
     socket =
       socket
       |> assign(:current_email, user.email)
+      |> assign(:profile_form, to_form(Accounts.change_user_profile(user)))
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
 
     {:ok, socket}
+  end
+
+  def handle_event(
+        "validate_profile",
+        %{"user" => params},
+        %{assigns: %{current_scope: %{user: user}}} = socket
+      ) do
+    changeset =
+      user
+      |> Accounts.change_user_profile(params)
+      |> Map.put(:action, :validate)
+
+    {:noreply, assign(socket, :profile_form, to_form(changeset))}
+  end
+
+  def handle_event(
+        "update_profile",
+        %{"user" => params},
+        %{assigns: %{current_scope: scope}} = socket
+      ) do
+    case Accounts.update_user_profile(scope, scope.user, params) do
+      {:ok, user} ->
+        {:noreply,
+         socket
+         |> assign(:current_scope, Scope.for_user(user))
+         |> assign(:profile_form, to_form(Accounts.change_user_profile(user)))
+         |> put_flash(:info, gettext("Profil mis a jour."))}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :profile_form, to_form(changeset, action: :insert))}
+
+      {:error, :unauthorized} ->
+        {:noreply, redirect_to_reauthentication(socket)}
+    end
   end
 
   def handle_event(

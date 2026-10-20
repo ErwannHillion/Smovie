@@ -6,7 +6,7 @@ defmodule Smovie.Accounts do
   import Ecto.Query, warn: false
   alias Smovie.Repo
 
-  alias Smovie.Accounts.{User, UserNotifier, UserToken}
+  alias Smovie.Accounts.{Scope, User, UserNotifier, UserToken}
 
   ## Database getters
 
@@ -77,8 +77,54 @@ defmodule Smovie.Accounts do
   def register_user(attrs) do
     %User{}
     |> User.email_changeset(attrs)
+    |> put_suggested_profile()
     |> Repo.insert()
   end
+
+  # L'inscription ne demande qu'une adresse : exiger un username au meme
+  # moment ajoute une etape et un motif d'abandon. On en derive un, disponible,
+  # que le membre change ensuite dans ses parametres.
+  defp put_suggested_profile(%Ecto.Changeset{valid?: true} = changeset) do
+    email = Ecto.Changeset.get_field(changeset, :email)
+
+    changeset
+    |> Ecto.Changeset.put_change(:username, User.suggest_username(email, &username_taken?/1))
+    |> Ecto.Changeset.put_change(:display_name, User.suggest_display_name(email))
+  end
+
+  defp put_suggested_profile(changeset), do: changeset
+
+  defp username_taken?(username) do
+    Repo.exists?(from u in User, where: u.username == ^username)
+  end
+
+  @doc """
+  Recupere un membre par son username public.
+  """
+  def get_user_by_username(username) when is_binary(username) do
+    Repo.get_by(User, username: username)
+  end
+
+  @doc """
+  Changeset de profil, pour les formulaires.
+  """
+  def change_user_profile(%User{} = user, attrs \\ %{}) do
+    User.profile_changeset(user, attrs)
+  end
+
+  @doc """
+  Met a jour le profil public d'un membre.
+
+  Un membre ne modifie que le sien : l'autorisation se filtre dans la
+  signature, et la clause de repli renvoie une valeur plutot que de lever.
+  """
+  def update_user_profile(%Scope{user: %User{id: id}}, %User{id: id} = user, attrs) do
+    user
+    |> User.profile_changeset(attrs)
+    |> Repo.update()
+  end
+
+  def update_user_profile(%Scope{}, %User{}, _attrs), do: {:error, :unauthorized}
 
   ## Settings
 
