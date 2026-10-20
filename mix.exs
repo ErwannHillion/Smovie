@@ -84,7 +84,17 @@ defmodule Smovie.MixProject do
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind smovie", "esbuild smovie"],
-      quality: ["format --check-formatted", "credo --strict", "sobelow --exit"],
+      quality: [
+        "format --check-formatted",
+        "credo --strict",
+        "sobelow --exit",
+        "gettext.extract --check-up-to-date"
+      ],
+      # --no-fuzzy : la correspondance floue recopie la traduction d'un message
+      # voisin sur un message neuf. « Modifier mon profil » avait ainsi herite
+      # de « Modifier mon adresse », et le test qui l'a attrape n'existait que
+      # par chance.
+      "gettext.sync": ["gettext.extract --merge --no-fuzzy"],
       "assets.deploy": [
         "tailwind smovie --minify",
         "esbuild smovie --minify",
