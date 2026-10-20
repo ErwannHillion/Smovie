@@ -35,7 +35,6 @@ defmodule SmovieWeb.Router do
       # Sections dont la navigation existe deja : voir SmovieWeb.SoonLive.
       live "/reviews", ReviewLive.Index
       live "/recherche", SearchLive
-      live "/watchlist", SoonLive, :watchlist
       live "/notifications", NotificationsLive
       live "/messages", SoonLive, :messages
 
@@ -84,6 +83,7 @@ defmodule SmovieWeb.Router do
         SmovieWeb.Hooks.Locale,
         SmovieWeb.Hooks.Unread
       ] do
+      live "/watchlist", WatchlistLive
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
     end

@@ -1,0 +1,82 @@
+defmodule SmovieWeb.ProfileTabsTest do
+  use SmovieWeb.ConnCase, async: true
+
+  import Phoenix.LiveViewTest
+  import Smovie.AccountsFixtures
+  import Smovie.CatalogFixtures
+  import Smovie.ReviewsFixtures
+
+  alias Smovie.Accounts
+  alias Smovie.Accounts.Scope
+  alias Smovie.Library
+
+  setup do
+    user = user_fixture()
+    scope = Scope.for_user(user)
+
+    {:ok, user} =
+      Accounts.update_user_profile(scope, user, %{
+        "username" => "cinephile",
+        "display_name" => "Cinephile"
+      })
+
+    film = movie_fixture(%{title: "Perfect Days", runtime: 124})
+    serie = tv_show_fixture(%{title: "Severance"})
+    Library.mark_watched(scope, film)
+    Library.mark_watched(scope, serie)
+    Library.rate_work(scope, film, 10)
+    review_fixture(user, film)
+
+    %{user: user, scope: scope, film: film, serie: serie}
+  end
+
+  test "l'apercu montre les chiffres cles", %{conn: conn} do
+    {:ok, _lv, html} = live(conn, ~p"/u/cinephile")
+
+    assert html =~ "Films"
+    assert html =~ "Notes"
+    assert html =~ "Heures"
+  end
+
+  test "l'onglet films liste les films vus", %{conn: conn} do
+    {:ok, _lv, html} = live(conn, ~p"/u/cinephile?onglet=films")
+
+    assert html =~ "Perfect Days"
+  end
+
+  test "l'onglet series liste les series", %{conn: conn} do
+    {:ok, _lv, html} = live(conn, ~p"/u/cinephile?onglet=series")
+
+    assert html =~ "Severance"
+    refute html =~ "Perfect Days"
+  end
+
+  test "l'onglet reviews liste les reviews", %{conn: conn} do
+    {:ok, _lv, html} = live(conn, ~p"/u/cinephile?onglet=reviews")
+
+    assert html =~ "hors-champ"
+  end
+
+  test "un onglet inconnu retombe sur l'apercu", %{conn: conn} do
+    {:ok, _lv, html} = live(conn, ~p"/u/cinephile?onglet=nimportequoi")
+
+    assert html =~ "Activite recente"
+  end
+
+  test "un profil prive ne montre aucun onglet", %{conn: conn, scope: scope, user: user} do
+    Accounts.update_user_visibility(scope, user, %{"profile_visibility" => "private"})
+
+    {:ok, _lv, html} = live(conn, ~p"/u/cinephile")
+
+    assert html =~ "Ce profil est prive"
+    refute html =~ "Perfect Days"
+  end
+
+  test "les reviews privees n'apparaissent pas pour un tiers", %{conn: conn, user: user} do
+    review_fixture(user, movie_fixture(%{title: "Secrete"}), %{"visibility" => "private"})
+
+    {:ok, _lv, html} = live(conn, ~p"/u/cinephile?onglet=reviews")
+
+    refute html =~ "Secrete"
+  end
+end
