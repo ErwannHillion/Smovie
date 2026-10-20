@@ -21,6 +21,16 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
   notation en demi-étoiles, TMDB et OMDb, internationalisation, mobile-first
 - Toutes les variables d'environnement se lisent dans `config/runtime.exs`
 
+### Removed
+- LiveViews, contrôleur et contexte de l'ancienne version (2 265 lignes)
+- Client TMDB, remplacé par `Smovie.External.TMDB` (SMOVIE-009)
+- Migrations des tables `movies`, `user_movies` et `user_follows`, remplacées
+  par la table `works` unifiée et les contextes `Library` et `Social`
+- `Dockerfile.yml`, inutilisable : syntaxe GitHub Actions dans un Dockerfile et
+  script `testbdd.sh` absent du dépôt
+- Navigation du scaffold Phoenix dans le layout applicatif
+
 ### Fixed
+- Un mode sudo expiré renvoie vers une reconnexion au lieu de sortir en 500
 - L'application démarre sur un poste neuf sans fichier `.env`
 - La clé API TMDB est lue au démarrage et non plus figée à la compilation
