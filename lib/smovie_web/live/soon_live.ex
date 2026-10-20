@@ -38,7 +38,7 @@ defmodule SmovieWeb.SoonLive do
       locale={@locale}
       current_path={@current_path}
     >
-      <div class="mx-auto flex max-w-md flex-col items-start gap-3 py-16">
+      <div class="flex max-w-xl flex-col items-start gap-3 py-16">
         <p class="text-base-content/40 font-mono text-[0.65rem] tracking-[0.15em] uppercase">
           {@ticket}
         </p>
