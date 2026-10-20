@@ -21,6 +21,7 @@ defmodule Smovie.Library do
   alias Smovie.Library.WatchlistItem
   alias Smovie.Library.WorkLike
   alias Smovie.Repo
+  alias Smovie.Social
 
   @pubsub Smovie.PubSub
 
@@ -72,6 +73,7 @@ defmodule Smovie.Library do
     |> case do
       {:ok, %{rating: rating, work: work}} ->
         broadcast_rating(scope, work)
+        Social.record(scope, :rated, %{work_id: work.id, rating_value: rating.value})
         {:ok, rating}
 
       {:error, _step, changeset, _changes} ->
@@ -272,6 +274,7 @@ defmodule Smovie.Library do
       {:ok, entry} ->
         bump_watch_count(work.id)
         drop_from_watchlist(scope, work)
+        Social.record(scope, :watched, %{work_id: work.id})
         {:ok, entry}
 
       {:error, changeset} ->
@@ -660,6 +663,8 @@ defmodule Smovie.Library do
   def toggle_like(%Scope{}, %Work{}), do: {:error, :unauthorized}
 
   defp insert_like(user_id, work_id) do
+    _ = Social.record(%Scope{user: %User{id: user_id}}, :liked_work, %{work_id: work_id})
+
     %WorkLike{}
     |> WorkLike.changeset(%{user_id: user_id, work_id: work_id})
     |> Repo.insert()
