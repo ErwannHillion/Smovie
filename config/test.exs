@@ -32,6 +32,11 @@ config :smovie, Oban, testing: :manual
 # :missing_api_key avant meme d'appeler la doublure.
 config :smovie, :tmdb, impl: Smovie.External.TMDBMock, api_key: "cle-de-test"
 
+config :smovie, :omdb,
+  impl: Smovie.External.OMDbMock,
+  api_key: "cle-omdb-de-test",
+  enabled: true
+
 # In test we don't send emails
 config :smovie, Smovie.Mailer, adapter: Swoosh.Adapters.Test
 
