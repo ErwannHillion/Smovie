@@ -5,17 +5,19 @@ defmodule Smovie.Application do
 
   use Application
 
+  alias Smovie.Config
+
   @impl true
   def start(_type, _args) do
     children = [
       SmovieWeb.Telemetry,
       Smovie.Repo,
-      {DNSCluster, query: Application.get_env(:smovie, :dns_cluster_query) || :ignore},
+      {DNSCluster, query: Config.dns_cluster_query()},
       {Phoenix.PubSub, name: Smovie.PubSub},
       # Cache des reponses TMDB et OMDb. Demarre avant Oban : les workers de
       # synchronisation s'en servent des leur premiere execution.
       {Cachex, name: :smovie_http_cache},
-      {Oban, Application.fetch_env!(:smovie, Oban)},
+      {Oban, Config.oban()},
       # Start to serve requests, typically the last entry
       SmovieWeb.Endpoint
     ]
