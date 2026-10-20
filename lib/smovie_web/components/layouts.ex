@@ -40,6 +40,7 @@ defmodule SmovieWeb.Layouts do
   attr :current_scope, :map, default: nil
   attr :locale, :string, default: nil
   attr :current_path, :string, default: "/"
+  attr :unread_count, :integer, default: 0
   attr :full_bleed, :boolean, default: false, doc: "colle le contenu aux bords (heros)"
   slot :inner_block, required: true
 
@@ -47,7 +48,12 @@ defmodule SmovieWeb.Layouts do
     assigns = assign(assigns, :container, @container)
 
     ~H"""
-    <.top_nav current_scope={@current_scope} locale={@locale} current_path={@current_path} />
+    <.top_nav
+      current_scope={@current_scope}
+      locale={@locale}
+      current_path={@current_path}
+      unread_count={@unread_count}
+    />
 
     <main class={[
       "pb-safe min-h-dvh md:pb-10",
@@ -67,6 +73,7 @@ defmodule SmovieWeb.Layouts do
   attr :current_scope, :map, default: nil
   attr :locale, :string, default: nil
   attr :current_path, :string, default: "/"
+  attr :unread_count, :integer, default: 0
 
   def top_nav(assigns) do
     assigns = assign(assigns, :container, @container)
@@ -114,6 +121,20 @@ defmodule SmovieWeb.Layouts do
         <.theme_toggle />
 
         <%= if @current_scope do %>
+          <.link
+            navigate={~p"/notifications"}
+            class="text-base-content/50 hover:text-base-content relative"
+            aria-label={gettext("Notifications")}
+          >
+            <.icon name="hero-bell" class="size-5" />
+            <span
+              :if={@unread_count > 0}
+              data-role="unread-badge"
+              class="bg-heat border-base-100 absolute -top-1 -right-1 grid min-w-4 place-items-center rounded-full border-2 px-1 font-mono text-[0.6rem] font-semibold text-[#2a0613]"
+            >
+              {@unread_count}
+            </span>
+          </.link>
           <.link
             navigate={~p"/u/#{@current_scope.user.username}"}
             title={@current_scope.user.display_name}

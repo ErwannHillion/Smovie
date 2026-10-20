@@ -23,6 +23,7 @@ defmodule SmovieWeb.HomeLive do
       current_scope={@current_scope}
       locale={@locale}
       current_path={@current_path}
+      unread_count={@unread_count}
     >
       <div class="flex max-w-3xl flex-col gap-4 py-10 md:py-16">
         <h1 class="font-display text-5xl font-extrabold leading-none tracking-tight md:text-6xl">

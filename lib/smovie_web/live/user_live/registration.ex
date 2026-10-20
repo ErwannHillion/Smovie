@@ -11,6 +11,7 @@ defmodule SmovieWeb.UserLive.Registration do
       current_scope={@current_scope}
       locale={@locale}
       current_path={@current_path}
+      unread_count={@unread_count}
     >
       <div class="mx-auto max-w-sm">
         <.header class="text-center">

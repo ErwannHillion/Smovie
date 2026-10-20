@@ -329,8 +329,15 @@ defmodule Smovie.Reviews do
     |> Multi.run(:count, fn repo, _changes -> refresh_like_count(repo, review_id) end)
     |> Repo.transaction()
     |> case do
-      {:ok, %{toggle: result}} -> {:ok, result}
-      {:error, _step, reason, _changes} -> {:error, reason}
+      {:ok, %{toggle: :liked}} ->
+        Social.notify(review_id_owner(review_id), user_id, :review_liked, %{review_id: review_id})
+        {:ok, :liked}
+
+      {:ok, %{toggle: result}} ->
+        {:ok, result}
+
+      {:error, _step, reason, _changes} ->
+        {:error, reason}
     end
   end
 
@@ -344,6 +351,10 @@ defmodule Smovie.Reviews do
       {:ok, _like} -> {:ok, :liked}
       {:error, changeset} -> {:error, changeset}
     end
+  end
+
+  defp review_id_owner(review_id) do
+    Repo.one(from r in Review, where: r.id == ^review_id, select: r.user_id)
   end
 
   defp refresh_like_count(repo, review_id) do
@@ -413,10 +424,33 @@ defmodule Smovie.Reviews do
         |> Multi.run(:count, fn repo, _changes -> refresh_comment_count(repo, review.id) end)
         |> Repo.transaction()
         |> case do
-          {:ok, %{comment: comment}} -> {:ok, Repo.preload(comment, :user)}
-          {:error, _step, changeset, _changes} -> {:error, changeset}
+          {:ok, %{comment: comment}} ->
+            notify_comment(comment, review)
+            {:ok, Repo.preload(comment, :user)}
+
+          {:error, _step, changeset, _changes} ->
+            {:error, changeset}
         end
     end
+  end
+
+  # Une reponse notifie l'auteur du commentaire parent ; un commentaire racine
+  # notifie l'auteur de la review.
+  defp notify_comment(%ReviewComment{parent_id: nil} = comment, review) do
+    Social.notify(review.user_id, comment.user_id, :review_commented, %{
+      review_id: review.id,
+      comment_id: comment.id
+    })
+  end
+
+  defp notify_comment(%ReviewComment{} = comment, review) do
+    parent_author =
+      Repo.one(from c in ReviewComment, where: c.id == ^comment.parent_id, select: c.user_id)
+
+    Social.notify(parent_author, comment.user_id, :comment_replied, %{
+      review_id: review.id,
+      comment_id: comment.id
+    })
   end
 
   defp valid_parent?(_review_id, nil), do: true

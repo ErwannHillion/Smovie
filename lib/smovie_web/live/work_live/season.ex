@@ -109,6 +109,7 @@ defmodule SmovieWeb.WorkLive.Season do
       current_scope={@current_scope}
       locale={@locale}
       current_path={@current_path}
+      unread_count={@unread_count}
     >
       <nav class="text-base-content/50 flex items-center gap-2 py-2 font-mono text-xs">
         <.link navigate={~p"/serie/#{@show.slug}"} class="hover:text-base-content">

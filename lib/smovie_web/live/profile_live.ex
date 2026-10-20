@@ -56,6 +56,7 @@ defmodule SmovieWeb.ProfileLive do
       current_scope={@current_scope}
       locale={@locale}
       current_path={@current_path}
+      unread_count={@unread_count}
     >
       <header class="flex flex-col gap-4 py-6 md:flex-row md:items-center md:gap-6 md:py-10">
         <.avatar user={@user} size={:large} />

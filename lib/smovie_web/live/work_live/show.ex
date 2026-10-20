@@ -164,6 +164,7 @@ defmodule SmovieWeb.WorkLive.Show do
       current_scope={@current_scope}
       locale={@locale}
       current_path={@current_path}
+      unread_count={@unread_count}
       full_bleed
     >
       <.work_header work={@work} directors={@directors} genres={@genres} />

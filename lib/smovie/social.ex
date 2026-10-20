@@ -11,6 +11,7 @@ defmodule Smovie.Social do
   alias Smovie.Repo
   alias Smovie.Social.Activity
   alias Smovie.Social.Follow
+  alias Smovie.Social.Notification
 
   @doc """
   Suit un membre.
@@ -35,6 +36,7 @@ defmodule Smovie.Social do
     |> case do
       {:ok, %{follow: follow}} ->
         record(%Scope{user: %User{id: follower_id}}, :followed, %{target_user_id: followed_id})
+        notify(followed_id, follower_id, :new_follower)
         {:ok, follow}
 
       {:error, _step, changeset, _changes} ->
@@ -233,6 +235,89 @@ defmodule Smovie.Social do
     {count, _} = Repo.delete_all(from a in Activity, where: a.inserted_at < ^threshold)
 
     {:ok, count}
+  end
+
+  ## Notifications
+
+  @doc """
+  Notifie un membre.
+
+  On ne se notifie jamais soi-meme : liker sa propre review ou se repondre ne
+  doit pas allumer le badge. La verification vit ici plutot qu'a chaque point
+  d'appel, ou elle finirait par etre oubliee une fois.
+
+  Comme pour les activites, un echec est silencieux : une notification perdue
+  ne doit pas faire echouer l'action qui l'a declenchee.
+  """
+  def notify(recipient_id, actor_id, kind, attrs \\ %{})
+
+  def notify(same_id, same_id, _kind, _attrs), do: :ignored
+
+  def notify(recipient_id, actor_id, kind, attrs) do
+    %Notification{}
+    |> Notification.changeset(
+      Map.merge(attrs, %{user_id: recipient_id, actor_id: actor_id, kind: kind})
+    )
+    |> Repo.insert()
+    |> case do
+      {:ok, notification} ->
+        broadcast_unread(recipient_id)
+        {:ok, notification}
+
+      {:error, _changeset} ->
+        :ignored
+    end
+  end
+
+  @doc """
+  Notifications d'un membre, des plus recentes.
+  """
+  def list_notifications(%Scope{user: %User{id: user_id}}, opts \\ []) do
+    limit = Keyword.get(opts, :limit, 40)
+
+    Repo.all(
+      from n in Notification,
+        where: n.user_id == ^user_id,
+        order_by: [desc: n.inserted_at, desc: n.id],
+        limit: ^limit,
+        preload: [:actor, :work, review: :work]
+    )
+  end
+
+  @doc """
+  Nombre de notifications non lues.
+  """
+  def unread_count(%Scope{user: %User{id: user_id}}) do
+    Repo.aggregate(
+      from(n in Notification, where: n.user_id == ^user_id and is_nil(n.read_at)),
+      :count
+    )
+  end
+
+  def unread_count(nil), do: 0
+
+  @doc """
+  Marque toutes les notifications comme lues.
+  """
+  def mark_all_read(%Scope{user: %User{id: user_id}}) do
+    {count, _} =
+      Repo.update_all(
+        from(n in Notification, where: n.user_id == ^user_id and is_nil(n.read_at)),
+        set: [read_at: DateTime.utc_now(:second)]
+      )
+
+    broadcast_unread(user_id)
+
+    {:ok, count}
+  end
+
+  @doc """
+  Sujet PubSub de la boite d'un membre.
+  """
+  def inbox_topic(user_id), do: "user:#{user_id}:inbox"
+
+  defp broadcast_unread(user_id) do
+    Phoenix.PubSub.broadcast(Smovie.PubSub, inbox_topic(user_id), :unread_changed)
   end
 
   defp refresh_counters(follower_id, followed_id) do
