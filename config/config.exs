@@ -73,11 +73,6 @@ config :logger, :default_formatter,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-# Configure TMDB API
-config :smovie, :tmdb,
-  api_key: System.get_env("TMDB_API_KEY"),
-  base_url: "https://api.themoviedb.org/3"
-
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
