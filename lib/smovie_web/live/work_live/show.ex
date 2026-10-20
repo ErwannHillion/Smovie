@@ -1,0 +1,267 @@
+defmodule SmovieWeb.WorkLive.Show do
+  @moduledoc """
+  Fiche d'un film ou d'une serie.
+
+  La page est servie meme si l'oeuvre n'est pas a jour : ce qu'on a s'affiche
+  immediatement, et le rafraichissement part en tache de fond. Attendre TMDB
+  rendrait chaque fiche tributaire de la latence d'un tiers.
+  """
+  use SmovieWeb, :live_view
+
+  alias Smovie.Catalog
+  alias Smovie.Catalog.Work
+  alias Smovie.Library
+  alias Smovie.Repo
+  alias SmovieWeb.Layouts
+
+  @impl true
+  def mount(%{"slug" => slug}, _session, %{assigns: %{live_action: action}} = socket) do
+    case Catalog.fetch_work_by_slug(kind_for(action), slug) do
+      {:error, :not_found} ->
+        raise SmovieWeb.WorkLive.NotFound, slug
+
+      {:ok, work} ->
+        if connected?(socket) do
+          Phoenix.PubSub.subscribe(Smovie.PubSub, Library.rating_topic(work))
+        end
+
+        {:ok, socket |> assign_work(work) |> assign(page_title: work.title)}
+    end
+  end
+
+  defp kind_for(:movie), do: :movie
+  defp kind_for(:tv_show), do: :tv_show
+
+  defp assign_work(%{assigns: %{current_scope: scope}} = socket, work) do
+    assign(socket,
+      work: work,
+      genres: Catalog.list_work_genres(work),
+      directors: Catalog.list_directors(work),
+      cast: Catalog.list_cast(work),
+      press: Catalog.press_rating(work),
+      my_rating: Library.get_rating(scope, work),
+      watched?: Library.watched?(scope, work),
+      in_watchlist?: Library.in_watchlist?(scope, work),
+      liked?: Library.liked?(scope, work)
+    )
+  end
+
+  @impl true
+  def handle_event("rate", %{"value" => value}, socket) do
+    with_scope(socket, &Library.toggle_rating(&1, &2, value))
+  end
+
+  def handle_event("toggle_watched", _params, socket) do
+    with_scope(socket, fn scope, work ->
+      if Library.watched?(scope, work) do
+        Library.unmark_watched(scope, work)
+      else
+        Library.mark_watched(scope, work)
+      end
+    end)
+  end
+
+  def handle_event("toggle_watchlist", _params, socket) do
+    with_scope(socket, &Library.toggle_watchlist/2)
+  end
+
+  def handle_event("toggle_like", _params, socket) do
+    with_scope(socket, &Library.toggle_like/2)
+  end
+
+  # Un visiteur non connecte est renvoye vers la connexion plutot que de voir
+  # son geste ignore sans explication.
+  defp with_scope(%{assigns: %{current_scope: nil}} = socket, _fun) do
+    {:noreply,
+     socket
+     |> put_flash(:info, gettext("Connectez-vous pour noter et suivre vos films."))
+     |> push_navigate(to: ~p"/users/log-in")}
+  end
+
+  defp with_scope(%{assigns: %{current_scope: scope, work: work}} = socket, fun) do
+    fun.(scope, work)
+
+    {:noreply, assign_work(socket, Repo.reload!(work))}
+  end
+
+  @impl true
+  def handle_info(
+        {:rating_updated, %Work{id: id}},
+        %{assigns: %{work: %Work{id: id} = work}} = socket
+      ) do
+    {:noreply, assign_work(socket, Repo.reload!(work))}
+  end
+
+  def handle_info(_message, socket), do: {:noreply, socket}
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <Layouts.app
+      flash={@flash}
+      current_scope={@current_scope}
+      locale={@locale}
+      current_path={@current_path}
+      full_bleed
+    >
+      <.work_header work={@work} directors={@directors} genres={@genres} />
+
+      <div class={[Layouts.container_class(), "grid gap-8 pb-10 lg:grid-cols-[minmax(0,1fr)_22rem]"]}>
+        <div class="order-2 flex min-w-0 flex-col gap-8 lg:order-1">
+          <p :if={@work.overview} class="text-base-content/80 max-w-prose leading-relaxed">
+            {@work.overview}
+          </p>
+
+          <section :if={@cast != []}>
+            <h2 class="text-base-content/70 font-mono text-[0.65rem] font-medium tracking-[0.15em] uppercase">
+              {gettext("Distribution")}
+            </h2>
+            <ul class="snap-row mt-3 flex gap-3 overflow-x-auto pb-1">
+              <li :for={credit <- @cast} class="w-20 shrink-0 text-center">
+                <div class="bg-base-300 mx-auto size-20 overflow-hidden rounded-full">
+                  <img
+                    :if={credit.person.profile_path}
+                    src={poster_url(credit.person.profile_path, 185)}
+                    alt={credit.person.name}
+                    loading="lazy"
+                    class="h-full w-full object-cover"
+                  />
+                </div>
+                <p class="mt-1.5 text-xs leading-tight">{credit.person.name}</p>
+                <p :if={credit.character} class="text-base-content/50 text-[0.65rem] leading-tight">
+                  {credit.character}
+                </p>
+              </li>
+            </ul>
+          </section>
+        </div>
+
+        <aside class="order-1 flex flex-col gap-3 lg:order-2">
+          <.score_block
+            smovie_average={smovie_average(@work)}
+            smovie_count={@work.smovie_rating_count}
+            press_score={press_score(@press)}
+            press_source={press_source(@press)}
+            tmdb_score={Work.tmdb_out_of_ten(@work)}
+          />
+
+          <.rating_input value={@my_rating && @my_rating.value} event="rate" />
+
+          <div class="bg-base-300 grid grid-cols-3 gap-px overflow-hidden rounded-xl">
+            <.work_action
+              event="toggle_watched"
+              active={@watched?}
+              icon="hero-eye"
+              label={if @watched?, do: gettext("Vu"), else: gettext("Marquer vu")}
+            />
+            <.work_action
+              event="toggle_watchlist"
+              active={@in_watchlist?}
+              icon="hero-bookmark"
+              label={if @in_watchlist?, do: gettext("Dans la liste"), else: gettext("Watchlist")}
+            />
+            <.work_action
+              event="toggle_like"
+              active={@liked?}
+              icon="hero-heart"
+              tone="heat"
+              label={gettext("J'aime")}
+            />
+          </div>
+        </aside>
+      </div>
+    </Layouts.app>
+    """
+  end
+
+  attr :work, :map, required: true
+  attr :directors, :list, required: true
+  attr :genres, :list, required: true
+
+  defp work_header(assigns) do
+    ~H"""
+    <header class="relative">
+      <div
+        :if={@work.backdrop_path}
+        class="absolute inset-0 -z-10 bg-cover bg-center opacity-40"
+        style={"background-image: url('#{poster_url(@work.backdrop_path, 780)}')"}
+      >
+      </div>
+      <div class="from-base-100 via-base-100/70 absolute inset-0 -z-10 bg-gradient-to-t to-transparent">
+      </div>
+
+      <div class={[Layouts.container_class(), "flex gap-5 pt-10 pb-8 md:gap-7 md:pt-16"]}>
+        <div class="w-24 shrink-0 md:w-40">
+          <.poster title={@work.title} poster_path={@work.poster_path} eager class="w-full" />
+        </div>
+        <div class="min-w-0 self-end">
+          <h1 class="font-display text-3xl leading-none font-bold tracking-tight md:text-5xl">
+            {@work.title}
+          </h1>
+          <p class="text-base-content/60 mt-2 font-mono text-xs">
+            {[Work.year(@work), runtime_label(@work)] |> Enum.reject(&is_nil/1) |> Enum.join(" · ")}
+          </p>
+          <p :if={@directors != []} class="text-base-content/70 mt-1.5 text-sm">
+            {gettext("de")}
+            <span class="text-base-content font-medium">
+              {Enum.map_join(@directors, ", ", & &1.name)}
+            </span>
+          </p>
+          <div :if={@genres != []} class="mt-3 flex flex-wrap gap-1.5">
+            <span
+              :for={genre <- @genres}
+              class="bg-base-200 text-base-content/70 rounded-full px-2.5 py-1 text-xs"
+            >
+              {genre.name}
+            </span>
+          </div>
+        </div>
+      </div>
+    </header>
+    """
+  end
+
+  attr :event, :string, required: true
+  attr :active, :boolean, required: true
+  attr :icon, :string, required: true
+  attr :label, :string, required: true
+  attr :tone, :string, default: "smovie"
+
+  defp work_action(assigns) do
+    ~H"""
+    <button
+      type="button"
+      phx-click={@event}
+      aria-pressed={to_string(@active)}
+      class={[
+        "bg-base-200 flex min-h-14 flex-col items-center justify-center gap-1 px-2 py-2.5",
+        "font-mono text-[0.6rem] tracking-[0.05em] uppercase",
+        action_tone(@active, @tone)
+      ]}
+    >
+      <.icon name={@icon} class="size-5" />
+      {@label}
+    </button>
+    """
+  end
+
+  defp action_tone(false, _tone), do: "text-base-content/50"
+  defp action_tone(true, "heat"), do: "text-heat"
+  defp action_tone(true, _tone), do: "text-smovie"
+
+  defp runtime_label(%Work{runtime: nil}), do: nil
+  defp runtime_label(%Work{runtime: minutes}), do: gettext("%{count} min", count: minutes)
+
+  defp smovie_average(%Work{} = work) do
+    case Work.smovie_out_of_five(work) do
+      nil -> nil
+      average -> average
+    end
+  end
+
+  defp press_score(nil), do: nil
+  defp press_score({_source, score}), do: score
+
+  defp press_source(nil), do: nil
+  defp press_source({source, _score}), do: source
+end

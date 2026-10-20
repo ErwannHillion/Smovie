@@ -265,7 +265,7 @@ defmodule SmovieWeb.WorkComponents do
 
   defp score(assigns) do
     ~H"""
-    <div class="bg-base-200 px-2.5 py-3 text-center">
+    <div class="bg-base-200 px-2.5 py-3 text-center" data-score={@label}>
       <p class="text-base-content/50 font-mono text-[0.55rem] tracking-[0.12em] uppercase">
         {@label}
       </p>
