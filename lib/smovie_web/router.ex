@@ -11,6 +11,7 @@ defmodule SmovieWeb.Router do
     plug :protect_from_forgery
     plug SmovieWeb.Plugs.ContentSecurityPolicy
     plug :fetch_current_scope_for_user
+    plug SmovieWeb.Plugs.Locale
   end
 
   pipeline :api do
@@ -21,7 +22,7 @@ defmodule SmovieWeb.Router do
     pipe_through :browser
 
     live_session :default,
-      on_mount: [{SmovieWeb.UserAuth, :mount_current_scope}] do
+      on_mount: [{SmovieWeb.UserAuth, :mount_current_scope}, SmovieWeb.Hooks.Locale] do
       live "/", HomeLive
     end
   end
@@ -54,7 +55,7 @@ defmodule SmovieWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
-      on_mount: [{SmovieWeb.UserAuth, :require_authenticated}] do
+      on_mount: [{SmovieWeb.UserAuth, :require_authenticated}, SmovieWeb.Hooks.Locale] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
     end
@@ -66,7 +67,7 @@ defmodule SmovieWeb.Router do
     pipe_through [:browser]
 
     live_session :current_user,
-      on_mount: [{SmovieWeb.UserAuth, :mount_current_scope}] do
+      on_mount: [{SmovieWeb.UserAuth, :mount_current_scope}, SmovieWeb.Hooks.Locale] do
       live "/users/register", UserLive.Registration, :new
       live "/users/log-in", UserLive.Login, :new
       live "/users/log-in/:token", UserLive.Confirmation, :new
