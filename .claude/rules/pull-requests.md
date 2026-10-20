@@ -23,18 +23,18 @@
 
 4. **Push la branche**
    ```bash
-   git push -u origin REALTIX-XXX-description
+   git push -u origin SMOVIE-XXX-description
    ```
 
 5. **Créer la PR avec `gh`**
    ```bash
-   gh pr create --title "REALTIX-XXX type: description" --body "..."
+   gh pr create --title "SMOVIE-XXX type: description" --body "..."
    ```
 
 ## Structure de la PR
 
 ### Titre
-Format : `REALTIX-XXX type: description courte`
+Format : `SMOVIE-XXX type: description courte`
 
 ### Corps de la PR
 
@@ -62,8 +62,8 @@ Description en 1-3 phrases du changement.
 - **TOUJOURS mettre à jour .env.example** si nouvelle variable d'environnement
 - **TOUJOURS mettre à jour README.md** si variable obligatoire ou nouveau service
 - **TOUJOURS vérifier la branche courante** avec `git branch --show-current` avant commit/PR
-- Utiliser le numéro REALTIX-XXX de la branche courante (pas un ancien numéro !)
-- Titre avec nomenclature REALTIX-XXX
+- Utiliser le numéro SMOVIE-XXX de la branche courante (pas un ancien numéro !)
+- Titre avec nomenclature SMOVIE-XXX
 - Description du "pourquoi", pas juste du "quoi"
 - Test plan clair
 - Un seul sujet par PR (sauf refacto groupée)

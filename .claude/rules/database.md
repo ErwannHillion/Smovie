@@ -158,8 +158,8 @@ Pour des opérations complexes, préférer IEx et le code Elixir :
 
 ```elixir
 # ✅ Bon - Dans IEx
-iex> Intranet.Repo.all(Intranet.Accounts.User) |> Enum.count()
+iex> Smovie.Repo.all(Smovie.Accounts.User) |> Enum.count()
 
 # ❌ Éviter - SQL brut
-$ psql -d intranet_dev -c "SELECT COUNT(*) FROM users;"
+$ psql -d smovie_dev -c "SELECT COUNT(*) FROM users;"
 ```

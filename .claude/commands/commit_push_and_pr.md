@@ -6,7 +6,7 @@ Arguments :
 
 ## Workflow
 
-1. **Vérifier la branche courante** avec `git branch --show-current` pour extraire REALTIX-XXX
+1. **Vérifier la branche courante** avec `git branch --show-current` pour extraire SMOVIE-XXX
 2. **Analyser les changements** :
    - `git status` pour voir les fichiers modifiés
    - `git diff` pour comprendre les changements
@@ -18,11 +18,11 @@ Arguments :
    - Vérifier que `System.get_env` est bien dans `config/*.exs` (pas dans le code)
 
 4. **Proposer un message de commit** respectant les règles `.claude/rules/git-commits.md` :
-   - Format : `REALTIX-XXX type(scope): description`
+   - Format : `SMOVIE-XXX type(scope): description`
    - Types : `feat`, `fix`, `refacto`, `test`, `docs`, `style`, `chore`, `ops`
    - **INTERDIT** : Mentionner Claude, Claude Code, ou toute référence à l'IA
    - **INTERDIT** : Utiliser des emojis (sauf dans le corps si demandé)
-   - **OBLIGATOIRE** : Préfixe REALTIX-XXX, message en français
+   - **OBLIGATOIRE** : Préfixe SMOVIE-XXX, message en français
    - Corps du commit avec détails si nécessaire
 
 5. **Valider avec l'utilisateur** avant de commiter, pusher et créer la PR
@@ -43,7 +43,7 @@ Arguments :
      - Se concentrer uniquement sur les commits nouveaux de la branche courante
 
 9. **Créer la Pull Request** avec `gh pr create` selon les règles `.claude/rules/pull-requests.md` :
-   - Titre : `REALTIX-XXX: Description concise`
+   - Titre : `SMOVIE-XXX: Description concise`
    - Corps avec sections :
      - **Contexte** : Pourquoi ce changement
      - **Modifications** : Liste détaillée des changements

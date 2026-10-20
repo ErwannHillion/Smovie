@@ -9,25 +9,25 @@
 
 ```elixir
 # ✅ Bon - Dans config/*.exs
-config :intranet, :plane,
-  api_url: System.get_env("PLANE_API_URL"),
-  is_active: System.get_env("PLANE_IS_ACTIVE", "false") == "true"
+config :smovie, :tmdb,
+  api_key: System.get_env("TMDB_API_KEY"),
+  base_url: System.get_env("TMDB_BASE_URL", "https://api.themoviedb.org/3")
 
 # ✅ Bon - Dans le code applicatif
-defmodule Intranet.ItSupport.PlaneClient do
+defmodule Smovie.External.TMDB.Req do
   def get_api_url do
-    Application.get_env(:intranet, :plane)[:api_url]
+    Application.get_env(:smovie, :tmdb)[:api_url]
   end
 
   def active? do
-    Application.get_env(:intranet, :plane)[:is_active]
+    Application.get_env(:smovie, :tmdb)[:is_active]
   end
 end
 
 # ❌ Mauvais - System.get_env dans le code
-defmodule Intranet.ItSupport.PlaneClient do
+defmodule Smovie.External.TMDB.Req do
   def get_api_url do
-    System.get_env("PLANE_API_URL")  # NON !
+    System.get_env("TMDB_BASE_URL")  # NON !
   end
 end
 ```
@@ -51,21 +51,21 @@ end
 
 ```elixir
 # config/config.exs - Valeurs par défaut communes
-config :intranet, :features,
-  show_orga_in_profile: false,
-  show_bookings_in_home: false
+config :smovie, :features,
+  show_press_ratings: true,
+  show_friends_block_on_home: true
 
 # config/runtime.exs - Variables d'environnement (prod/preprod)
-config :intranet, :plane,
-  api_url: System.get_env("PLANE_API_URL"),
-  is_active: System.get_env("PLANE_IS_ACTIVE", "false") == "true"
+config :smovie, :tmdb,
+  api_key: System.get_env("TMDB_API_KEY"),
+  base_url: System.get_env("TMDB_BASE_URL", "https://api.themoviedb.org/3")
 
 # config/dev.exs - Overrides pour développement
-config :intranet, :features,
-  show_orga_in_profile: true
+config :smovie, :features,
+  show_press_ratings: false
 
 # config/test.exs - Overrides pour tests
-config :intranet, :plane,
+config :smovie, :tmdb,
   api_url: "http://localhost:4567",
   is_active: false
 ```
@@ -86,12 +86,12 @@ config :intranet, :plane,
 ```elixir
 # ❌ Mauvais - URL en dur
 def send_webhook do
-  HTTPoison.post("https://api.plane.so/webhook", body)
+  HTTPoison.post("https://api.themoviedb.org/3/webhook", body)
 end
 
 # ✅ Bon - URL variabilisée
 def send_webhook do
-  url = Application.get_env(:intranet, :plane)[:webhook_url]
+  url = Application.get_env(:smovie, :tmdb)[:webhook_url]
   HTTPoison.post(url, body)
 end
 ```
@@ -100,27 +100,25 @@ end
 
 ```elixir
 # config/runtime.exs
-config :intranet, :external_urls,
-  webmail: System.get_env("URL_WEBMAIL_AQUARAY", "https://webmail.example.com"),
-  lucca: System.get_env("URL_LUCCA", "https://lucca.example.com")
-config :intranet, :emails,
-  dpo: System.get_env("DPO_EMAIL", "dpo@inter-gestion.com"),
-  support: System.get_env("SUPPORT_EMAIL", "support@inter-gestion.com")
+config :smovie, :tmdb,
+  image_base_url: System.get_env("TMDB_IMAGE_BASE_URL", "https://image.tmdb.org/t/p"),
+  language: System.get_env("TMDB_LANGUAGE", "fr-FR")
+config :smovie, :emails,
 
-config :intranet, :limits,
+config :smovie, :limits,
   max_file_size: String.to_integer(System.get_env("MAX_FILE_SIZE", "10485760")),
   pagination_default: String.to_integer(System.get_env("PAGINATION_DEFAULT", "50"))
 
 # Dans le code
-defmodule IntranetWeb.LayoutView do
-  def webmail_url do
-    Application.get_env(:intranet, :external_urls)[:webmail]
+defmodule SmovieWeb.WorkComponents do
+  def image_base_url do
+    Application.get_env(:smovie, :tmdb)[:image_base_url]
   end
 end
 
-defmodule Intranet.Support do
-  def dpo_email do
-    Application.get_env(:intranet, :emails)[:dpo]
+defmodule Smovie.Trending do
+  def window_days do
+    Application.get_env(:smovie, :trending)[:window_days]
   end
 end
 ```
@@ -145,17 +143,15 @@ MICROSOFT_CLIENT_SECRET=your-client-secret
 MICROSOFT_TENANT_ID=your-tenant-id
 
 # External Services
-PLANE_IS_ACTIVE=false
-PLANE_API_URL=https://api.plane.so
-PLANE_API_KEY=your-plane-api-key
+OMDB_IS_ACTIVE=false
+TMDB_BASE_URL=https://api.themoviedb.org/3
+TMDB_API_KEY=your-plane-api-key
 
 # External URLs
-URL_WEBMAIL_AQUARAY=https://webmail.example.com
-URL_LUCCA=https://lucca.example.com
+TMDB_IMAGE_BASE_URL=https://image.tmdb.org/t/p
+TMDB_LANGUAGE=fr-FR
 
 # Emails
-DPO_EMAIL=dpo@inter-gestion.com
-SUPPORT_EMAIL=support@inter-gestion.com
 
 # Features (optional - defaults in config)
 SHOW_ORGA_IN_PROFILE=false
@@ -165,7 +161,7 @@ SHOW_BOOKINGS_IN_HOME_CALENDAR=false
 DB_USERNAME=postgres
 DB_PASSWORD=postgres
 DB_HOSTNAME=localhost
-DB_NAME=intranet_dev
+DB_NAME=smovie_dev
 ```
 
 **Règles** :
@@ -203,10 +199,10 @@ DB_NAME=intranet_dev
 ### Sections Obligatoires du README
 
 ```markdown
-# Intranet
+# Smovie
 
 ## Description
-[Brève description du projet]
+Letterboxd francophone : films et series, notation jusqu a l episode, social et messagerie.
 
 ## Prérequis
 - Elixir 1.18+
@@ -227,29 +223,29 @@ cp .env.example .env
 
 Variables obligatoires :
 - `DATABASE_URL` (production)
-- `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECRET`, `MICROSOFT_TENANT_ID`
-- [Liste des vars obligatoires]
+- `TMDB_API_KEY`
+- `SECRET_KEY_BASE` (production)
 
 Variables optionnelles :
-- `PLANE_IS_ACTIVE` (default: false)
-- [Liste des vars optionnelles avec defaults]
+- `OMDB_IS_ACTIVE` (default: false)
+- `TMDB_LANGUAGE` (default: fr-FR)
 
 ### 3. Setup de la base de données
 ...
 
 ## Services Externes
 
-### Microsoft OAuth
-[Configuration OAuth]
+### TMDB
+[Clé API, langue, région]
 
-### Plane.so (optionnel)
-[Configuration Plane si activé]
+### OMDb (optionnel)
+[Configuration OMDb si activé — notes presse]
 
 ## Fonctionnalités
-- Authentification Microsoft
-- Gestion des utilisateurs
-- Réservations de salles
-- [Autres features]
+- Catalogue films et séries importé de TMDB
+- Notation en demi-étoiles, jusqu'à l'épisode
+- Reviews, abonnements, watchlist
+- Messagerie privée et de groupe
 
 ## Développement
 [Instructions pour développer]
@@ -266,23 +262,22 @@ Quand vous ajoutez/modifiez une configuration :
 - [ ] `CHANGELOG.md` mis à jour si changement impacte les utilisateurs
 - [ ] Documentation de la variable (commentaire dans config)
 
-## Abstraction (Future)
+## Le module Smovie.Config
 
-**Note** : Pour l'instant, utiliser `Application.get_env/2` directement.
-
-À terme, envisager une abstraction unifiée :
+**Non négociable** : le code applicatif lit la configuration via `Smovie.Config`,
+jamais `Application.get_env/2` en direct (check `.credo/no_direct_application_get_env.ex`).
 
 ```elixir
 # Future - Module de configuration centralisé
-defmodule Intranet.Config do
-  def plane_api_url, do: get(:plane, :api_url)
-  def plane_active?, do: get(:plane, :is_active)
-  def dpo_email, do: get(:emails, :dpo)
+defmodule Smovie.Config do
+  def plane_api_url, do: get(:tmdb, :api_url)
+  def plane_active?, do: get(:tmdb, :is_active)
+  def omdb_enabled?, do: get(:omdb, :enabled)
 
   defp get(key, subkey) do
-    Application.get_env(:intranet, key)[subkey]
+    Application.get_env(:smovie, key)[subkey]
   end
 end
 ```
 
-Mais ne pas introduire avant d'avoir un plan de migration complet.
+`Smovie.Config` est le **seul** module autorisé à appeler `Application.get_env/2`.

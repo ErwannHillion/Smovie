@@ -82,11 +82,10 @@ donnée que la fonction a elle-même construite. Même là, préférer une garde
 
 ### Détection
 
-Le check `.credo/no_true_match.ex` existe **mais n'est pas branché** : il n'y a
-aucun `.credo.exs` à la racine, donc `mix credo --strict` tourne avec les checks
-par défaut et ne l'exécute pas (comme les 9 autres checks custom du dossier).
+Le check `.credo/no_true_match.ex` est branché par `.credo.exs` depuis SMOVIE-001 :
+`mix credo --strict` l'exécute, comme les neuf autres checks du dossier.
 
-Vérifier à la main :
+Vérification manuelle d'appoint :
 
 ```bash
 git grep -n "true = " -- 'lib/**/*.ex'
@@ -94,14 +93,5 @@ git grep -n "true = " -- 'lib/**/*.ex'
 
 ### État du code
 
-Au 2026-09-15, 15 occurrences pré-existantes subsistent :
-
-| Fichier | Occurrences |
-|---|---|
-| `lib/realtix/sphere_deals.ex` | 12 |
-| `lib/realtix/teaser_shares.ex` | 3 |
-
-`settings.ex` et `user_session_controller.ex` ont été traités par REALTIX-107.
-
-REALTIX-99 n'avait nettoyé que le contexte `Chats`. Ne pas en ajouter de nouvelles ;
-les corriger au passage quand on touche un de ces fichiers.
+Zéro occurrence. La refonte repart d'une base propre : il ne s'agit pas d'une dette à
+résorber mais d'une règle à ne pas enfreindre.

@@ -36,7 +36,7 @@ Workflow :
 Si tout est OK :
 - Vérifier la branche courante avec `git branch --show-current`
 - Compiler les résultats de tous les agents
-- Proposer le commit avec nomenclature REALTIX-XXX
+- Proposer le commit avec nomenclature SMOVIE-XXX
 - CHANGELOG.md mis à jour
 
 Présenter un résumé clair des actions de chaque agent et un rapport de validation.

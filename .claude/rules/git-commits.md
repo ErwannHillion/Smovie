@@ -2,45 +2,45 @@
 
 ## Nomenclature Obligatoire
 
-**Format** : `REALTIX-XXX type(scope): description`
+**Format** : `SMOVIE-XXX type(scope): description`
 
 ### Exemples
-- `REALTIX-493 feat(auth): active remember_me automatiquement pour login Microsoft`
-- `REALTIX-482 fix(calendar): correction affichage dates`
-- `REALTIX-470 refacto(divers): nettoyage code`
+- `SMOVIE-014 feat(notes): selecteur d etoiles par demi-crans`
+- `SMOVIE-021 fix(reviews): corrige le compteur de likes apres un retrait`
+- `SMOVIE-002 refacto(divers): supprime les live views de l ancienne version`
 
 ## Nomenclature des Branches
 
-**La branche porte le nom du ticket.** Elle se crée avec le script du repo, qui
-dérive le nom du summary JIRA :
+**La branche porte le nom du ticket.**
 
 ```bash
-./scripts/jira-sync.sh create-branch REALTIX-XXX
+git switch -c SMOVIE-XXX-scope-description-du-ticket
 ```
 
 ### Nomenclature des tickets JIRA
 
 **Format** : `[Scope] Description`
 
-- `[Analyse] Provenance de chaque valeur du formulaire`
-- `[Accounts] Pays utilisateur et modale de premiere connexion`
-- `[Packs] Propagation des corrections de pack aux deals existants`
-- `[Secu] Edition des packs reservee aux referents du pays`
+- `[Catalogue] Import a la demande depuis TMDB`
+- `[Notes] Selecteur d etoiles et note Smovie bayesienne`
+- `[Messagerie] Partage de films et de reviews`
+- `[Secu] Durcissement des autorisations de conversation`
 - `[Fix] ...`, `[Refacto] ...`, `[UX] ...`, `[Perf] ...`
 
 **Pas de `feat(scope):` dans un titre de ticket** — ce format est réservé aux
 messages de commit. Le script coupe tout ce qui précède un `:`, donc un titre
 en `feat(analyse): ...` produit une branche sans verbe ni scope.
 
-**Éviter accents et apostrophes dans les titres** : le script les supprime, ce
-qui donne `secu-dition-des-packs-rserve-aux-rfrents`.
+**Éviter accents et apostrophes dans les titres** : ils n'ont rien à faire dans un
+nom de branche, et les retirer après coup donne des horreurs du genre
+`secu-dition-des-packs-rserve-aux-rfrents`.
 
 ### Branches produites
 
 | Ticket | Branche |
 |---|---|
-| `[Analyse] Provenance de chaque valeur du formulaire` | `REALTIX-102-analyse-provenance-de-chaque-valeur-du-formulaire` |
-| `[Pays] Analyse dependante du pays utilisateur` | `REALTIX-103-pays-analyse-dependante-du-pays-utilisateur` |
+| `[Catalogue] Table works unifiee` | `SMOVIE-008-catalogue-table-works-unifiee` |
+| `[Notes] Selecteur d etoiles et note bayesienne` | `SMOVIE-014-notes-selecteur-d-etoiles-et-note-bayesienne` |
 
 ## Types Autorisés
 
@@ -58,10 +58,10 @@ qui donne `secu-dition-des-packs-rserve-aux-rfrents`.
 ❌ **INTERDIT** :
 - Mentionner Claude, Claude Code, ou toute référence à l'IA
 - Utiliser des emojis (sauf dans le corps si demandé)
-- Omettre le préfixe REALTIX-XXX
+- Omettre le préfixe SMOVIE-XXX
 
 ✅ **OBLIGATOIRE** :
-- Préfixer avec REALTIX-XXX (numéro de la branche)
+- Préfixer avec SMOVIE-XXX (numéro de la branche)
 - Message en français
 - Description concise et claire
 - Corps du commit pour détails supplémentaires
@@ -69,7 +69,7 @@ qui donne `secu-dition-des-packs-rserve-aux-rfrents`.
 ## Format du Corps
 
 ```
-REALTIX-XXX type(scope): titre court
+SMOVIE-XXX type(scope): titre court
 
 Description détaillée si nécessaire.
 Liste des changements :
@@ -85,7 +85,10 @@ Liste des changements :
 4. **Vérifier si ajout/modification de config** :
    - Mettre à jour `.env.example` si nouvelle variable d'environnement
    - Mettre à jour `README.md` si variable obligatoire ou service externe
-   - Vérifier que `System.get_env` est bien dans `config/*.exs` (pas dans le code)
+   - Vérifier que `System.get_env` est bien dans `config/runtime.exs` (pas dans le
+     code), et que le code lit la configuration via `Smovie.Config`
 5. S'assurer que les tests passent
 6. Formater le code (`mix format`)
 7. Vérifier la qualité avec `mix credo --strict`
+8. **Vérifier les chaînes traduites** : toute chaîne visible passe par `gettext/1`,
+   puis `mix gettext.extract --merge`

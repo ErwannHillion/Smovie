@@ -31,10 +31,10 @@ Toutes les règles sont documentées dans `.claude/rules/` :
 - `elixir-phoenix.md` - Conventions Elixir/Phoenix complètes
 - `database.md` - Migrations, upserts, seeds
 - `configuration.md` - Variables d'environnement, .env.example
-- `git-commits.md` - Nomenclature REALTIX-XXX, checklist
+- `git-commits.md` - Nomenclature SMOVIE-XXX, checklist
 - `pull-requests.md` - Workflow PR, CHANGELOG
 - `changelog.md` - Suivi des releases
-- `project-specific.md` - Architecture intranet
+- `project-specific.md` - Architecture Smovie
 
 ## Utilisation
 

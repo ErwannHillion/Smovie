@@ -18,8 +18,8 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 ## [Unreleased]
 
 ### Added
-- Nouvelle fonctionnalité X pour [contexte]
-- Nouveau module Y pour gérer [cas d'usage]
+- Nouvelle fonctionnalite X pour [contexte]
+- Nouveau module Y pour gerer [cas d'usage]
 
 ### Changed
 - Amélioration de Z pour [raison]
@@ -35,8 +35,8 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 ## [1.2.0] - 2025-01-15
 
 ### Added
-- Authentification Microsoft avec cookie persistant
-- Gestion des réservations de salles avec calendrier
+- Fiches film et série avec note Smovie et note presse
+- Notation des épisodes un par un
 
 ...
 ```
@@ -67,19 +67,19 @@ Toutes les modifications notables de ce projet seront documentées dans ce fichi
 ✅ **Bon** - Concis et orienté métier :
 ```markdown
 ### Added
-- Authentification Microsoft avec cookie persistant (60 jours)
-- Retry automatique de connexion dans client lourd
-- Widget calendrier dynamique sur page d'accueil
+- Notation des episodes un par un, avec progression par saison
+- Note presse IMDb et Metacritic sur les fiches film et serie
+- Partage d'un film ou d'une review dans une conversation
 
 ### Fixed
-- Affichage des accents dans notifications de réservation
-- Gestion des participants non-inscrits aux réunions
+- Compteur de likes d'une review apres un retrait
+- Moyenne Smovie des oeuvres ayant moins de trois notes
 ```
 
 ❌ **Mauvais** - Trop technique ou verbeux :
 ```markdown
 ### Added
-- Ajout du paramètre remember_me=true dans IntranetWeb.AuthController ligne 45 pour activer le cookie de session persistant via IntranetWeb.UserAuth.log_in_user/3 qui utilise le plug put_session avec une durée de 60 jours configurée dans user_auth.ex
+- Ajout du champ rating_value smallint dans Smovie.Reviews.Review ligne 23 avec un CHECK BETWEEN 1 AND 10 pour stocker la note en demi-etoiles au moment de la publication via Reviews.publish/3 qui copie ratings.value
 ```
 
 ## Remaniement du Changelog
@@ -99,26 +99,26 @@ Si la section `[Unreleased]` devient trop longue ou verbeuse :
 ## [Unreleased]
 
 ### Added
-- Menu de réservation de salles avec gestion des conflits
-- Notifications email aux participants de réunions
-- Masquage des titres de réunions pour non-participants
+- Watchlist avec tri par sortie, duree et note Smovie
+- Notifications d'abonnement, de like et de commentaire
+- Masquage des reviews a spoilers derriere un clic
 
 ### Changed
-- Amélioration du widget calendrier pour afficher réunions et réservations
-- Simplification de la gestion des participants aux réservations
+- Classement des tendances calcule sur une fenetre de sept jours
+- Simplification du selecteur d'etoiles en un champ glissable
 
 ### Fixed
-- Correction des accents dans messages de succès (réservations)
-- Fix du rendu des noms et prénoms pour utilisateurs de test
+- Correction du tri des episodes au-dela du numero 9
+- Fix de l'import TMDB des series sans date de premiere diffusion
 
 ## [1.5.0] - 2025-01-20
 
 ### Added
-- Authentification Microsoft avec cookie persistant
-- Client lourd avec retry automatique si serveur indisponible
+- Fiches film et serie avec note Smovie et note presse
+- Import a la demande du catalogue TMDB
 
 ### Fixed
-- Gestion des erreurs de connexion dans client lourd
+- Gestion des erreurs de quota OMDb
 
 ## [1.4.0] - 2025-01-10
 
@@ -131,15 +131,15 @@ Le changelog peut être référencé dans le corps de la PR :
 
 ```markdown
 ## Résumé
-Ajout du système de réservation de salles avec calendrier dynamique.
+Ajout de la notation des episodes et de la progression par saison.
 
 ## Changements
 Voir CHANGELOG.md section [Unreleased]
 
 ## Test plan
-- [ ] Créer une réservation de salle
-- [ ] Vérifier l'affichage dans le calendrier
-- [ ] Tester les notifications email
+- [ ] Noter trois episodes d'une saison
+- [ ] Verifier la progression affichee sur la fiche serie
+- [ ] Verifier que la note de la serie reste independante
 ```
 
 ## Notes

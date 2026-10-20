@@ -261,7 +261,7 @@ User: "Implémente <feature>, lance les agents en parallèle"
 #### Phase 5 : Finalisation
 ```
 Si tout OK :
-  - Commit avec nomenclature REALTIX-XXX
+  - Commit avec nomenclature SMOVIE-XXX
   - CHANGELOG.md mis à jour
   - Prêt pour PR
 ```
@@ -380,7 +380,7 @@ end
 **Problème 2 : Appels en double (on_mount vs mount)**
 ```elixir
 # Dans router.ex
-live_session :default, on_mount: IntranetWeb.UserLiveAuth do
+live_session :default, on_mount: SmovieWeb.UserLiveAuth do
   # UserLiveAuth charge current_user
 end
 

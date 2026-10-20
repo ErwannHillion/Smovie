@@ -2,8 +2,7 @@
 
 ## La règle
 
-**Toute session qui lance `mix test`, `mix run` ou un serveur de dev vérifie
-les Chrome headless avant de terminer.**
+**Toute session qui lance un Chrome headless le referme avant de terminer.**
 
 ```bash
 ps -axo comm= | grep -ci "google chrome"   # combien tournent
@@ -12,37 +11,21 @@ ps -axo comm= | grep -ci "google chrome"   # combien tournent
 
 ## Pourquoi
 
-`mix test` et `mix run` se terminent par un `System.halt/1`, qui ne déroule
-pas l'arrêt des applications. ChromicPDF — le pool de Chrome qui sert
-l'export PDF du teaser — n'a donc jamais l'occasion de refermer ce qu'il a
-ouvert.
+Un Chrome headless lancé en ligne de commande, ou par une bibliothèque qui gère son
+propre pool, ne se referme pas toujours quand le processus parent s'arrête — `mix test`
+et `mix run` se terminent par un `System.halt/1`, qui ne déroule pas l'arrêt des
+applications. Les instances s'accumulent, silencieusement, à plusieurs centaines de
+mégaoctets pièce.
 
-Le 2026-09-22, une journée de travail avait laissé **494 processus et
-11,6 Go**. La machine ramait.
-
-## Ce qui a été fait côté projet
-
-| Configuration | Fuite par exécution | Durée de `pdf_exporter_test.exs` |
-|---|---|---|
-| Pool par défaut | ~100 processus | 18,2 s |
-| `on_demand: true` | 84 processus | 18,5 s |
-| Pool de taille 1 + `after_suite` | **4 processus** | **3,3 s** |
-
-- `config/test.exs` et `config/dev.exs` : `on_demand: false, session_pool: [size: 1]`
-- `config/config.exs` : `on_demand: false` — la production garde un pool chaud
-- `test/test_helper.exs` : `Supervisor.stop(Realtix.Supervisor)` dans
-  `ExUnit.after_suite/1`, suivi d'un court délai
-
-**Ne pas remettre `on_demand: true`** : ce mode ouvre un Chrome *par
-opération*, hors de l'arbre de supervision, donc l'arrêt de fin de suite ne
-les voit pas. C'est pire que le pool, et cinq fois plus lent.
+Sur un autre projet de l'équipe, une journée de travail avait laissé **494 processus et
+11,6 Go**.
 
 ## Le piège du filtre
 
 Le navigateur interactif et le headless partagent le même binaire. Un
 `pkill -f "Google Chrome"` emporterait les onglets de l'utilisateur.
 
-❌ `pkill -f "Google Chrome"`
+❌ `pkill -f "Google Chrome"` — tue la session interactive
 ❌ `pgrep -fa` — tronque les lignes de commande, le comptage est faux
 ❌ `ps ... | grep -- '--headless'` — attrape sa propre ligne de commande
 
@@ -51,3 +34,12 @@ Le navigateur interactif et le headless partagent le même binaire. Un
 ```bash
 ps -axo pid=,args= | awk '/Google Chrome\.app/ && /--headless/ {print $1}'
 ```
+
+## Si un pool est introduit un jour
+
+Smovie n'embarque pas ChromicPDF aujourd'hui. Si un export PDF arrive :
+
+- configurer `on_demand: false` avec `session_pool: [size: 1]` en `test` et en `dev` —
+  `on_demand: true` ouvre un Chrome **par opération**, hors de l'arbre de supervision,
+  donc l'arrêt de fin de suite ne les voit pas ;
+- arrêter le superviseur applicatif dans `ExUnit.after_suite/1`.
