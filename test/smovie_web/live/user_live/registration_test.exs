@@ -8,8 +8,8 @@ defmodule SmovieWeb.UserLive.RegistrationTest do
     test "renders registration page", %{conn: conn} do
       {:ok, _lv, html} = live(conn, ~p"/users/register")
 
-      assert html =~ "Register"
-      assert html =~ "Log in"
+      assert html =~ "Creer un compte"
+      assert html =~ "Connexion"
     end
 
     test "redirects if already logged in", %{conn: conn} do
@@ -30,7 +30,7 @@ defmodule SmovieWeb.UserLive.RegistrationTest do
         |> element("#registration_form")
         |> render_change(user: %{"email" => "with spaces"})
 
-      assert result =~ "Register"
+      assert result =~ "Creer un compte"
       assert result =~ "must have the @ sign and no spaces"
     end
   end
@@ -47,7 +47,7 @@ defmodule SmovieWeb.UserLive.RegistrationTest do
         |> follow_redirect(conn, ~p"/users/log-in")
 
       assert html =~
-               ~r/An email was sent to .*, please access it to confirm your account/
+               ~r/Un message a ete envoye a .*\. Ouvrez-le pour confirmer votre compte/
     end
 
     test "renders errors for duplicated email", %{conn: conn} do
@@ -72,11 +72,11 @@ defmodule SmovieWeb.UserLive.RegistrationTest do
 
       {:ok, _login_live, login_html} =
         lv
-        |> element("main a", "Log in")
+        |> element("main a", "Connectez-vous")
         |> render_click()
         |> follow_redirect(conn, ~p"/users/log-in")
 
-      assert login_html =~ "Log in"
+      assert login_html =~ "Connexion"
     end
   end
 end

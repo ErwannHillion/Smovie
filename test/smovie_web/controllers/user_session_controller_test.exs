@@ -67,7 +67,9 @@ defmodule SmovieWeb.UserSessionControllerTest do
           "user" => %{"email" => user.email, "password" => "invalid_password"}
         })
 
-      assert Phoenix.Flash.get(conn.assigns.flash, :error) == "Invalid email or password"
+      assert Phoenix.Flash.get(conn.assigns.flash, :error) ==
+               "Adresse e-mail ou mot de passe incorrect"
+
       assert redirected_to(conn) == ~p"/users/log-in"
     end
   end

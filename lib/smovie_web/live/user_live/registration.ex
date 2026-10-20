@@ -6,16 +6,20 @@ defmodule SmovieWeb.UserLive.Registration do
 
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_scope}>
+    <Layouts.app
+      flash={@flash}
+      current_scope={@current_scope}
+      locale={@locale}
+      current_path={@current_path}
+    >
       <div class="mx-auto max-w-sm">
         <.header class="text-center">
-          Register for an account
+          {gettext("Creer un compte")}
           <:subtitle>
-            Already registered?
+            {gettext("Deja inscrit ?")}
             <.link navigate={~p"/users/log-in"} class="font-semibold text-brand hover:underline">
-              Log in
+              {gettext("Connectez-vous")}
             </.link>
-            to your account now.
           </:subtitle>
         </.header>
 
@@ -23,14 +27,18 @@ defmodule SmovieWeb.UserLive.Registration do
           <.input
             field={@form[:email]}
             type="email"
-            label="Email"
+            label={gettext("Adresse e-mail")}
             autocomplete="username"
             required
             phx-mounted={JS.focus()}
           />
 
-          <.button variant="primary" phx-disable-with="Creating account..." class="w-full">
-            Create an account
+          <.button
+            variant="primary"
+            phx-disable-with={gettext("Creation du compte...")}
+            class="w-full"
+          >
+            {gettext("Creer mon compte")}
           </.button>
         </.form>
       </div>
@@ -62,7 +70,9 @@ defmodule SmovieWeb.UserLive.Registration do
          socket
          |> put_flash(
            :info,
-           "An email was sent to #{user.email}, please access it to confirm your account."
+           gettext("Un message a ete envoye a %{email}. Ouvrez-le pour confirmer votre compte.",
+             email: user.email
+           )
          )
          |> push_navigate(to: ~p"/users/log-in")}
 

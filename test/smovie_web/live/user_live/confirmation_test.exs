@@ -18,7 +18,7 @@ defmodule SmovieWeb.UserLive.ConfirmationTest do
         end)
 
       {:ok, _lv, html} = live(conn, ~p"/users/log-in/#{token}")
-      assert html =~ "Confirm my account"
+      assert html =~ "Confirmer mon compte"
     end
 
     test "renders login page for confirmed user", %{conn: conn, confirmed_user: user} do
@@ -28,8 +28,8 @@ defmodule SmovieWeb.UserLive.ConfirmationTest do
         end)
 
       {:ok, _lv, html} = live(conn, ~p"/users/log-in/#{token}")
-      refute html =~ "Confirm my account"
-      assert html =~ "Log in"
+      refute html =~ "Confirmer mon compte"
+      assert html =~ "Connexion"
     end
 
     test "confirms the given token once", %{conn: conn, unconfirmed_user: user} do
@@ -60,7 +60,7 @@ defmodule SmovieWeb.UserLive.ConfirmationTest do
         live(conn, ~p"/users/log-in/#{token}")
         |> follow_redirect(conn, ~p"/users/log-in")
 
-      assert html =~ "Magic link is invalid or it has expired"
+      assert html =~ "Ce lien de connexion est invalide ou a expire"
     end
 
     test "logs confirmed user in without changing confirmed_at", %{
@@ -91,7 +91,7 @@ defmodule SmovieWeb.UserLive.ConfirmationTest do
         live(conn, ~p"/users/log-in/#{token}")
         |> follow_redirect(conn, ~p"/users/log-in")
 
-      assert html =~ "Magic link is invalid or it has expired"
+      assert html =~ "Ce lien de connexion est invalide ou a expire"
     end
 
     test "raises error for invalid token", %{conn: conn} do
@@ -99,7 +99,7 @@ defmodule SmovieWeb.UserLive.ConfirmationTest do
         live(conn, ~p"/users/log-in/invalid-token")
         |> follow_redirect(conn, ~p"/users/log-in")
 
-      assert html =~ "Magic link is invalid or it has expired"
+      assert html =~ "Ce lien de connexion est invalide ou a expire"
     end
   end
 end
