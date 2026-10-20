@@ -25,13 +25,18 @@ defmodule SmovieWeb.Router do
     put "/locale/:locale", LocaleController, :update
 
     live_session :default,
-      on_mount: [{SmovieWeb.UserAuth, :mount_current_scope}, SmovieWeb.Hooks.Locale] do
+      on_mount: [
+        {SmovieWeb.UserAuth, :mount_current_scope},
+        SmovieWeb.Hooks.Locale,
+        SmovieWeb.Hooks.Unread
+      ] do
       live "/", HomeLive
 
       # Sections dont la navigation existe deja : voir SmovieWeb.SoonLive.
       live "/reviews", ReviewLive.Index
       live "/recherche", SoonLive, :search
       live "/watchlist", SoonLive, :watchlist
+      live "/notifications", NotificationsLive
       live "/messages", SoonLive, :messages
 
       live "/u/:username", ProfileLive
@@ -74,7 +79,11 @@ defmodule SmovieWeb.Router do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
-      on_mount: [{SmovieWeb.UserAuth, :require_authenticated}, SmovieWeb.Hooks.Locale] do
+      on_mount: [
+        {SmovieWeb.UserAuth, :require_authenticated},
+        SmovieWeb.Hooks.Locale,
+        SmovieWeb.Hooks.Unread
+      ] do
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
     end
@@ -86,7 +95,11 @@ defmodule SmovieWeb.Router do
     pipe_through [:browser]
 
     live_session :current_user,
-      on_mount: [{SmovieWeb.UserAuth, :mount_current_scope}, SmovieWeb.Hooks.Locale] do
+      on_mount: [
+        {SmovieWeb.UserAuth, :mount_current_scope},
+        SmovieWeb.Hooks.Locale,
+        SmovieWeb.Hooks.Unread
+      ] do
       live "/users/register", UserLive.Registration, :new
       live "/users/log-in", UserLive.Login, :new
       live "/users/log-in/:token", UserLive.Confirmation, :new

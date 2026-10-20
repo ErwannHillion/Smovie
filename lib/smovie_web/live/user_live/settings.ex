@@ -14,6 +14,7 @@ defmodule SmovieWeb.UserLive.Settings do
       current_scope={@current_scope}
       locale={@locale}
       current_path={@current_path}
+      unread_count={@unread_count}
     >
       <.header class="text-center">
         {gettext("Parametres du compte")}

@@ -10,6 +10,7 @@ defmodule SmovieWeb.UserLive.Login do
       current_scope={@current_scope}
       locale={@locale}
       current_path={@current_path}
+      unread_count={@unread_count}
     >
       <div class="mx-auto max-w-sm space-y-4">
         <.header class="text-center">

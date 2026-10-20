@@ -37,6 +37,7 @@ defmodule SmovieWeb.SoonLive do
       current_scope={@current_scope}
       locale={@locale}
       current_path={@current_path}
+      unread_count={@unread_count}
     >
       <div class="flex max-w-xl flex-col items-start gap-3 py-16">
         <p class="text-base-content/40 font-mono text-[0.65rem] tracking-[0.15em] uppercase">

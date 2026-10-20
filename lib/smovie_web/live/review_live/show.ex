@@ -113,6 +113,7 @@ defmodule SmovieWeb.ReviewLive.Show do
       current_scope={@current_scope}
       locale={@locale}
       current_path={@current_path}
+      unread_count={@unread_count}
     >
       <div class="max-w-2xl py-4">
         <.review_card review={@review} show_work full revealed={@revealed} />
