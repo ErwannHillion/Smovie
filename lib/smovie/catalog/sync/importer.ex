@@ -29,7 +29,7 @@ defmodule Smovie.Catalog.Sync.Importer do
   """
   def import_movie(tmdb_id) do
     case TMDB.get_movie(tmdb_id) do
-      {:ok, payload} -> payload |> Mapper.movie_attrs() |> Catalog.upsert_work()
+      {:ok, payload} -> payload |> Mapper.movie_attrs() |> import_with_relations(payload)
       {:error, reason} -> {:error, reason}
     end
   end
@@ -39,8 +39,27 @@ defmodule Smovie.Catalog.Sync.Importer do
   """
   def import_tv_show(tmdb_id) do
     case TMDB.get_tv_show(tmdb_id) do
-      {:ok, payload} -> payload |> Mapper.tv_show_attrs() |> Catalog.upsert_work()
+      {:ok, payload} -> payload |> Mapper.tv_show_attrs() |> import_with_relations(payload)
       {:error, reason} -> {:error, reason}
+    end
+  end
+
+  # Genres et casting ne viennent que des charges utiles de detail : un
+  # resultat de recherche n'a que des identifiants de genre et aucun casting.
+  defp import_with_relations(attrs, payload) do
+    case Catalog.upsert_work(attrs) do
+      {:ok, work} ->
+        payload
+        |> Mapper.genre_attrs()
+        |> Catalog.upsert_genres()
+        |> then(&Catalog.put_work_genres(work, &1))
+
+        payload |> Mapper.credit_attrs() |> then(&Catalog.put_work_credits(work, &1))
+
+        {:ok, work}
+
+      {:error, changeset} ->
+        {:error, changeset}
     end
   end
 
