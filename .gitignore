@@ -40,3 +40,8 @@ npm-debug.log
 .env
 .env.*.local
 db/
+# Documents de travail (archi, maquettes, specs) - non versionnes
+/file_for_claude/
+
+# macOS
+.DS_Store
