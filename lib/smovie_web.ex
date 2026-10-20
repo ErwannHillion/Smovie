@@ -86,6 +86,7 @@ defmodule SmovieWeb do
       import Phoenix.HTML
       # Core UI components
       import SmovieWeb.CoreComponents
+      import SmovieWeb.ActivityComponents
       import SmovieWeb.ReviewComponents
       import SmovieWeb.UserComponents
       import SmovieWeb.WorkComponents

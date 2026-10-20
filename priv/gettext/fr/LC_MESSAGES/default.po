@@ -287,7 +287,7 @@ msgstr "Accueil"
 msgid "Chercher"
 msgstr "Chercher"
 
-#: lib/smovie_web/live/home_live.ex:30
+#: lib/smovie_web/live/home_live.ex:32
 #, elixir-autogen, elixir-format
 msgid "Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watchlist et messagerie."
 msgstr "Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watchlist et messagerie."
@@ -296,11 +296,6 @@ msgstr "Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watch
 #, elixir-autogen, elixir-format
 msgid "Glissez pour noter"
 msgstr "Glissez pour noter"
-
-#: lib/smovie_web/live/home_live.ex:35
-#, elixir-autogen, elixir-format
-msgid "La page d'accueil arrive avec SMOVIE-026."
-msgstr "La page d'accueil arrive avec SMOVIE-026."
 
 #: lib/smovie_web/components/layouts.ex:179
 #: lib/smovie_web/components/layouts.ex:188
@@ -717,3 +712,38 @@ msgstr "Populaires"
 #, elixir-autogen, elixir-format
 msgid "Recentes"
 msgstr "Recentes"
+
+#: lib/smovie_web/components/activity_components.ex:58
+#, elixir-autogen, elixir-format
+msgid "%{member} a aime %{work}"
+msgstr "%{member} a aime %{work}"
+
+#: lib/smovie_web/components/activity_components.ex:45
+#, elixir-autogen, elixir-format
+msgid "%{member} a note %{work}"
+msgstr "%{member} a note %{work}"
+
+#: lib/smovie_web/components/activity_components.ex:52
+#, elixir-autogen, elixir-format
+msgid "%{member} a publie une review de %{work}"
+msgstr "%{member} a publie une review de %{work}"
+
+#: lib/smovie_web/components/activity_components.ex:48
+#, elixir-autogen, elixir-format
+msgid "%{member} a vu %{work}"
+msgstr "%{member} a vu %{work}"
+
+#: lib/smovie_web/components/activity_components.ex:62
+#, elixir-autogen, elixir-format
+msgid "%{member} suit desormais %{other}"
+msgstr "%{member} suit desormais %{other}"
+
+#: lib/smovie_web/live/home_live.ex:43
+#, elixir-autogen, elixir-format
+msgid "Activite de vos abonnements"
+msgstr "Activite de vos abonnements"
+
+#: lib/smovie_web/live/home_live.ex:37
+#, elixir-autogen, elixir-format
+msgid "La page d'accueil arrive avec SMOVIE-027."
+msgstr "La page d'accueil arrive avec SMOVIE-027."

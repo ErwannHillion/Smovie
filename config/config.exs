@@ -98,7 +98,8 @@ config :smovie, Oban,
        # 4 h du matin : TMDB a publie les sorties de la veille, et le trafic
        # est au plus bas.
        {"0 4 * * *", Smovie.Workers.SyncTrendingCatalogWorker},
-       {"0 * * * *", Smovie.Workers.RefreshRatingStatsWorker}
+       {"0 * * * *", Smovie.Workers.RefreshRatingStatsWorker},
+       {"30 4 * * 0", Smovie.Workers.PurgeActivitiesWorker}
      ]}
   ]
 

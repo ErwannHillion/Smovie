@@ -249,6 +249,7 @@ defmodule Smovie.Reviews do
     |> case do
       {:ok, %{review: review}} ->
         mark_watched_if_needed(scope, work)
+        Social.record(scope, :reviewed, %{work_id: work.id, review_id: review.id})
         {:ok, review}
 
       {:error, _step, changeset, _changes} ->

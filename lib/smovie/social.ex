@@ -9,6 +9,7 @@ defmodule Smovie.Social do
   alias Smovie.Accounts.Scope
   alias Smovie.Accounts.User
   alias Smovie.Repo
+  alias Smovie.Social.Activity
   alias Smovie.Social.Follow
 
   @doc """
@@ -32,8 +33,12 @@ defmodule Smovie.Social do
     end)
     |> Repo.transaction()
     |> case do
-      {:ok, %{follow: follow}} -> {:ok, follow}
-      {:error, _step, changeset, _changes} -> {:error, changeset}
+      {:ok, %{follow: follow}} ->
+        record(%Scope{user: %User{id: follower_id}}, :followed, %{target_user_id: followed_id})
+        {:ok, follow}
+
+      {:error, _step, changeset, _changes} ->
+        {:error, changeset}
     end
   end
 
@@ -149,6 +154,85 @@ defmodule Smovie.Social do
         order_by: [desc: u.followers_count, desc: u.id],
         limit: ^limit
     )
+  end
+
+  ## Fil d'activite
+
+  @doc """
+  Enregistre une activite.
+
+  Silencieuse en cas d'echec : une activite est un effet de bord d'une action
+  reussie, et la perdre ne doit jamais faire echouer l'action elle-meme. On ne
+  va pas refuser une note parce que le fil n'a pas pu l'enregistrer.
+  """
+  def record(%Scope{user: %User{id: user_id}}, kind, attrs) do
+    %Activity{}
+    |> Activity.changeset(Map.merge(attrs, %{user_id: user_id, kind: kind}))
+    |> Repo.insert()
+    |> case do
+      {:ok, activity} -> {:ok, activity}
+      {:error, _changeset} -> :ignored
+    end
+  end
+
+  def record(_scope, _kind, _attrs), do: :ignored
+
+  @doc """
+  Fil des comptes suivis.
+
+  Les visibilites sont appliquees a la lecture : une oeuvre reste une oeuvre,
+  mais une activite dont l'auteur a ferme son profil n'a pas a circuler.
+  """
+  def list_feed(scope, opts \\ [])
+
+  def list_feed(%Scope{} = scope, opts) do
+    limit = Keyword.get(opts, :limit, 30)
+    ids = following_ids(scope)
+
+    if ids == [] do
+      []
+    else
+      Repo.all(
+        from a in Activity,
+          join: u in assoc(a, :user),
+          where: a.user_id in ^ids,
+          where: u.profile_visibility in [:public, :followers],
+          order_by: [desc: a.inserted_at, desc: a.id],
+          limit: ^limit,
+          preload: [:user, :work, :target_user, review: :work]
+      )
+    end
+  end
+
+  def list_feed(nil, _opts), do: []
+
+  @doc """
+  Activite d'un membre, pour son profil.
+  """
+  def list_user_activity(%User{id: user_id}, opts \\ []) do
+    limit = Keyword.get(opts, :limit, 20)
+
+    Repo.all(
+      from a in Activity,
+        where: a.user_id == ^user_id,
+        order_by: [desc: a.inserted_at, desc: a.id],
+        limit: ^limit,
+        preload: [:user, :work, :target_user, review: :work]
+    )
+  end
+
+  @doc """
+  Purge les activites au-dela de `days` jours.
+
+  Un fil ne se consulte pas au-dela de quelques semaines : conserver
+  indefiniment ferait grossir la table sans que personne n'y gagne.
+  """
+  def purge_activities(days \\ 90) do
+    threshold = DateTime.add(DateTime.utc_now(), -days, :day)
+
+    {count, _} = Repo.delete_all(from a in Activity, where: a.inserted_at < ^threshold)
+
+    {:ok, count}
   end
 
   defp refresh_counters(follower_id, followed_id) do

@@ -8,9 +8,11 @@ defmodule SmovieWeb.HomeLive do
   """
   use SmovieWeb, :live_view
 
+  alias Smovie.Social
+
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, page_title: "Smovie")}
+  def mount(_params, _session, %{assigns: %{current_scope: scope}} = socket) do
+    {:ok, assign(socket, page_title: "Smovie", feed: Social.list_feed(scope))}
   end
 
   @impl true
@@ -32,9 +34,18 @@ defmodule SmovieWeb.HomeLive do
           )}
         </p>
         <p class="text-base-content/40 font-mono text-xs">
-          {gettext("La page d'accueil arrive avec SMOVIE-026.")}
+          {gettext("La page d'accueil arrive avec SMOVIE-027.")}
         </p>
       </div>
+
+      <section :if={@feed != []} class="max-w-2xl">
+        <h2 class="text-base-content/70 font-mono text-[0.65rem] font-medium tracking-[0.15em] uppercase">
+          {gettext("Activite de vos abonnements")}
+        </h2>
+        <div class="divide-base-300 border-base-300 mt-2 divide-y border-t border-b">
+          <.activity_item :for={activity <- @feed} activity={activity} />
+        </div>
+      </section>
     </Layouts.app>
     """
   end
