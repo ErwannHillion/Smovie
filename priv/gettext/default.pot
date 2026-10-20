@@ -266,7 +266,7 @@ msgstr[1] ""
 #: lib/smovie_web/components/work_components.ex:165
 #: lib/smovie_web/components/work_components.ex:175
 #: lib/smovie_web/components/work_components.ex:213
-#: lib/smovie_web/live/work_live/season.ex:199
+#: lib/smovie_web/live/work_live/season.ex:198
 #, elixir-autogen, elixir-format
 msgid "%{stars} sur 5"
 msgstr ""
@@ -329,6 +329,8 @@ msgid "Retour a l'accueil"
 msgstr ""
 
 #: lib/smovie_web/components/layouts.ex:177
+#: lib/smovie_web/live/review_live/index.ex:13
+#: lib/smovie_web/live/review_live/index.ex:49
 #, elixir-autogen, elixir-format
 msgid "Reviews"
 msgstr ""
@@ -355,7 +357,7 @@ msgstr ""
 
 #: lib/smovie_web/components/layouts.ex:178
 #: lib/smovie_web/live/user_live/settings.ex:79
-#: lib/smovie_web/live/work_live/show.ex:338
+#: lib/smovie_web/live/work_live/show.ex:337
 #, elixir-autogen, elixir-format
 msgid "Watchlist"
 msgstr ""
@@ -440,74 +442,74 @@ msgstr ""
 msgid "Visibilite par defaut d'une nouvelle review"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/season.ex:216
-#: lib/smovie_web/live/work_live/show.ex:430
+#: lib/smovie_web/live/work_live/season.ex:215
+#: lib/smovie_web/live/work_live/show.ex:429
 #, elixir-autogen, elixir-format
 msgid "%{count} min"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/season.ex:89
-#: lib/smovie_web/live/work_live/show.ex:146
+#: lib/smovie_web/live/work_live/season.ex:88
+#: lib/smovie_web/live/work_live/show.ex:145
 #, elixir-autogen, elixir-format
 msgid "Connectez-vous pour noter et suivre vos films."
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:338
+#: lib/smovie_web/live/work_live/show.ex:337
 #, elixir-autogen, elixir-format
 msgid "Dans la liste"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:294
+#: lib/smovie_web/live/work_live/show.ex:293
 #, elixir-autogen, elixir-format
 msgid "Distribution"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:345
+#: lib/smovie_web/live/work_live/show.ex:344
 #, elixir-autogen, elixir-format
 msgid "J'aime"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/season.ex:150
-#: lib/smovie_web/live/work_live/show.ex:332
+#: lib/smovie_web/live/work_live/season.ex:149
+#: lib/smovie_web/live/work_live/show.ex:331
 #, elixir-autogen, elixir-format
 msgid "Marquer vu"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:332
+#: lib/smovie_web/live/work_live/show.ex:331
 #, elixir-autogen, elixir-format
 msgid "Vu"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:382
+#: lib/smovie_web/live/work_live/show.ex:381
 #, elixir-autogen, elixir-format
 msgid "de"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/season.ex:127
-#: lib/smovie_web/live/work_live/show.ex:448
+#: lib/smovie_web/live/work_live/season.ex:126
+#: lib/smovie_web/live/work_live/show.ex:447
 #, elixir-autogen, elixir-format
 msgid "%{count} episode"
 msgid_plural "%{count} episodes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/smovie_web/live/work_live/season.ex:127
-#: lib/smovie_web/live/work_live/show.ex:449
+#: lib/smovie_web/live/work_live/season.ex:126
+#: lib/smovie_web/live/work_live/show.ex:448
 #, elixir-autogen, elixir-format
 msgid "%{watched} vus"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/season.ex:175
+#: lib/smovie_web/live/work_live/season.ex:174
 #, elixir-autogen, elixir-format
 msgid "Les episodes de cette saison ne sont pas encore disponibles."
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:263
+#: lib/smovie_web/live/work_live/show.ex:262
 #, elixir-autogen, elixir-format
 msgid "Saisons"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/season.ex:171
+#: lib/smovie_web/live/work_live/season.ex:170
 #, elixir-autogen, elixir-format
 msgid "Marquer toute la saison comme vue"
 msgstr ""
@@ -560,28 +562,28 @@ msgstr ""
 msgid "abonnes"
 msgstr ""
 
-#: lib/smovie_web/live/review_live/show.ex:127
+#: lib/smovie_web/live/review_live/show.ex:126
 #, elixir-autogen, elixir-format
 msgid "Afficher les spoilers"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:215
+#: lib/smovie_web/live/work_live/show.ex:214
 #, elixir-autogen, elixir-format
 msgid "Annuler"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:193
+#: lib/smovie_web/live/work_live/show.ex:192
 #, elixir-autogen, elixir-format
 msgid "Ce que vous en avez pense"
 msgstr ""
 
 #: lib/smovie_web/components/review_components.ex:62
-#: lib/smovie_web/live/work_live/show.ex:201
+#: lib/smovie_web/live/work_live/show.ex:200
 #, elixir-autogen, elixir-format
 msgid "Contient des spoilers"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:243
+#: lib/smovie_web/live/work_live/show.ex:242
 #, elixir-autogen, elixir-format
 msgid "Ecrire une review"
 msgstr ""
@@ -591,97 +593,127 @@ msgstr ""
 msgid "Lire"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:224
+#: lib/smovie_web/live/work_live/show.ex:223
 #, elixir-autogen, elixir-format
 msgid "Modifier"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:211
+#: lib/smovie_web/live/work_live/show.ex:210
 #, elixir-autogen, elixir-format
 msgid "Publication..."
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:212
+#: lib/smovie_web/live/work_live/show.ex:211
 #, elixir-autogen, elixir-format
 msgid "Publier"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:88
+#: lib/smovie_web/live/work_live/show.ex:87
 #, elixir-autogen, elixir-format
 msgid "Review publiee."
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:250
+#: lib/smovie_web/live/work_live/show.ex:249
 #, elixir-autogen, elixir-format
 msgid "Reviews populaires"
 msgstr ""
 
-#: lib/smovie_web/live/review_live/show.ex:225
-#: lib/smovie_web/live/work_live/show.ex:232
+#: lib/smovie_web/live/review_live/show.ex:224
+#: lib/smovie_web/live/work_live/show.ex:231
 #, elixir-autogen, elixir-format
 msgid "Supprimer"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:229
+#: lib/smovie_web/live/work_live/show.ex:228
 #, elixir-autogen, elixir-format
 msgid "Supprimer cette review ?"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:207
+#: lib/smovie_web/live/work_live/show.ex:206
 #, elixir-autogen, elixir-format
 msgid "Visible par"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/show.ex:180
+#: lib/smovie_web/live/work_live/show.ex:179
 #, elixir-autogen, elixir-format
 msgid "Votre review"
 msgstr ""
 
-#: lib/smovie_web/live/review_live/show.ex:147
+#: lib/smovie_web/live/review_live/show.ex:146
 #, elixir-autogen, elixir-format
 msgid "%{count} commentaire"
 msgid_plural "%{count} commentaires"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/smovie_web/live/review_live/show.ex:141
+#: lib/smovie_web/live/review_live/show.ex:140
 #, elixir-autogen, elixir-format
 msgid "%{count} j'aime"
 msgid_plural "%{count} j'aime"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/smovie_web/live/review_live/show.ex:167
+#: lib/smovie_web/live/review_live/show.ex:166
 #, elixir-autogen, elixir-format
 msgid "Annuler la reponse"
 msgstr ""
 
-#: lib/smovie_web/live/review_live/show.ex:84
+#: lib/smovie_web/live/review_live/show.ex:83
 #, elixir-autogen, elixir-format
 msgid "Ce commentaire n'a pas pu etre publie."
 msgstr ""
 
-#: lib/smovie_web/live/review_live/show.ex:105
+#: lib/smovie_web/live/review_live/show.ex:104
 #, elixir-autogen, elixir-format
 msgid "Connectez-vous pour reagir aux reviews."
 msgstr ""
 
-#: lib/smovie_web/live/review_live/show.ex:165
+#: lib/smovie_web/live/review_live/show.ex:164
 #, elixir-autogen, elixir-format
 msgid "Envoyer"
 msgstr ""
 
-#: lib/smovie_web/live/review_live/show.ex:216
+#: lib/smovie_web/live/review_live/show.ex:215
 #, elixir-autogen, elixir-format
 msgid "Repondre"
 msgstr ""
 
-#: lib/smovie_web/live/review_live/show.ex:161
+#: lib/smovie_web/live/review_live/show.ex:160
 #, elixir-autogen, elixir-format
 msgid "Votre commentaire"
 msgstr ""
 
-#: lib/smovie_web/live/review_live/show.ex:161
+#: lib/smovie_web/live/review_live/show.ex:160
 #, elixir-autogen, elixir-format
 msgid "Votre reponse"
+msgstr ""
+
+#: lib/smovie_web/live/review_live/index.ex:100
+#, elixir-autogen, elixir-format
+msgid "Aucune review pour l'instant."
+msgstr ""
+
+#: lib/smovie_web/live/review_live/index.ex:95
+#, elixir-autogen, elixir-format
+msgid "Connectez-vous pour voir les reviews des comptes que vous suivez."
+msgstr ""
+
+#: lib/smovie_web/live/review_live/index.ex:89
+#, elixir-autogen, elixir-format
+msgid "De vos abonnements"
+msgstr ""
+
+#: lib/smovie_web/live/review_live/index.ex:98
+#, elixir-autogen, elixir-format
+msgid "Les comptes que vous suivez n'ont encore rien publie."
+msgstr ""
+
+#: lib/smovie_web/live/review_live/index.ex:88
+#, elixir-autogen, elixir-format
+msgid "Populaires"
+msgstr ""
+
+#: lib/smovie_web/live/review_live/index.ex:90
+#, elixir-autogen, elixir-format
+msgid "Recentes"
 msgstr ""

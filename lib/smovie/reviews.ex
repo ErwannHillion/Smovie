@@ -96,6 +96,85 @@ defmodule Smovie.Reviews do
   end
 
   @doc """
+  Reviews populaires de la plateforme.
+
+  Classer par likes seuls figerait la page sur les reviews anciennes : les
+  plus likees de tous les temps le resteraient indefiniment. On applique donc
+  une decote de graviteempruntee a Hacker News :
+
+      score = (likes + 2 x commentaires) / (heures + 2) ^ 1.5
+
+  Les commentaires comptent double : ils signalent une review qui fait debat,
+  ce qu'un like ne dit pas.
+
+  Le calcul se fait a la requete sur une fenetre courte — le volume y reste
+  faible, une vue materialisee serait de la machinerie pour rien.
+  """
+  def list_popular(opts \\ []) do
+    limit = Keyword.get(opts, :limit, 20)
+    days = Keyword.get(opts, :days, 14)
+    min_length = Config.reviews_min_body_length()
+    since = DateTime.add(DateTime.utc_now(), -days, :day)
+
+    Repo.all(
+      from r in Review,
+        where: r.visibility == :public,
+        where: r.published_at > ^since,
+        where: fragment("length(?) >= ?", r.body, ^min_length),
+        order_by: [
+          desc:
+            fragment(
+              "(? + 2 * ?) / power(EXTRACT(EPOCH FROM (now() - ?)) / 3600.0 + 2, 1.5)",
+              r.likes_count,
+              r.comments_count,
+              r.published_at
+            )
+        ],
+        limit: ^limit,
+        preload: [:user, :work]
+    )
+  end
+
+  @doc """
+  Reviews les plus recentes.
+  """
+  def list_recent(opts \\ []) do
+    limit = Keyword.get(opts, :limit, 20)
+
+    Repo.all(
+      from r in Review,
+        where: r.visibility == :public,
+        order_by: [desc: r.published_at],
+        limit: ^limit,
+        preload: [:user, :work]
+    )
+  end
+
+  @doc """
+  Reviews des comptes suivis.
+
+  Les reviews reservees aux abonnes y entrent : on suit precisement ces
+  comptes, donc on en est abonne.
+  """
+  def list_from_following(%Scope{} = scope, opts \\ []) do
+    limit = Keyword.get(opts, :limit, 20)
+    ids = Social.following_ids(scope)
+
+    if ids == [] do
+      []
+    else
+      Repo.all(
+        from r in Review,
+          where: r.user_id in ^ids,
+          where: r.visibility in [:public, :followers],
+          order_by: [desc: r.published_at],
+          limit: ^limit,
+          preload: [:user, :work]
+      )
+    end
+  end
+
+  @doc """
   Reviews d'un membre, de la plus recente a la plus ancienne.
   """
   def list_by_user(scope, %User{} = author, opts \\ []) do
