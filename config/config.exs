@@ -97,7 +97,8 @@ config :smovie, Oban,
      crontab: [
        # 4 h du matin : TMDB a publie les sorties de la veille, et le trafic
        # est au plus bas.
-       {"0 4 * * *", Smovie.Workers.SyncTrendingCatalogWorker}
+       {"0 4 * * *", Smovie.Workers.SyncTrendingCatalogWorker},
+       {"0 * * * *", Smovie.Workers.RefreshRatingStatsWorker}
      ]}
   ]
 
