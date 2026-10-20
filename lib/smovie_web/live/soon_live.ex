@@ -22,8 +22,8 @@ defmodule SmovieWeb.SoonLive do
   }
 
   @impl true
-  def mount(_params, _session, socket) do
-    {title, ticket, description} = Map.fetch!(@sections, socket.assigns.live_action)
+  def mount(_params, _session, %{assigns: %{live_action: section}} = socket) do
+    {title, ticket, description} = Map.fetch!(@sections, section)
 
     {:ok,
      assign(socket, page_title: title, title: title, ticket: ticket, description: description)}

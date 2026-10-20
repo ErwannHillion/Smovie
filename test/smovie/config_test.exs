@@ -89,11 +89,32 @@ defmodule Smovie.ConfigTest do
       assert Config.dns_cluster_query() == :ignore
     end
 
+    test "local_mail_adapter?/0 ne reconnait que l'adaptateur local" do
+      # En test, l'adaptateur est Swoosh.Adapters.Test : il n'y a pas de boite
+      # locale a proposer, contrairement au developpement.
+      refute Config.local_mail_adapter?()
+
+      with_env_module(Smovie.Mailer, [adapter: Swoosh.Adapters.Local], fn ->
+        assert Config.local_mail_adapter?()
+      end)
+    end
+
     test "oban/0 expose la configuration des files" do
       config = Config.oban()
 
       assert config[:repo] == Smovie.Repo
       assert config[:testing] == :manual
+    end
+  end
+
+  defp with_env_module(key, overrides, fun) do
+    original = Application.get_env(:smovie, key)
+    Application.put_env(:smovie, key, Keyword.merge(original || [], overrides))
+
+    try do
+      fun.()
+    after
+      Application.put_env(:smovie, key, original)
     end
   end
 
