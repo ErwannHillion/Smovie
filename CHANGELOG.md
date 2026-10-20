@@ -7,6 +7,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- Interface bilingue français / anglais : résolution de la langue par préférence
+  de compte, cookie, puis en-tête du navigateur ; sélecteur de langue dans l'en-tête
+- HTTPS forcé en production, avec HSTS d'un an
 - `Smovie.Config`, point de lecture unique de la configuration applicative
 - Oban pour les traitements de fond : synchronisation du catalogue, tendances,
   notifications ; quatre files dimensionnées par ce qu'elles appellent
