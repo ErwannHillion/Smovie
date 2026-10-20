@@ -380,7 +380,7 @@ msgstr "Bio"
 msgid "Enregistrer le profil"
 msgstr "Save profile"
 
-#: lib/smovie_web/live/profile_live.ex:65
+#: lib/smovie_web/live/profile_live.ex:106
 #, elixir-autogen, elixir-format
 msgid "Films vus, series, reviews et statistiques arrivent avec SMOVIE-028."
 msgstr "Watched films, series, reviews and statistics land with SMOVIE-028."
@@ -400,7 +400,7 @@ msgstr "Avatar upload comes later; for now it is your initial."
 msgid "Lieu"
 msgstr "Location"
 
-#: lib/smovie_web/live/profile_live.ex:59
+#: lib/smovie_web/live/profile_live.ex:90
 #, elixir-autogen, elixir-format
 msgid "Modifier mon profil"
 msgstr "Edit my profile"
@@ -415,7 +415,7 @@ msgstr "Display name"
 msgid "Profil mis a jour."
 msgstr "Profile updated."
 
-#: lib/smovie_web/live/profile_live.ex:69
+#: lib/smovie_web/live/profile_live.ex:110
 #, elixir-autogen, elixir-format
 msgid "Ce profil est prive."
 msgstr "This profile is private."
@@ -511,3 +511,51 @@ msgstr "Seasons"
 #, elixir-autogen, elixir-format
 msgid "Marquer toute la saison comme vue"
 msgstr "Mark the whole season as watched"
+
+#: lib/smovie_web/live/network_live.ex:100
+#: lib/smovie_web/live/profile_live.ex:99
+#, elixir-autogen, elixir-format
+msgid "Abonne"
+msgstr "Following"
+
+#: lib/smovie_web/live/network_live.ex:113
+#, elixir-autogen, elixir-format
+msgid "Abonnements"
+msgstr "Following"
+
+#: lib/smovie_web/live/network_live.ex:114
+#, elixir-autogen, elixir-format
+msgid "Abonnes"
+msgstr "Followers"
+
+#: lib/smovie_web/live/network_live.ex:116
+#, elixir-autogen, elixir-format
+msgid "Ce membre ne suit personne pour l'instant."
+msgstr "This member is not following anyone yet."
+
+#: lib/smovie_web/live/network_live.ex:49
+#: lib/smovie_web/live/profile_live.ex:37
+#, elixir-autogen, elixir-format
+msgid "Connectez-vous pour suivre des membres."
+msgstr "Log in to follow members."
+
+#: lib/smovie_web/live/network_live.ex:117
+#, elixir-autogen, elixir-format
+msgid "Personne ne suit ce membre pour l'instant."
+msgstr "Nobody follows this member yet."
+
+#: lib/smovie_web/live/network_live.ex:101
+#: lib/smovie_web/live/profile_live.ex:99
+#, elixir-autogen, elixir-format
+msgid "Suivre"
+msgstr "Follow"
+
+#: lib/smovie_web/live/profile_live.ex:71
+#, elixir-autogen, elixir-format
+msgid "abonnements"
+msgstr "following"
+
+#: lib/smovie_web/live/profile_live.ex:74
+#, elixir-autogen, elixir-format
+msgid "abonnes"
+msgstr "followers"

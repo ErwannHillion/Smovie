@@ -9,21 +9,43 @@ defmodule SmovieWeb.ProfileLive do
   use SmovieWeb, :live_view
 
   alias Smovie.Accounts
+  alias Smovie.Social
 
   @impl true
-  def mount(%{"username" => username}, _session, %{assigns: %{current_scope: scope}} = socket) do
+  def mount(%{"username" => username}, _session, socket) do
     case Accounts.get_user_by_username(username) do
       nil ->
         raise SmovieWeb.ProfileLive.NotFound, username
 
       user ->
-        {:ok,
-         assign(socket,
-           user: user,
-           visible: Accounts.visible?(scope, user, :profile),
-           page_title: user.display_name
-         )}
+        {:ok, socket |> assign_profile(user) |> assign(page_title: user.display_name)}
     end
+  end
+
+  defp assign_profile(%{assigns: %{current_scope: scope}} = socket, user) do
+    assign(socket,
+      user: user,
+      visible: Accounts.visible?(scope, user, :profile),
+      following?: Social.following?(scope, user)
+    )
+  end
+
+  @impl true
+  def handle_event("toggle_follow", _params, %{assigns: %{current_scope: nil}} = socket) do
+    {:noreply,
+     socket
+     |> put_flash(:info, gettext("Connectez-vous pour suivre des membres."))
+     |> push_navigate(to: ~p"/users/log-in")}
+  end
+
+  def handle_event(
+        "toggle_follow",
+        _params,
+        %{assigns: %{current_scope: scope, user: user}} = socket
+      ) do
+    Social.toggle_follow(scope, user)
+
+    {:noreply, assign_profile(socket, Smovie.Repo.reload!(user))}
   end
 
   @impl true
@@ -44,6 +66,14 @@ defmodule SmovieWeb.ProfileLive do
           <p class="text-base-content/50 mt-1.5 font-mono text-xs">
             @{@user.username}<span :if={@visible and @user.location}> · {@user.location}</span>
           </p>
+          <p class="text-base-content/70 mt-2 flex gap-4 font-mono text-xs">
+            <.link navigate={~p"/u/#{@user.username}/abonnements"} class="hover:text-base-content">
+              <b class="text-base-content">{@user.following_count}</b> {gettext("abonnements")}
+            </.link>
+            <.link navigate={~p"/u/#{@user.username}/abonnes"} class="hover:text-base-content">
+              <b class="text-base-content">{@user.followers_count}</b> {gettext("abonnes")}
+            </.link>
+          </p>
           <p
             :if={@visible and @user.bio}
             class="text-base-content/80 mt-3 max-w-prose text-sm leading-relaxed"
@@ -51,13 +81,24 @@ defmodule SmovieWeb.ProfileLive do
             {@user.bio}
           </p>
         </div>
-        <.link
-          :if={own_profile?(@current_scope, @user)}
-          navigate={~p"/users/settings"}
-          class="btn btn-ghost btn-sm md:ml-auto"
-        >
-          {gettext("Modifier mon profil")}
-        </.link>
+        <div class="flex items-center gap-2 md:ml-auto">
+          <.link
+            :if={own_profile?(@current_scope, @user)}
+            navigate={~p"/users/settings"}
+            class="btn btn-ghost btn-sm"
+          >
+            {gettext("Modifier mon profil")}
+          </.link>
+          <button
+            :if={not own_profile?(@current_scope, @user)}
+            type="button"
+            phx-click="toggle_follow"
+            aria-pressed={to_string(@following?)}
+            class={["btn btn-sm", if(@following?, do: "btn-ghost", else: "btn-primary")]}
+          >
+            {if @following?, do: gettext("Abonne"), else: gettext("Suivre")}
+          </button>
+        </div>
       </header>
 
       <div class="border-base-300 border-t pt-6">
