@@ -79,4 +79,34 @@ defmodule SmovieWeb.ProfileTabsTest do
 
     refute html =~ "Secrete"
   end
+
+  describe "onglet stats" do
+    test "affiche la repartition des notes", %{conn: conn} do
+      {:ok, _lv, html} = live(conn, ~p"/u/cinephile?onglet=stats")
+
+      assert html =~ "Repartition de vos notes"
+      assert html =~ "moyenne 5,0"
+    end
+
+    test "un cran a une seule note reste visible", %{conn: conn} do
+      # Sinon l'histogramme ment par omission.
+      {:ok, _lv, html} = live(conn, ~p"/u/cinephile?onglet=stats")
+
+      refute html =~ "height: 0px"
+    end
+
+    test "invite a noter quand il n'y a rien a montrer", %{conn: conn} do
+      autre = user_fixture()
+
+      {:ok, autre} =
+        Accounts.update_user_profile(Scope.for_user(autre), autre, %{
+          "username" => "debutant",
+          "display_name" => "Debutant"
+        })
+
+      {:ok, _lv, html} = live(conn, ~p"/u/#{autre.username}?onglet=stats")
+
+      assert html =~ "Notez quelques oeuvres"
+    end
+  end
 end

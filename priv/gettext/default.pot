@@ -325,8 +325,8 @@ msgid "Retour a l'accueil"
 msgstr ""
 
 #: lib/smovie_web/components/layouts.ex:198
-#: lib/smovie_web/live/profile_live.ex:173
-#: lib/smovie_web/live/profile_live.ex:267
+#: lib/smovie_web/live/profile_live.ex:191
+#: lib/smovie_web/live/profile_live.ex:367
 #: lib/smovie_web/live/review_live/index.ex:13
 #: lib/smovie_web/live/review_live/index.ex:50
 #, elixir-autogen, elixir-format
@@ -398,7 +398,7 @@ msgstr ""
 msgid "Lieu"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:131
+#: lib/smovie_web/live/profile_live.ex:149
 #, elixir-autogen, elixir-format
 msgid "Modifier mon profil"
 msgstr ""
@@ -413,7 +413,7 @@ msgstr ""
 msgid "Profil mis a jour."
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:150
+#: lib/smovie_web/live/profile_live.ex:168
 #, elixir-autogen, elixir-format
 msgid "Ce profil est prive."
 msgstr ""
@@ -511,7 +511,7 @@ msgid "Marquer toute la saison comme vue"
 msgstr ""
 
 #: lib/smovie_web/live/network_live.ex:101
-#: lib/smovie_web/live/profile_live.ex:140
+#: lib/smovie_web/live/profile_live.ex:158
 #, elixir-autogen, elixir-format
 msgid "Abonne"
 msgstr ""
@@ -532,7 +532,7 @@ msgid "Ce membre ne suit personne pour l'instant."
 msgstr ""
 
 #: lib/smovie_web/live/network_live.ex:49
-#: lib/smovie_web/live/profile_live.ex:77
+#: lib/smovie_web/live/profile_live.ex:95
 #, elixir-autogen, elixir-format
 msgid "Connectez-vous pour suivre des membres."
 msgstr ""
@@ -543,17 +543,17 @@ msgid "Personne ne suit ce membre pour l'instant."
 msgstr ""
 
 #: lib/smovie_web/live/network_live.ex:102
-#: lib/smovie_web/live/profile_live.ex:140
+#: lib/smovie_web/live/profile_live.ex:158
 #, elixir-autogen, elixir-format
 msgid "Suivre"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:112
+#: lib/smovie_web/live/profile_live.ex:130
 #, elixir-autogen, elixir-format
 msgid "abonnements"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:115
+#: lib/smovie_web/live/profile_live.ex:133
 #, elixir-autogen, elixir-format
 msgid "abonnes"
 msgstr ""
@@ -684,7 +684,7 @@ msgstr ""
 msgid "Votre reponse"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:240
+#: lib/smovie_web/live/profile_live.ex:307
 #: lib/smovie_web/live/review_live/index.ex:101
 #, elixir-autogen, elixir-format
 msgid "Aucune review pour l'instant."
@@ -914,17 +914,17 @@ msgstr[1] ""
 msgid "%{hours} h %{rest} de visionnage"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:194
+#: lib/smovie_web/live/profile_live.ex:212
 #, elixir-autogen, elixir-format
 msgid "Activite recente"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:264
+#: lib/smovie_web/live/profile_live.ex:364
 #, elixir-autogen, elixir-format
 msgid "Apercu"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:213
+#: lib/smovie_web/live/profile_live.ex:231
 #, elixir-autogen, elixir-format
 msgid "Aucun film vu pour l'instant."
 msgstr ""
@@ -934,7 +934,7 @@ msgstr ""
 msgid "Aucune oeuvre ne correspond a ce filtre."
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:228
+#: lib/smovie_web/live/profile_live.ex:246
 #, elixir-autogen, elixir-format
 msgid "Aucune serie suivie pour l'instant."
 msgstr ""
@@ -944,7 +944,7 @@ msgstr ""
 msgid "Date d'ajout"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:179
+#: lib/smovie_web/live/profile_live.ex:197
 #, elixir-autogen, elixir-format
 msgid "Derniers films vus"
 msgstr ""
@@ -954,14 +954,15 @@ msgstr ""
 msgid "Duree"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:171
-#: lib/smovie_web/live/profile_live.ex:265
+#: lib/smovie_web/live/profile_live.ex:189
+#: lib/smovie_web/live/profile_live.ex:365
 #: lib/smovie_web/live/watchlist_live.ex:131
 #, elixir-autogen, elixir-format
 msgid "Films"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:174
+#: lib/smovie_web/live/profile_live.ex:192
+#: lib/smovie_web/live/profile_live.ex:290
 #, elixir-autogen, elixir-format
 msgid "Heures"
 msgstr ""
@@ -971,7 +972,7 @@ msgstr ""
 msgid "Note Smovie"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:172
+#: lib/smovie_web/live/profile_live.ex:190
 #, elixir-autogen, elixir-format
 msgid "Notes"
 msgstr ""
@@ -981,7 +982,7 @@ msgstr ""
 msgid "Retirer de la liste"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:266
+#: lib/smovie_web/live/profile_live.ex:366
 #: lib/smovie_web/live/watchlist_live.ex:131
 #, elixir-autogen, elixir-format
 msgid "Series"
@@ -1005,4 +1006,44 @@ msgstr ""
 #: lib/smovie_web/live/watchlist_live.ex:154
 #, elixir-autogen, elixir-format
 msgid "Votre liste a voir est vide. Ajoutez un film depuis sa fiche."
+msgstr ""
+
+#: lib/smovie_web/live/profile_live.ex:262
+#, elixir-autogen, elixir-format
+msgid "%{count} notes"
+msgstr ""
+
+#: lib/smovie_web/live/profile_live.ex:277
+#, elixir-autogen, elixir-format
+msgid "Genres preferes"
+msgstr ""
+
+#: lib/smovie_web/live/profile_live.ex:295
+#, elixir-autogen, elixir-format
+msgid "Notez quelques oeuvres pour voir apparaitre vos statistiques."
+msgstr ""
+
+#: lib/smovie_web/live/profile_live.ex:284
+#, elixir-autogen, elixir-format
+msgid "Realisateurs preferes"
+msgstr ""
+
+#: lib/smovie_web/live/profile_live.ex:253
+#, elixir-autogen, elixir-format
+msgid "Repartition de vos notes"
+msgstr ""
+
+#: lib/smovie_web/live/profile_live.ex:291
+#, elixir-autogen, elixir-format
+msgid "Revus"
+msgstr ""
+
+#: lib/smovie_web/live/profile_live.ex:368
+#, elixir-autogen, elixir-format
+msgid "Stats"
+msgstr ""
+
+#: lib/smovie_web/live/profile_live.ex:255
+#, elixir-autogen, elixir-format
+msgid "moyenne %{value}"
 msgstr ""
