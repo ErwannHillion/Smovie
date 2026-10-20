@@ -16,7 +16,9 @@ defmodule Smovie.Library do
   alias Smovie.Config
   alias Smovie.Library.Rating
   alias Smovie.Library.RatingStats
+  alias Smovie.Catalog.WorkGenre
   alias Smovie.Library.WatchEntry
+  alias Smovie.Library.WatchlistItem
   alias Smovie.Library.WorkLike
   alias Smovie.Repo
 
@@ -253,7 +255,7 @@ defmodule Smovie.Library do
     |> case do
       {:ok, entry} ->
         bump_watch_count(work.id)
-        remove_from_watchlist(scope, work)
+        drop_from_watchlist(scope, work)
         {:ok, entry}
 
       {:error, changeset} ->
@@ -387,8 +389,142 @@ defmodule Smovie.Library do
     )
   end
 
-  # Remplie par SMOVIE-016 : d'ici la, marquer vu n'a rien a retirer.
-  defp remove_from_watchlist(_scope, _work), do: :ok
+  # Marquer vu retire de la watchlist : l'oeuvre n'est plus a voir. On ignore
+  # le cas ou elle n'y etait pas, qui est le plus frequent.
+  defp drop_from_watchlist(%Scope{user: %User{id: user_id}}, %Work{id: work_id}) do
+    Repo.delete_all(
+      from i in WatchlistItem, where: i.user_id == ^user_id and i.work_id == ^work_id
+    )
+
+    :ok
+  end
+
+  ## Watchlist
+
+  @doc """
+  Ajoute une oeuvre a la liste a voir.
+
+  Refuse une saison ou un episode : on ne met pas un episode « a voir », on
+  reprend une serie la ou on l'a laissee.
+  """
+  def add_to_watchlist(scope, work, attrs \\ %{})
+
+  def add_to_watchlist(%Scope{user: %User{id: user_id}}, %Work{kind: kind} = work, attrs)
+      when kind in [:movie, :tv_show] do
+    %WatchlistItem{}
+    |> WatchlistItem.changeset(Map.merge(attrs, %{user_id: user_id, work_id: work.id}))
+    |> Repo.insert(on_conflict: :nothing, conflict_target: [:user_id, :work_id])
+  end
+
+  def add_to_watchlist(%Scope{}, %Work{}, _attrs), do: {:error, :not_watchlistable}
+
+  @doc """
+  Retire une oeuvre de la liste a voir.
+  """
+  def remove_from_watchlist(%Scope{user: %User{id: user_id}}, %Work{id: work_id}) do
+    case Repo.delete_all(
+           from i in WatchlistItem, where: i.user_id == ^user_id and i.work_id == ^work_id
+         ) do
+      {0, _} -> {:error, :not_in_watchlist}
+      {_count, _} -> :ok
+    end
+  end
+
+  @doc """
+  Bascule la presence d'une oeuvre dans la liste a voir.
+  """
+  def toggle_watchlist(%Scope{} = scope, %Work{} = work) do
+    if in_watchlist?(scope, work) do
+      remove_from_watchlist(scope, work)
+      {:ok, :removed}
+    else
+      case add_to_watchlist(scope, work) do
+        {:ok, _item} -> {:ok, :added}
+        error -> error
+      end
+    end
+  end
+
+  @doc """
+  Vrai si l'oeuvre est dans la liste a voir du membre.
+  """
+  def in_watchlist?(%Scope{user: %User{id: user_id}}, %Work{id: work_id}) do
+    Repo.exists?(from i in WatchlistItem, where: i.user_id == ^user_id and i.work_id == ^work_id)
+  end
+
+  def in_watchlist?(nil, %Work{}), do: false
+
+  @doc """
+  Liste a voir d'un membre.
+
+  Tris acceptes : `:added` (defaut), `:release`, `:rating`, `:runtime`,
+  `:title`. Un tri inconnu retombe sur la date d'ajout plutot que de lever :
+  l'ordre vient de l'URL, donc de l'exterieur.
+  """
+  def list_watchlist(%User{id: user_id}, opts \\ []) do
+    sort = Keyword.get(opts, :sort, :added)
+    kind = Keyword.get(opts, :kind)
+    genre_id = Keyword.get(opts, :genre_id)
+    limit = Keyword.get(opts, :limit, 60)
+
+    from(i in WatchlistItem,
+      join: w in Work,
+      on: w.id == i.work_id,
+      where: i.user_id == ^user_id,
+      limit: ^limit,
+      select: w
+    )
+    |> filter_kind(kind)
+    |> filter_genre(genre_id)
+    |> sort_watchlist(sort)
+    |> Repo.all()
+  end
+
+  defp filter_kind(query, nil), do: query
+  defp filter_kind(query, kind), do: from([_i, w] in query, where: w.kind == ^kind)
+
+  defp filter_genre(query, nil), do: query
+
+  defp filter_genre(query, genre_id) do
+    from([_i, w] in query,
+      join: wg in WorkGenre,
+      on: wg.work_id == w.id,
+      where: wg.genre_id == ^genre_id
+    )
+  end
+
+  defp sort_watchlist(query, :release),
+    do: from([_i, w] in query, order_by: [desc_nulls_last: w.release_date])
+
+  defp sort_watchlist(query, :rating),
+    do: from([_i, w] in query, order_by: [desc_nulls_last: w.smovie_rating_avg])
+
+  defp sort_watchlist(query, :runtime),
+    do: from([_i, w] in query, order_by: [asc_nulls_last: w.runtime])
+
+  defp sort_watchlist(query, :title), do: from([_i, w] in query, order_by: [asc: w.title])
+
+  defp sort_watchlist(query, _added), do: from([i, _w] in query, order_by: [desc: i.inserted_at])
+
+  @doc """
+  Nombre d'oeuvres dans la liste a voir.
+  """
+  def watchlist_count(%User{id: user_id}) do
+    Repo.aggregate(from(i in WatchlistItem, where: i.user_id == ^user_id), :count)
+  end
+
+  @doc """
+  Duree totale de la liste a voir, en minutes.
+  """
+  def watchlist_minutes(%User{id: user_id}) do
+    from(i in WatchlistItem,
+      join: w in Work,
+      on: w.id == i.work_id,
+      where: i.user_id == ^user_id,
+      select: coalesce(sum(w.runtime), 0)
+    )
+    |> Repo.one()
+  end
 
   ## Coups de coeur
 
