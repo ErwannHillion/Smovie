@@ -266,7 +266,7 @@ msgstr[1] ""
 #: lib/smovie_web/components/work_components.ex:165
 #: lib/smovie_web/components/work_components.ex:175
 #: lib/smovie_web/components/work_components.ex:213
-#: lib/smovie_web/live/work_live/season.ex:200
+#: lib/smovie_web/live/work_live/season.ex:192
 #, elixir-autogen, elixir-format
 msgid "%{stars} sur 5"
 msgstr ""
@@ -435,7 +435,7 @@ msgstr ""
 msgid "Visibilite par defaut d'une nouvelle review"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/season.ex:217
+#: lib/smovie_web/live/work_live/season.ex:209
 #: lib/smovie_web/live/work_live/show.ex:496
 #, elixir-autogen, elixir-format
 msgid "%{count} min"
@@ -462,7 +462,7 @@ msgstr ""
 msgid "J'aime"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/season.ex:151
+#: lib/smovie_web/live/work_live/season.ex:143
 #: lib/smovie_web/live/work_live/show.ex:385
 #, elixir-autogen, elixir-format
 msgid "Marquer vu"
@@ -478,7 +478,7 @@ msgstr ""
 msgid "de"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/season.ex:128
+#: lib/smovie_web/live/work_live/season.ex:120
 #: lib/smovie_web/live/work_live/show.ex:514
 #, elixir-autogen, elixir-format
 msgid "%{count} episode"
@@ -486,13 +486,13 @@ msgid_plural "%{count} episodes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: lib/smovie_web/live/work_live/season.ex:128
+#: lib/smovie_web/live/work_live/season.ex:120
 #: lib/smovie_web/live/work_live/show.ex:515
 #, elixir-autogen, elixir-format
 msgid "%{watched} vus"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/season.ex:176
+#: lib/smovie_web/live/work_live/season.ex:168
 #, elixir-autogen, elixir-format
 msgid "Les episodes de cette saison ne sont pas encore disponibles."
 msgstr ""
@@ -502,7 +502,7 @@ msgstr ""
 msgid "Saisons"
 msgstr ""
 
-#: lib/smovie_web/live/work_live/season.ex:172
+#: lib/smovie_web/live/work_live/season.ex:164
 #, elixir-autogen, elixir-format
 msgid "Marquer toute la saison comme vue"
 msgstr ""
@@ -1183,4 +1183,34 @@ msgstr ""
 #: lib/smovie_web/live/messaging_live/show.ex:302
 #, elixir-autogen, elixir-format
 msgid "%{member} ecrit…"
+msgstr ""
+
+#: lib/smovie_web/controllers/error_html.ex:20
+#, elixir-autogen, elixir-format
+msgid "Cette page n'existe pas, ou n'existe plus."
+msgstr ""
+
+#: lib/smovie_web/controllers/error_html.ex:40
+#, elixir-autogen, elixir-format
+msgid "Cette requete n'a pas pu aboutir."
+msgstr ""
+
+#: lib/smovie_web/controllers/error_html.ex:30
+#, elixir-autogen, elixir-format
+msgid "L'erreur est de notre cote. Reessayez dans un instant."
+msgstr ""
+
+#: lib/smovie_web/controllers/error_html.ex:19
+#, elixir-autogen, elixir-format
+msgid "Page introuvable"
+msgstr ""
+
+#: lib/smovie_web/controllers/error_html.ex:29
+#, elixir-autogen, elixir-format
+msgid "Quelque chose a casse"
+msgstr ""
+
+#: lib/smovie_web/controllers/error_html.ex:55
+#, elixir-autogen, elixir-format
+msgid "Retour a l'accueil"
 msgstr ""

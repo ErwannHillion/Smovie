@@ -350,6 +350,26 @@ defmodule Smovie.Library do
   def watched_count(nil, %Work{}), do: 0
 
   @doc """
+  Identifiants des oeuvres vues parmi une liste.
+
+  Une requete pour toute une saison plutot qu'une par episode : une saison de
+  vingt episodes en declenchait vingt.
+  """
+  def watched_work_ids(%Scope{user: %User{id: user_id}}, works) when is_list(works) do
+    ids = Enum.map(works, & &1.id)
+
+    from(e in WatchEntry,
+      where: e.user_id == ^user_id and e.work_id in ^ids,
+      select: e.work_id,
+      distinct: true
+    )
+    |> Repo.all()
+    |> MapSet.new()
+  end
+
+  def watched_work_ids(nil, _works), do: MapSet.new()
+
+  @doc """
   Journal d'un membre, de la seance la plus recente a la plus ancienne.
   """
   def list_watch_entries(%User{id: user_id}, opts \\ []) do

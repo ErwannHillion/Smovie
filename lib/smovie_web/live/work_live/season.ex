@@ -31,7 +31,7 @@ defmodule SmovieWeb.WorkLive.Season do
       episodes: episodes,
       progress: Library.season_progress(scope, season),
       ratings: Library.ratings_by_work_id(scope, episodes),
-      watched: watched_ids(scope, episodes)
+      watched: Library.watched_work_ids(scope, episodes)
     )
   end
 
@@ -91,14 +91,6 @@ defmodule SmovieWeb.WorkLive.Season do
 
   defp reload(%{assigns: %{show: show, season: season}} = socket) do
     assign_season(socket, show, Catalog.reload_work(season))
-  end
-
-  defp watched_ids(nil, _episodes), do: MapSet.new()
-
-  defp watched_ids(scope, episodes) do
-    episodes
-    |> Enum.filter(&Library.watched?(scope, &1))
-    |> MapSet.new(& &1.id)
   end
 
   @impl true
