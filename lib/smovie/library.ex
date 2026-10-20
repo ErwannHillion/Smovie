@@ -16,6 +16,8 @@ defmodule Smovie.Library do
   alias Smovie.Config
   alias Smovie.Library.Rating
   alias Smovie.Library.RatingStats
+  alias Smovie.Library.WatchEntry
+  alias Smovie.Library.WorkLike
   alias Smovie.Repo
 
   @pubsub Smovie.PubSub
@@ -220,6 +222,208 @@ defmodule Smovie.Library do
 
     Map.new(1..10, &{&1, Map.get(counts, &1, 0)})
   end
+
+  ## Journal de visionnage
+
+  @doc """
+  Marque une oeuvre comme vue.
+
+  Une seconde seance le meme jour n'en cree pas une deuxieme : c'est presque
+  toujours un double clic, pas deux visionnages. Un re-visionnage un autre
+  jour s'ajoute en revanche a l'historique.
+
+  Marquer vu retire l'oeuvre de la watchlist : elle n'est plus a voir.
+  """
+  def mark_watched(scope, work, opts \\ [])
+
+  def mark_watched(%Scope{user: %User{id: user_id}} = scope, %Work{} = work, opts) do
+    watched_on = Keyword.get(opts, :watched_on, Date.utc_today())
+    rewatch = watched_count(scope, work) > 0
+
+    attrs = %{
+      user_id: user_id,
+      work_id: work.id,
+      watched_on: watched_on,
+      rewatch: rewatch
+    }
+
+    %WatchEntry{}
+    |> WatchEntry.changeset(attrs)
+    |> Repo.insert(on_conflict: :nothing, conflict_target: [:user_id, :work_id, :watched_on])
+    |> case do
+      {:ok, entry} ->
+        bump_watch_count(work.id)
+        remove_from_watchlist(scope, work)
+        {:ok, entry}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  def mark_watched(%Scope{}, %Work{}, _opts), do: {:error, :unauthorized}
+
+  @doc """
+  Retire une seance. Sans date, retire la plus recente.
+  """
+  def unmark_watched(scope, work, opts \\ [])
+
+  def unmark_watched(%Scope{user: %User{id: user_id}}, %Work{id: work_id}, opts) do
+    query =
+      case Keyword.get(opts, :watched_on) do
+        nil ->
+          from(e in WatchEntry, where: e.user_id == ^user_id and e.work_id == ^work_id)
+
+        date ->
+          from(e in WatchEntry,
+            where: e.user_id == ^user_id and e.work_id == ^work_id and e.watched_on == ^date
+          )
+      end
+
+    case Repo.delete_all(latest_only(query, opts)) do
+      {0, _} ->
+        {:error, :not_watched}
+
+      {_count, _} ->
+        bump_watch_count(work_id)
+        :ok
+    end
+  end
+
+  # Sans date, on ne supprime que la seance la plus recente : effacer tout
+  # l'historique d'un clic serait irreversible et jamais ce qu'on veut.
+  defp latest_only(query, opts) do
+    case Keyword.get(opts, :watched_on) do
+      nil ->
+        from(e in WatchEntry,
+          where:
+            e.id in subquery(
+              from(q in query, order_by: [desc: q.watched_on, desc: q.id], limit: 1, select: q.id)
+            )
+        )
+
+      _date ->
+        query
+    end
+  end
+
+  @doc """
+  Vrai si le membre a deja vu l'oeuvre.
+  """
+  def watched?(%Scope{} = scope, %Work{} = work), do: watched_count(scope, work) > 0
+  def watched?(nil, %Work{}), do: false
+
+  @doc """
+  Nombre de seances d'un membre sur une oeuvre.
+  """
+  def watched_count(%Scope{user: %User{id: user_id}}, %Work{id: work_id}) do
+    Repo.aggregate(
+      from(e in WatchEntry, where: e.user_id == ^user_id and e.work_id == ^work_id),
+      :count
+    )
+  end
+
+  def watched_count(nil, %Work{}), do: 0
+
+  @doc """
+  Journal d'un membre, de la seance la plus recente a la plus ancienne.
+  """
+  def list_watch_entries(%User{id: user_id}, opts \\ []) do
+    limit = Keyword.get(opts, :limit, 50)
+
+    Repo.all(
+      from e in WatchEntry,
+        where: e.user_id == ^user_id,
+        order_by: [desc: e.watched_on, desc: e.id],
+        limit: ^limit,
+        preload: [:work]
+    )
+  end
+
+  @doc """
+  Oeuvres vues par un membre, une seule fois chacune.
+  """
+  def list_watched_works(%User{id: user_id}, opts \\ []) do
+    kind = Keyword.get(opts, :kind, :movie)
+    limit = Keyword.get(opts, :limit, 60)
+
+    Repo.all(
+      from w in Work,
+        join: e in WatchEntry,
+        on: e.work_id == w.id,
+        where: e.user_id == ^user_id and w.kind == ^kind,
+        group_by: w.id,
+        order_by: [desc: max(e.watched_on)],
+        limit: ^limit
+    )
+  end
+
+  @doc """
+  Minutes de visionnage cumulees d'un membre.
+
+  Les episodes comptent comme les films : c'est du temps passe devant un
+  ecran, et l'exclure donnerait un chiffre faux a qui regarde surtout des
+  series.
+  """
+  def watched_minutes(%User{id: user_id}) do
+    from(e in WatchEntry,
+      join: w in Work,
+      on: w.id == e.work_id,
+      where: e.user_id == ^user_id,
+      select: coalesce(sum(w.runtime), 0)
+    )
+    |> Repo.one()
+  end
+
+  # Nombre de spectateurs distincts, et non de seances : deux visionnages par
+  # la meme personne ne font pas deux spectateurs.
+  defp bump_watch_count(work_id) do
+    count =
+      from(e in WatchEntry, where: e.work_id == ^work_id, select: count(e.user_id, :distinct))
+      |> Repo.one()
+
+    Repo.update_all(from(w in Work, where: w.id == ^work_id),
+      set: [smovie_watch_count: count]
+    )
+  end
+
+  # Remplie par SMOVIE-016 : d'ici la, marquer vu n'a rien a retirer.
+  defp remove_from_watchlist(_scope, _work), do: :ok
+
+  ## Coups de coeur
+
+  @doc """
+  Bascule le coup de coeur d'un membre sur une oeuvre.
+  """
+  def toggle_like(%Scope{user: %User{id: user_id}}, %Work{id: work_id}) do
+    query = from(l in WorkLike, where: l.user_id == ^user_id and l.work_id == ^work_id)
+
+    case Repo.delete_all(query) do
+      {0, _} -> insert_like(user_id, work_id)
+      {_count, _} -> {:ok, :unliked}
+    end
+  end
+
+  def toggle_like(%Scope{}, %Work{}), do: {:error, :unauthorized}
+
+  defp insert_like(user_id, work_id) do
+    %WorkLike{}
+    |> WorkLike.changeset(%{user_id: user_id, work_id: work_id})
+    |> Repo.insert()
+    |> case do
+      {:ok, _like} -> {:ok, :liked}
+      {:error, changeset} -> {:error, changeset}
+    end
+  end
+
+  @doc """
+  Vrai si le membre a aime l'oeuvre.
+  """
+  def liked?(%Scope{user: %User{id: user_id}}, %Work{id: work_id}) do
+    Repo.exists?(from l in WorkLike, where: l.user_id == ^user_id and l.work_id == ^work_id)
+  end
+
+  def liked?(nil, %Work{}), do: false
 
   @doc """
   Sujet PubSub des notes d'une oeuvre.
