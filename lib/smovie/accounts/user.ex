@@ -2,6 +2,8 @@ defmodule Smovie.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Smovie.Accounts.Visibility
+
   schema "users" do
     field :email, :string
     field :password, :string, virtual: true, redact: true
@@ -19,6 +21,10 @@ defmodule Smovie.Accounts.User do
     # Prevu pour un televersement ulterieur : en attendant, l'avatar est
     # l'initiale du nom affiche sur une couleur derivee de l'identifiant.
     field :avatar_path, :string
+
+    field :profile_visibility, Visibility, default: :public
+    field :watchlist_visibility, Visibility, default: :public
+    field :default_review_visibility, Visibility, default: :public
 
     timestamps(type: :utc_datetime)
   end
@@ -106,6 +112,17 @@ defmodule Smovie.Accounts.User do
       "" -> "Membre"
       local -> local
     end
+  end
+
+  @doc """
+  Changeset des reglages de visibilite.
+  """
+  def visibility_changeset(user, attrs) do
+    fields = [:profile_visibility, :watchlist_visibility, :default_review_visibility]
+
+    user
+    |> cast(attrs, fields)
+    |> validate_required(fields)
   end
 
   @doc """
