@@ -7,21 +7,28 @@ defmodule SmovieWeb.UserLive.Settings do
 
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_scope}>
+    <Layouts.app
+      flash={@flash}
+      current_scope={@current_scope}
+      locale={@locale}
+      current_path={@current_path}
+    >
       <.header class="text-center">
-        Account Settings
-        <:subtitle>Manage your account email address and password settings</:subtitle>
+        {gettext("Parametres du compte")}
+        <:subtitle>{gettext("Gerez votre adresse e-mail et votre mot de passe")}</:subtitle>
       </.header>
 
       <.form for={@email_form} id="email_form" phx-submit="update_email" phx-change="validate_email">
         <.input
           field={@email_form[:email]}
           type="email"
-          label="Email"
+          label={gettext("Adresse e-mail")}
           autocomplete="username"
           required
         />
-        <.button variant="primary" phx-disable-with="Changing...">Change Email</.button>
+        <.button variant="primary" phx-disable-with={gettext("Modification...")}>
+          {gettext("Modifier mon adresse")}
+        </.button>
       </.form>
 
       <div class="divider" />
@@ -45,18 +52,18 @@ defmodule SmovieWeb.UserLive.Settings do
         <.input
           field={@password_form[:password]}
           type="password"
-          label="New password"
+          label={gettext("Nouveau mot de passe")}
           autocomplete="new-password"
           required
         />
         <.input
           field={@password_form[:password_confirmation]}
           type="password"
-          label="Confirm new password"
+          label={gettext("Confirmer le nouveau mot de passe")}
           autocomplete="new-password"
         />
-        <.button variant="primary" phx-disable-with="Saving...">
-          Save Password
+        <.button variant="primary" phx-disable-with={gettext("Enregistrement...")}>
+          {gettext("Enregistrer le mot de passe")}
         </.button>
       </.form>
     </Layouts.app>
@@ -67,10 +74,14 @@ defmodule SmovieWeb.UserLive.Settings do
     socket =
       case Accounts.update_user_email(user, token) do
         :ok ->
-          put_flash(socket, :info, "Email changed successfully.")
+          put_flash(socket, :info, gettext("Adresse e-mail modifiee."))
 
         :error ->
-          put_flash(socket, :error, "Email change link is invalid or it has expired.")
+          put_flash(
+            socket,
+            :error,
+            gettext("Ce lien de changement d'adresse est invalide ou a expire.")
+          )
       end
 
     {:ok, push_navigate(socket, to: ~p"/users/settings")}
@@ -117,7 +128,9 @@ defmodule SmovieWeb.UserLive.Settings do
           &url(~p"/users/settings/confirm-email/#{&1}")
         )
 
-        info = "A link to confirm your email change has been sent to the new address."
+        info =
+          gettext("Un lien de confirmation a ete envoye a la nouvelle adresse.")
+
         {:noreply, socket |> put_flash(:info, info)}
 
       {:error, :sudo_mode_expired} ->
@@ -173,7 +186,7 @@ defmodule SmovieWeb.UserLive.Settings do
 
   defp redirect_to_reauthentication(socket) do
     socket
-    |> put_flash(:error, "Votre session a expire. Reconnectez-vous pour continuer.")
+    |> put_flash(:error, gettext("Votre session a expire. Reconnectez-vous pour continuer."))
     |> push_navigate(to: ~p"/users/log-in")
   end
 end

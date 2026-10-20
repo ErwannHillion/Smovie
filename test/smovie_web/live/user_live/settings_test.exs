@@ -12,8 +12,8 @@ defmodule SmovieWeb.UserLive.SettingsTest do
         |> log_in_user(user_fixture())
         |> live(~p"/users/settings")
 
-      assert html =~ "Change Email"
-      assert html =~ "Save Password"
+      assert html =~ "Modifier mon adresse"
+      assert html =~ "Enregistrer le mot de passe"
     end
 
     test "redirects if user is not logged in", %{conn: conn} do
@@ -55,7 +55,7 @@ defmodule SmovieWeb.UserLive.SettingsTest do
         })
         |> render_submit()
 
-      assert result =~ "A link to confirm your email"
+      assert result =~ "Un lien de confirmation a ete envoye"
       assert Accounts.get_user_by_email(user.email)
     end
 
@@ -70,7 +70,7 @@ defmodule SmovieWeb.UserLive.SettingsTest do
           "user" => %{"email" => "with spaces"}
         })
 
-      assert result =~ "Change Email"
+      assert result =~ "Modifier mon adresse"
       assert result =~ "must have the @ sign and no spaces"
     end
 
@@ -84,7 +84,7 @@ defmodule SmovieWeb.UserLive.SettingsTest do
         })
         |> render_submit()
 
-      assert result =~ "Change Email"
+      assert result =~ "Modifier mon adresse"
       assert result =~ "did not change"
     end
   end
@@ -118,7 +118,7 @@ defmodule SmovieWeb.UserLive.SettingsTest do
       assert get_session(new_password_conn, :user_token) != get_session(conn, :user_token)
 
       assert Phoenix.Flash.get(new_password_conn.assigns.flash, :info) =~
-               "Password updated successfully"
+               "Mot de passe mis a jour"
 
       assert Accounts.get_user_by_email_and_password(user.email, new_password)
     end
@@ -136,7 +136,7 @@ defmodule SmovieWeb.UserLive.SettingsTest do
           }
         })
 
-      assert result =~ "Save Password"
+      assert result =~ "Enregistrer le mot de passe"
       assert result =~ "should be at least 12 character(s)"
       assert result =~ "does not match password"
     end
@@ -154,7 +154,7 @@ defmodule SmovieWeb.UserLive.SettingsTest do
         })
         |> render_submit()
 
-      assert result =~ "Save Password"
+      assert result =~ "Enregistrer le mot de passe"
       assert result =~ "should be at least 12 character(s)"
       assert result =~ "does not match password"
     end
@@ -179,7 +179,7 @@ defmodule SmovieWeb.UserLive.SettingsTest do
       assert {:live_redirect, %{to: path, flash: flash}} = redirect
       assert path == ~p"/users/settings"
       assert %{"info" => message} = flash
-      assert message == "Email changed successfully."
+      assert message == "Adresse e-mail modifiee."
       refute Accounts.get_user_by_email(user.email)
       assert Accounts.get_user_by_email(email)
 
@@ -188,7 +188,7 @@ defmodule SmovieWeb.UserLive.SettingsTest do
       assert {:live_redirect, %{to: path, flash: flash}} = redirect
       assert path == ~p"/users/settings"
       assert %{"error" => message} = flash
-      assert message == "Email change link is invalid or it has expired."
+      assert message == "Ce lien de changement d'adresse est invalide ou a expire."
     end
 
     test "does not update email with invalid token", %{conn: conn, user: user} do
@@ -196,7 +196,7 @@ defmodule SmovieWeb.UserLive.SettingsTest do
       assert {:live_redirect, %{to: path, flash: flash}} = redirect
       assert path == ~p"/users/settings"
       assert %{"error" => message} = flash
-      assert message == "Email change link is invalid or it has expired."
+      assert message == "Ce lien de changement d'adresse est invalide ou a expire."
       assert Accounts.get_user_by_email(user.email)
     end
 

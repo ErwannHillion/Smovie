@@ -5,19 +5,26 @@ defmodule SmovieWeb.UserLive.Login do
 
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_scope}>
+    <Layouts.app
+      flash={@flash}
+      current_scope={@current_scope}
+      locale={@locale}
+      current_path={@current_path}
+    >
       <div class="mx-auto max-w-sm space-y-4">
         <.header class="text-center">
-          <p>Log in</p>
+          <p>{gettext("Connexion")}</p>
           <:subtitle>
             <%= if @current_scope do %>
-              You need to reauthenticate to perform sensitive actions on your account.
+              {gettext(
+                "Vous devez vous reconnecter pour effectuer une action sensible sur votre compte."
+              )}
             <% else %>
-              Don't have an account? <.link
+              {gettext("Pas encore de compte ?")} <.link
                 navigate={~p"/users/register"}
                 class="font-semibold text-brand hover:underline"
                 phx-no-format
-              >Sign up</.link> for an account now.
+              >{gettext("Inscrivez-vous")}</.link>
             <% end %>
           </:subtitle>
         </.header>
@@ -25,9 +32,12 @@ defmodule SmovieWeb.UserLive.Login do
         <div :if={local_mail_adapter?()} class="alert alert-info">
           <.icon name="hero-information-circle" class="size-6 shrink-0" />
           <div>
-            <p>You are running the local mail adapter.</p>
+            <p>{gettext("L'adaptateur mail local est actif.")}</p>
             <p>
-              To see sent emails, visit <.link href="/dev/mailbox" class="underline">the mailbox page</.link>.
+              {gettext("Les messages envoyes sont consultables sur")} <.link
+                href="/dev/mailbox"
+                class="underline"
+              >{gettext("la page mailbox")}</.link>.
             </p>
           </div>
         </div>
@@ -43,17 +53,17 @@ defmodule SmovieWeb.UserLive.Login do
             readonly={!!@current_scope}
             field={f[:email]}
             type="email"
-            label="Email"
+            label={gettext("Adresse e-mail")}
             autocomplete="username"
             required
             phx-mounted={JS.focus()}
           />
           <.button class="w-full" variant="primary">
-            Log in with email <span aria-hidden="true">→</span>
+            {gettext("Recevoir un lien de connexion")} <span aria-hidden="true">→</span>
           </.button>
         </.form>
 
-        <div class="divider">or</div>
+        <div class="divider">{gettext("ou")}</div>
 
         <.form
           :let={f}
@@ -67,24 +77,24 @@ defmodule SmovieWeb.UserLive.Login do
             readonly={!!@current_scope}
             field={f[:email]}
             type="email"
-            label="Email"
+            label={gettext("Adresse e-mail")}
             autocomplete="username"
             required
           />
           <.input
             field={@form[:password]}
             type="password"
-            label="Password"
+            label={gettext("Mot de passe")}
             autocomplete="current-password"
           />
           <.input
             :if={!@current_scope}
             field={f[:remember_me]}
             type="checkbox"
-            label="Keep me logged in"
+            label={gettext("Rester connecte")}
           />
           <.button class="w-full" variant="primary">
-            Log in <span aria-hidden="true">→</span>
+            {gettext("Se connecter")} <span aria-hidden="true">→</span>
           </.button>
         </.form>
       </div>
@@ -115,7 +125,9 @@ defmodule SmovieWeb.UserLive.Login do
     end
 
     info =
-      "If your email is in our system, you will receive instructions for logging in shortly."
+      gettext(
+        "Si cette adresse est enregistree, vous recevrez sous peu les instructions de connexion."
+      )
 
     {:noreply,
      socket

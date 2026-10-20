@@ -5,7 +5,12 @@ defmodule SmovieWeb.UserLive.Confirmation do
 
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_scope}>
+    <Layouts.app
+      flash={@flash}
+      current_scope={@current_scope}
+      locale={@locale}
+      current_path={@current_path}
+    >
       <div class="mx-auto max-w-sm">
         <.header class="text-center">Welcome {@user.email}</.header>
 
@@ -22,10 +27,10 @@ defmodule SmovieWeb.UserLive.Confirmation do
             :if={!@current_scope}
             field={@form[:remember_me]}
             type="checkbox"
-            label="Keep me logged in"
+            label={gettext("Rester connecte")}
           />
-          <.button variant="primary" phx-disable-with="Confirming..." class="w-full">
-            Confirm my account
+          <.button variant="primary" phx-disable-with={gettext("Confirmation...")} class="w-full">
+            {gettext("Confirmer mon compte")}
           </.button>
         </.form>
 
@@ -42,9 +47,11 @@ defmodule SmovieWeb.UserLive.Confirmation do
             :if={!@current_scope}
             field={@form[:remember_me]}
             type="checkbox"
-            label="Keep me logged in"
+            label={gettext("Rester connecte")}
           />
-          <.button variant="primary" phx-disable-with="Logging in..." class="w-full">Log in</.button>
+          <.button variant="primary" phx-disable-with={gettext("Connexion...")} class="w-full">
+            {gettext("Se connecter")}
+          </.button>
         </.form>
 
         <p :if={!@user.confirmed_at} class="alert alert-outline mt-8">
@@ -64,7 +71,7 @@ defmodule SmovieWeb.UserLive.Confirmation do
     else
       {:ok,
        socket
-       |> put_flash(:error, "Magic link is invalid or it has expired.")
+       |> put_flash(:error, gettext("Ce lien de connexion est invalide ou a expire."))
        |> push_navigate(to: ~p"/users/log-in")}
     end
   end

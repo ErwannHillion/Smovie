@@ -40,7 +40,7 @@ defmodule SmovieWeb.UserSessionController do
     else
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
       conn
-      |> put_flash(:error, "Invalid email or password")
+      |> put_flash(:error, gettext("Adresse e-mail ou mot de passe incorrect"))
       |> put_flash(:email, String.slice(email, 0, 160))
       |> redirect(to: ~p"/users/log-in")
     end
@@ -61,10 +61,10 @@ defmodule SmovieWeb.UserSessionController do
 
       conn
       |> put_session(:user_return_to, ~p"/users/settings")
-      |> create(params, "Password updated successfully!")
+      |> create(params, gettext("Mot de passe mis a jour."))
     else
       conn
-      |> put_flash(:error, "Votre session a expire. Reconnectez-vous pour continuer.")
+      |> put_flash(:error, gettext("Votre session a expire. Reconnectez-vous pour continuer."))
       |> redirect(to: ~p"/users/log-in")
     end
   end
