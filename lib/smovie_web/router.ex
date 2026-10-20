@@ -83,6 +83,7 @@ defmodule SmovieWeb.Router do
       ] do
       live "/watchlist", WatchlistLive
       live "/messages", MessagingLive.Index
+      live "/messages/nouveau", MessagingLive.New
       live "/messages/:id", MessagingLive.Show
       live "/users/settings", UserLive.Settings, :edit
       live "/users/settings/confirm-email/:token", UserLive.Settings, :confirm_email
