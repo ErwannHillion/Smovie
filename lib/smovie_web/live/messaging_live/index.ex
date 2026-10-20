@@ -30,6 +30,7 @@ defmodule SmovieWeb.MessagingLive.Index do
       locale={@locale}
       current_path={@current_path}
       unread_count={@unread_count}
+      unread_messages={@unread_messages}
     >
       <header class="flex items-baseline gap-4 py-4">
         <h1 class="font-display text-3xl leading-none font-bold tracking-tight md:text-4xl">

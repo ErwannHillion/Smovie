@@ -70,6 +70,7 @@ defmodule SmovieWeb.NetworkLive do
       locale={@locale}
       current_path={@current_path}
       unread_count={@unread_count}
+      unread_messages={@unread_messages}
     >
       <nav class="text-base-content/50 flex items-center gap-2 py-2 font-mono text-xs">
         <.link navigate={~p"/u/#{@user.username}"} class="hover:text-base-content">

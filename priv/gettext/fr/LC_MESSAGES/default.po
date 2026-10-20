@@ -16,15 +16,15 @@ msgstr ""
 msgid "Actions"
 msgstr "Actions"
 
-#: lib/smovie_web/live/user_live/login.ex:57
-#: lib/smovie_web/live/user_live/login.ex:81
-#: lib/smovie_web/live/user_live/registration.ex:31
-#: lib/smovie_web/live/user_live/settings.ex:96
+#: lib/smovie_web/live/user_live/login.ex:58
+#: lib/smovie_web/live/user_live/login.ex:82
+#: lib/smovie_web/live/user_live/registration.ex:32
+#: lib/smovie_web/live/user_live/settings.ex:97
 #, elixir-autogen, elixir-format
 msgid "Adresse e-mail"
 msgstr "Adresse e-mail"
 
-#: lib/smovie_web/live/user_live/settings.ex:148
+#: lib/smovie_web/live/user_live/settings.ex:149
 #, elixir-autogen, elixir-format
 msgid "Adresse e-mail modifiee."
 msgstr "Adresse e-mail modifiee."
@@ -34,17 +34,17 @@ msgstr "Adresse e-mail modifiee."
 msgid "Adresse e-mail ou mot de passe incorrect"
 msgstr "Adresse e-mail ou mot de passe incorrect"
 
-#: lib/smovie_web/components/layouts.ex:284
+#: lib/smovie_web/components/layouts.ex:299
 #, elixir-autogen, elixir-format
 msgid "Attempting to reconnect"
 msgstr "Attempting to reconnect"
 
-#: lib/smovie_web/live/user_live/settings.ex:154
+#: lib/smovie_web/live/user_live/settings.ex:155
 #, elixir-autogen, elixir-format
 msgid "Ce lien de changement d'adresse est invalide ou a expire."
 msgstr "Ce lien de changement d'adresse est invalide ou a expire."
 
-#: lib/smovie_web/live/user_live/confirmation.ex:75
+#: lib/smovie_web/live/user_live/confirmation.ex:76
 #, elixir-autogen, elixir-format
 msgid "Ce lien de connexion est invalide ou a expire."
 msgstr "Ce lien de connexion est invalide ou a expire."
@@ -54,115 +54,115 @@ msgstr "Ce lien de connexion est invalide ou a expire."
 msgid "Cette langue n'est pas disponible."
 msgstr "Cette langue n'est pas disponible."
 
-#: lib/smovie_web/live/user_live/confirmation.ex:33
+#: lib/smovie_web/live/user_live/confirmation.ex:34
 #, elixir-autogen, elixir-format
 msgid "Confirmation..."
 msgstr "Confirmation..."
 
-#: lib/smovie_web/live/user_live/settings.ex:133
+#: lib/smovie_web/live/user_live/settings.ex:134
 #, elixir-autogen, elixir-format
 msgid "Confirmer le nouveau mot de passe"
 msgstr "Confirmer le nouveau mot de passe"
 
-#: lib/smovie_web/live/user_live/confirmation.ex:34
+#: lib/smovie_web/live/user_live/confirmation.ex:35
 #, elixir-autogen, elixir-format
 msgid "Confirmer mon compte"
 msgstr "Confirmer mon compte"
 
-#: lib/smovie_web/live/user_live/registration.ex:22
+#: lib/smovie_web/live/user_live/registration.ex:23
 #, elixir-autogen, elixir-format
 msgid "Connectez-vous"
 msgstr "Connectez-vous"
 
-#: lib/smovie_web/components/layouts.ex:155
-#: lib/smovie_web/live/user_live/login.ex:17
+#: lib/smovie_web/components/layouts.ex:160
+#: lib/smovie_web/live/user_live/login.ex:18
 #, elixir-autogen, elixir-format
 msgid "Connexion"
 msgstr "Connexion"
 
-#: lib/smovie_web/live/user_live/confirmation.ex:53
+#: lib/smovie_web/live/user_live/confirmation.ex:54
 #, elixir-autogen, elixir-format
 msgid "Connexion..."
 msgstr "Connexion..."
 
-#: lib/smovie_web/live/user_live/registration.ex:39
+#: lib/smovie_web/live/user_live/registration.ex:40
 #, elixir-autogen, elixir-format
 msgid "Creation du compte..."
 msgstr "Creation du compte..."
 
-#: lib/smovie_web/live/user_live/registration.ex:42
+#: lib/smovie_web/live/user_live/registration.ex:43
 #, elixir-autogen, elixir-format
 msgid "Creer mon compte"
 msgstr "Creer mon compte"
 
-#: lib/smovie_web/live/user_live/registration.ex:18
+#: lib/smovie_web/live/user_live/registration.ex:19
 #, elixir-autogen, elixir-format
 msgid "Creer un compte"
 msgstr "Creer un compte"
 
-#: lib/smovie_web/components/layouts.ex:148
-#: lib/smovie_web/components/layouts.ex:149
+#: lib/smovie_web/components/layouts.ex:153
+#: lib/smovie_web/components/layouts.ex:154
 #, elixir-autogen, elixir-format
 msgid "Deconnexion"
 msgstr "Deconnexion"
 
-#: lib/smovie_web/live/user_live/registration.ex:20
+#: lib/smovie_web/live/user_live/registration.ex:21
 #, elixir-autogen, elixir-format
 msgid "Deja inscrit ?"
 msgstr "Deja inscrit ?"
 
-#: lib/smovie_web/live/user_live/settings.ex:56
-#: lib/smovie_web/live/user_live/settings.ex:136
+#: lib/smovie_web/live/user_live/settings.ex:57
+#: lib/smovie_web/live/user_live/settings.ex:137
 #, elixir-autogen, elixir-format
 msgid "Enregistrement..."
 msgstr "Enregistrement..."
 
-#: lib/smovie_web/live/user_live/settings.ex:137
+#: lib/smovie_web/live/user_live/settings.ex:138
 #, elixir-autogen, elixir-format
 msgid "Enregistrer le mot de passe"
 msgstr "Enregistrer le mot de passe"
 
-#: lib/smovie_web/live/user_live/settings.ex:21
+#: lib/smovie_web/live/user_live/settings.ex:22
 #, elixir-autogen, elixir-format
 msgid "Gerez votre adresse e-mail et votre mot de passe"
 msgstr "Gerez votre adresse e-mail et votre mot de passe"
 
-#: lib/smovie_web/components/layouts.ex:296
+#: lib/smovie_web/components/layouts.ex:311
 #, elixir-autogen, elixir-format
 msgid "Hang in there while we get back on track"
 msgstr "Hang in there while we get back on track"
 
-#: lib/smovie_web/components/layouts.ex:158
+#: lib/smovie_web/components/layouts.ex:163
 #, elixir-autogen, elixir-format
 msgid "Inscription"
 msgstr "Inscription"
 
-#: lib/smovie_web/live/user_live/login.ex:28
+#: lib/smovie_web/live/user_live/login.ex:29
 #, elixir-autogen, elixir-format
 msgid "Inscrivez-vous"
 msgstr "Inscrivez-vous"
 
-#: lib/smovie_web/live/user_live/login.ex:36
+#: lib/smovie_web/live/user_live/login.ex:37
 #, elixir-autogen, elixir-format
 msgid "L'adaptateur mail local est actif."
 msgstr "L'adaptateur mail local est actif."
 
-#: lib/smovie_web/live/user_live/login.ex:38
+#: lib/smovie_web/live/user_live/login.ex:39
 #, elixir-autogen, elixir-format
 msgid "Les messages envoyes sont consultables sur"
 msgstr "Les messages envoyes sont consultables sur"
 
-#: lib/smovie_web/live/user_live/settings.ex:100
+#: lib/smovie_web/live/user_live/settings.ex:101
 #, elixir-autogen, elixir-format
 msgid "Modification..."
 msgstr "Modification..."
 
-#: lib/smovie_web/live/user_live/settings.ex:101
+#: lib/smovie_web/live/user_live/settings.ex:102
 #, elixir-autogen, elixir-format
 msgid "Modifier mon adresse"
 msgstr "Modifier mon adresse"
 
-#: lib/smovie_web/live/user_live/login.ex:88
+#: lib/smovie_web/live/user_live/login.ex:89
 #, elixir-autogen, elixir-format
 msgid "Mot de passe"
 msgstr "Mot de passe"
@@ -172,71 +172,71 @@ msgstr "Mot de passe"
 msgid "Mot de passe mis a jour."
 msgstr "Mot de passe mis a jour."
 
-#: lib/smovie_web/live/user_live/settings.ex:126
+#: lib/smovie_web/live/user_live/settings.ex:127
 #, elixir-autogen, elixir-format
 msgid "Nouveau mot de passe"
 msgstr "Nouveau mot de passe"
 
-#: lib/smovie_web/live/user_live/settings.ex:20
+#: lib/smovie_web/live/user_live/settings.ex:21
 #, elixir-autogen, elixir-format
 msgid "Parametres du compte"
 msgstr "Parametres du compte"
 
-#: lib/smovie_web/live/user_live/login.ex:24
+#: lib/smovie_web/live/user_live/login.ex:25
 #, elixir-autogen, elixir-format
 msgid "Pas encore de compte ?"
 msgstr "Pas encore de compte ?"
 
-#: lib/smovie_web/live/user_live/login.ex:63
+#: lib/smovie_web/live/user_live/login.ex:64
 #, elixir-autogen, elixir-format
 msgid "Recevoir un lien de connexion"
 msgstr "Recevoir un lien de connexion"
 
-#: lib/smovie_web/live/user_live/confirmation.ex:31
-#: lib/smovie_web/live/user_live/confirmation.ex:51
-#: lib/smovie_web/live/user_live/login.ex:95
+#: lib/smovie_web/live/user_live/confirmation.ex:32
+#: lib/smovie_web/live/user_live/confirmation.ex:52
+#: lib/smovie_web/live/user_live/login.ex:96
 #, elixir-autogen, elixir-format
 msgid "Rester connecte"
 msgstr "Rester connecte"
 
-#: lib/smovie_web/live/user_live/confirmation.ex:54
-#: lib/smovie_web/live/user_live/login.ex:98
+#: lib/smovie_web/live/user_live/confirmation.ex:55
+#: lib/smovie_web/live/user_live/login.ex:99
 #, elixir-autogen, elixir-format
 msgid "Se connecter"
 msgstr "Se connecter"
 
-#: lib/smovie_web/live/user_live/login.ex:129
+#: lib/smovie_web/live/user_live/login.ex:130
 #, elixir-autogen, elixir-format
 msgid "Si cette adresse est enregistree, vous recevrez sous peu les instructions de connexion."
 msgstr "Si cette adresse est enregistree, vous recevrez sous peu les instructions de connexion."
 
-#: lib/smovie_web/components/layouts.ex:291
+#: lib/smovie_web/components/layouts.ex:306
 #, elixir-autogen, elixir-format
 msgid "Something went wrong!"
 msgstr "Something went wrong!"
 
-#: lib/smovie_web/live/user_live/settings.ex:261
+#: lib/smovie_web/live/user_live/settings.ex:262
 #, elixir-autogen, elixir-format
 msgid "Un lien de confirmation a ete envoye a la nouvelle adresse."
 msgstr "Un lien de confirmation a ete envoye a la nouvelle adresse."
 
-#: lib/smovie_web/live/user_live/registration.ex:74
+#: lib/smovie_web/live/user_live/registration.ex:75
 #, elixir-autogen, elixir-format
 msgid "Un message a ete envoye a %{email}. Ouvrez-le pour confirmer votre compte."
 msgstr "Un message a ete envoye a %{email}. Ouvrez-le pour confirmer votre compte."
 
 #: lib/smovie_web/controllers/user_session_controller.ex:67
-#: lib/smovie_web/live/user_live/settings.ex:318
+#: lib/smovie_web/live/user_live/settings.ex:319
 #, elixir-autogen, elixir-format
 msgid "Votre session a expire. Reconnectez-vous pour continuer."
 msgstr "Votre session a expire. Reconnectez-vous pour continuer."
 
-#: lib/smovie_web/live/user_live/login.ex:20
+#: lib/smovie_web/live/user_live/login.ex:21
 #, elixir-autogen, elixir-format
 msgid "Vous devez vous reconnecter pour effectuer une action sensible sur votre compte."
 msgstr "Vous devez vous reconnecter pour effectuer une action sensible sur votre compte."
 
-#: lib/smovie_web/components/layouts.ex:279
+#: lib/smovie_web/components/layouts.ex:294
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
 msgstr "We can't find the internet"
@@ -246,12 +246,12 @@ msgstr "We can't find the internet"
 msgid "close"
 msgstr "close"
 
-#: lib/smovie_web/live/user_live/login.ex:41
+#: lib/smovie_web/live/user_live/login.ex:42
 #, elixir-autogen, elixir-format
 msgid "la page mailbox"
 msgstr "la page mailbox"
 
-#: lib/smovie_web/live/user_live/login.ex:67
+#: lib/smovie_web/live/user_live/login.ex:68
 #, elixir-autogen, elixir-format
 msgid "ou"
 msgstr "ou"
@@ -266,28 +266,28 @@ msgstr[1] "%{count} notes"
 #: lib/smovie_web/components/work_components.ex:165
 #: lib/smovie_web/components/work_components.ex:175
 #: lib/smovie_web/components/work_components.ex:213
-#: lib/smovie_web/live/work_live/season.ex:199
+#: lib/smovie_web/live/work_live/season.ex:200
 #, elixir-autogen, elixir-format
 msgid "%{stars} sur 5"
 msgstr "%{stars} sur 5"
 
-#: lib/smovie_web/components/layouts.ex:208
+#: lib/smovie_web/components/layouts.ex:223
 #, elixir-autogen, elixir-format
 msgid "A voir"
 msgstr "A voir"
 
-#: lib/smovie_web/components/layouts.ex:197
-#: lib/smovie_web/components/layouts.ex:206
+#: lib/smovie_web/components/layouts.ex:212
+#: lib/smovie_web/components/layouts.ex:221
 #, elixir-autogen, elixir-format
 msgid "Accueil"
 msgstr "Accueil"
 
-#: lib/smovie_web/components/layouts.ex:207
+#: lib/smovie_web/components/layouts.ex:222
 #, elixir-autogen, elixir-format
 msgid "Chercher"
 msgstr "Chercher"
 
-#: lib/smovie_web/live/home_live.ex:166
+#: lib/smovie_web/live/home_live.ex:167
 #, elixir-autogen, elixir-format
 msgid "Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watchlist et messagerie."
 msgstr "Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watchlist et messagerie."
@@ -297,10 +297,10 @@ msgstr "Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watch
 msgid "Glissez pour noter"
 msgstr "Glissez pour noter"
 
-#: lib/smovie_web/components/layouts.ex:200
-#: lib/smovie_web/components/layouts.ex:209
+#: lib/smovie_web/components/layouts.ex:215
+#: lib/smovie_web/components/layouts.ex:224
 #: lib/smovie_web/live/messaging_live/index.ex:13
-#: lib/smovie_web/live/messaging_live/index.ex:36
+#: lib/smovie_web/live/messaging_live/index.ex:37
 #, elixir-autogen, elixir-format
 msgid "Messages"
 msgstr "Messages"
@@ -310,22 +310,22 @@ msgstr "Messages"
 msgid "Presse"
 msgstr "Presse"
 
-#: lib/smovie_web/components/layouts.ex:210
+#: lib/smovie_web/components/layouts.ex:225
 #, elixir-autogen, elixir-format
 msgid "Profil"
 msgstr "Profil"
 
-#: lib/smovie_web/components/layouts.ex:111
-#: lib/smovie_web/live/search_live.ex:63
+#: lib/smovie_web/components/layouts.ex:116
+#: lib/smovie_web/live/search_live.ex:64
 #, elixir-autogen, elixir-format
 msgid "Rechercher"
 msgstr "Rechercher"
 
-#: lib/smovie_web/components/layouts.ex:198
-#: lib/smovie_web/live/profile_live.ex:191
-#: lib/smovie_web/live/profile_live.ex:367
+#: lib/smovie_web/components/layouts.ex:213
+#: lib/smovie_web/live/profile_live.ex:192
+#: lib/smovie_web/live/profile_live.ex:368
 #: lib/smovie_web/live/review_live/index.ex:13
-#: lib/smovie_web/live/review_live/index.ex:50
+#: lib/smovie_web/live/review_live/index.ex:51
 #, elixir-autogen, elixir-format
 msgid "Reviews"
 msgstr "Reviews"
@@ -341,7 +341,7 @@ msgid "TMDB"
 msgstr "TMDB"
 
 #: lib/smovie_web/components/work_components.ex:138
-#: lib/smovie_web/live/home_live.ex:97
+#: lib/smovie_web/live/home_live.ex:98
 #, elixir-autogen, elixir-format
 msgid "Tout voir"
 msgstr "Tout voir"
@@ -351,11 +351,11 @@ msgstr "Tout voir"
 msgid "Votre note"
 msgstr "Votre note"
 
-#: lib/smovie_web/components/layouts.ex:199
-#: lib/smovie_web/live/user_live/settings.ex:80
+#: lib/smovie_web/components/layouts.ex:214
+#: lib/smovie_web/live/user_live/settings.ex:81
 #: lib/smovie_web/live/watchlist_live.ex:16
-#: lib/smovie_web/live/watchlist_live.ex:65
-#: lib/smovie_web/live/work_live/show.ex:390
+#: lib/smovie_web/live/watchlist_live.ex:66
+#: lib/smovie_web/live/work_live/show.ex:391
 #, elixir-autogen, elixir-format
 msgid "Watchlist"
 msgstr "Watchlist"
@@ -370,73 +370,73 @@ msgstr "presse"
 msgid "public"
 msgstr "public"
 
-#: lib/smovie_web/live/user_live/settings.ex:54
+#: lib/smovie_web/live/user_live/settings.ex:55
 #, elixir-autogen, elixir-format
 msgid "Bio"
 msgstr "Bio"
 
-#: lib/smovie_web/live/user_live/settings.ex:57
+#: lib/smovie_web/live/user_live/settings.ex:58
 #, elixir-autogen, elixir-format
 msgid "Enregistrer le profil"
 msgstr "Enregistrer le profil"
 
-#: lib/smovie_web/live/user_live/settings.ex:46
+#: lib/smovie_web/live/user_live/settings.ex:47
 #, elixir-autogen, elixir-format
 msgid "Identifiant public"
 msgstr "Identifiant public"
 
-#: lib/smovie_web/live/user_live/settings.ex:33
+#: lib/smovie_web/live/user_live/settings.ex:34
 #, elixir-autogen, elixir-format
 msgid "L'avatar televersable arrive plus tard : pour l'instant, c'est votre initiale."
 msgstr "L'avatar televersable arrive plus tard : pour l'instant, c'est votre initiale."
 
-#: lib/smovie_web/live/user_live/settings.ex:53
+#: lib/smovie_web/live/user_live/settings.ex:54
 #, elixir-autogen, elixir-format
 msgid "Lieu"
 msgstr "Lieu"
 
-#: lib/smovie_web/live/profile_live.ex:149
+#: lib/smovie_web/live/profile_live.ex:150
 #, elixir-autogen, elixir-format
 msgid "Modifier mon profil"
 msgstr "Modifier mon profil"
 
-#: lib/smovie_web/live/user_live/settings.ex:40
+#: lib/smovie_web/live/user_live/settings.ex:41
 #, elixir-autogen, elixir-format
 msgid "Nom affiche"
 msgstr "Nom affiche"
 
-#: lib/smovie_web/live/user_live/settings.ex:223
+#: lib/smovie_web/live/user_live/settings.ex:224
 #, elixir-autogen, elixir-format
 msgid "Profil mis a jour."
 msgstr "Profil mis a jour."
 
-#: lib/smovie_web/live/profile_live.ex:168
+#: lib/smovie_web/live/profile_live.ex:169
 #, elixir-autogen, elixir-format
 msgid "Ce profil est prive."
 msgstr "Ce profil est prive."
 
-#: lib/smovie_web/live/user_live/settings.ex:74
+#: lib/smovie_web/live/user_live/settings.ex:75
 #, elixir-autogen, elixir-format
 msgid "Profil et reviews"
 msgstr "Profil et reviews"
 
-#: lib/smovie_web/live/user_live/settings.ex:69
+#: lib/smovie_web/live/user_live/settings.ex:70
 #, elixir-autogen, elixir-format
 msgid "Qui voit quoi"
 msgstr "Qui voit quoi"
 
-#: lib/smovie_web/live/user_live/settings.ex:188
+#: lib/smovie_web/live/user_live/settings.ex:189
 #, elixir-autogen, elixir-format
 msgid "Visibilite enregistree."
 msgstr "Visibilite enregistree."
 
-#: lib/smovie_web/live/user_live/settings.ex:86
+#: lib/smovie_web/live/user_live/settings.ex:87
 #, elixir-autogen, elixir-format
 msgid "Visibilite par defaut d'une nouvelle review"
 msgstr "Visibilite par defaut d'une nouvelle review"
 
-#: lib/smovie_web/live/work_live/season.ex:216
-#: lib/smovie_web/live/work_live/show.ex:495
+#: lib/smovie_web/live/work_live/season.ex:217
+#: lib/smovie_web/live/work_live/show.ex:496
 #, elixir-autogen, elixir-format
 msgid "%{count} min"
 msgstr "%{count} min"
@@ -447,83 +447,83 @@ msgstr "%{count} min"
 msgid "Connectez-vous pour noter et suivre vos films."
 msgstr "Connectez-vous pour noter et suivre vos films."
 
-#: lib/smovie_web/live/work_live/show.ex:390
+#: lib/smovie_web/live/work_live/show.ex:391
 #, elixir-autogen, elixir-format
 msgid "Dans la liste"
 msgstr "Dans la liste"
 
-#: lib/smovie_web/live/work_live/show.ex:346
+#: lib/smovie_web/live/work_live/show.ex:347
 #, elixir-autogen, elixir-format
 msgid "Distribution"
 msgstr "Distribution"
 
-#: lib/smovie_web/live/work_live/show.ex:403
+#: lib/smovie_web/live/work_live/show.ex:404
 #, elixir-autogen, elixir-format
 msgid "J'aime"
 msgstr "J'aime"
 
-#: lib/smovie_web/live/work_live/season.ex:150
-#: lib/smovie_web/live/work_live/show.ex:384
+#: lib/smovie_web/live/work_live/season.ex:151
+#: lib/smovie_web/live/work_live/show.ex:385
 #, elixir-autogen, elixir-format
 msgid "Marquer vu"
 msgstr "Marquer vu"
 
-#: lib/smovie_web/live/work_live/show.ex:384
+#: lib/smovie_web/live/work_live/show.ex:385
 #, elixir-autogen, elixir-format
 msgid "Vu"
 msgstr "Vu"
 
-#: lib/smovie_web/live/work_live/show.ex:447
+#: lib/smovie_web/live/work_live/show.ex:448
 #, elixir-autogen, elixir-format
 msgid "de"
 msgstr "de"
 
-#: lib/smovie_web/live/work_live/season.ex:127
-#: lib/smovie_web/live/work_live/show.ex:513
+#: lib/smovie_web/live/work_live/season.ex:128
+#: lib/smovie_web/live/work_live/show.ex:514
 #, elixir-autogen, elixir-format
 msgid "%{count} episode"
 msgid_plural "%{count} episodes"
 msgstr[0] "%{count} episode"
 msgstr[1] "%{count} episodes"
 
-#: lib/smovie_web/live/work_live/season.ex:127
-#: lib/smovie_web/live/work_live/show.ex:514
+#: lib/smovie_web/live/work_live/season.ex:128
+#: lib/smovie_web/live/work_live/show.ex:515
 #, elixir-autogen, elixir-format
 msgid "%{watched} vus"
 msgstr "%{watched} vus"
 
-#: lib/smovie_web/live/work_live/season.ex:175
+#: lib/smovie_web/live/work_live/season.ex:176
 #, elixir-autogen, elixir-format
 msgid "Les episodes de cette saison ne sont pas encore disponibles."
 msgstr "Les episodes de cette saison ne sont pas encore disponibles."
 
-#: lib/smovie_web/live/work_live/show.ex:315
+#: lib/smovie_web/live/work_live/show.ex:316
 #, elixir-autogen, elixir-format
 msgid "Saisons"
 msgstr "Saisons"
 
-#: lib/smovie_web/live/work_live/season.ex:171
+#: lib/smovie_web/live/work_live/season.ex:172
 #, elixir-autogen, elixir-format
 msgid "Marquer toute la saison comme vue"
 msgstr "Marquer toute la saison comme vue"
 
-#: lib/smovie_web/live/network_live.ex:101
-#: lib/smovie_web/live/profile_live.ex:158
+#: lib/smovie_web/live/network_live.ex:102
+#: lib/smovie_web/live/profile_live.ex:159
 #, elixir-autogen, elixir-format
 msgid "Abonne"
 msgstr "Abonne"
 
-#: lib/smovie_web/live/network_live.ex:114
+#: lib/smovie_web/live/network_live.ex:115
 #, elixir-autogen, elixir-format
 msgid "Abonnements"
 msgstr "Abonnements"
 
-#: lib/smovie_web/live/network_live.ex:115
+#: lib/smovie_web/live/network_live.ex:116
 #, elixir-autogen, elixir-format
 msgid "Abonnes"
 msgstr "Abonnes"
 
-#: lib/smovie_web/live/network_live.ex:117
+#: lib/smovie_web/live/network_live.ex:118
 #, elixir-autogen, elixir-format
 msgid "Ce membre ne suit personne pour l'instant."
 msgstr "Ce membre ne suit personne pour l'instant."
@@ -534,49 +534,49 @@ msgstr "Ce membre ne suit personne pour l'instant."
 msgid "Connectez-vous pour suivre des membres."
 msgstr "Connectez-vous pour suivre des membres."
 
-#: lib/smovie_web/live/network_live.ex:118
+#: lib/smovie_web/live/network_live.ex:119
 #, elixir-autogen, elixir-format
 msgid "Personne ne suit ce membre pour l'instant."
 msgstr "Personne ne suit ce membre pour l'instant."
 
-#: lib/smovie_web/live/network_live.ex:102
-#: lib/smovie_web/live/profile_live.ex:158
+#: lib/smovie_web/live/network_live.ex:103
+#: lib/smovie_web/live/profile_live.ex:159
 #, elixir-autogen, elixir-format
 msgid "Suivre"
 msgstr "Suivre"
 
-#: lib/smovie_web/live/profile_live.ex:130
+#: lib/smovie_web/live/profile_live.ex:131
 #, elixir-autogen, elixir-format
 msgid "abonnements"
 msgstr "abonnements"
 
-#: lib/smovie_web/live/profile_live.ex:133
+#: lib/smovie_web/live/profile_live.ex:134
 #, elixir-autogen, elixir-format
 msgid "abonnes"
 msgstr "abonnes"
 
-#: lib/smovie_web/live/review_live/show.ex:127
+#: lib/smovie_web/live/review_live/show.ex:128
 #, elixir-autogen, elixir-format
 msgid "Afficher les spoilers"
 msgstr "Afficher les spoilers"
 
-#: lib/smovie_web/live/work_live/show.ex:267
+#: lib/smovie_web/live/work_live/show.ex:268
 #, elixir-autogen, elixir-format
 msgid "Annuler"
 msgstr "Annuler"
 
-#: lib/smovie_web/live/work_live/show.ex:245
+#: lib/smovie_web/live/work_live/show.ex:246
 #, elixir-autogen, elixir-format
 msgid "Ce que vous en avez pense"
 msgstr "Ce que vous en avez pense"
 
 #: lib/smovie_web/components/review_components.ex:62
-#: lib/smovie_web/live/work_live/show.ex:253
+#: lib/smovie_web/live/work_live/show.ex:254
 #, elixir-autogen, elixir-format
 msgid "Contient des spoilers"
 msgstr "Contient des spoilers"
 
-#: lib/smovie_web/live/work_live/show.ex:295
+#: lib/smovie_web/live/work_live/show.ex:296
 #, elixir-autogen, elixir-format
 msgid "Ecrire une review"
 msgstr "Ecrire une review"
@@ -586,17 +586,17 @@ msgstr "Ecrire une review"
 msgid "Lire"
 msgstr "Lire"
 
-#: lib/smovie_web/live/work_live/show.ex:276
+#: lib/smovie_web/live/work_live/show.ex:277
 #, elixir-autogen, elixir-format
 msgid "Modifier"
 msgstr "Modifier"
 
-#: lib/smovie_web/live/work_live/show.ex:263
+#: lib/smovie_web/live/work_live/show.ex:264
 #, elixir-autogen, elixir-format
 msgid "Publication..."
 msgstr "Publication..."
 
-#: lib/smovie_web/live/work_live/show.ex:264
+#: lib/smovie_web/live/work_live/show.ex:265
 #, elixir-autogen, elixir-format
 msgid "Publier"
 msgstr "Publier"
@@ -606,48 +606,48 @@ msgstr "Publier"
 msgid "Review publiee."
 msgstr "Review publiee."
 
-#: lib/smovie_web/live/work_live/show.ex:302
+#: lib/smovie_web/live/work_live/show.ex:303
 #, elixir-autogen, elixir-format
 msgid "Reviews populaires"
 msgstr "Reviews populaires"
 
-#: lib/smovie_web/live/messaging_live/show.ex:131
-#: lib/smovie_web/live/review_live/show.ex:225
-#: lib/smovie_web/live/work_live/show.ex:284
+#: lib/smovie_web/live/messaging_live/show.ex:170
+#: lib/smovie_web/live/review_live/show.ex:226
+#: lib/smovie_web/live/work_live/show.ex:285
 #, elixir-autogen, elixir-format
 msgid "Supprimer"
 msgstr "Supprimer"
 
-#: lib/smovie_web/live/work_live/show.ex:281
+#: lib/smovie_web/live/work_live/show.ex:282
 #, elixir-autogen, elixir-format
 msgid "Supprimer cette review ?"
 msgstr "Supprimer cette review ?"
 
-#: lib/smovie_web/live/work_live/show.ex:259
+#: lib/smovie_web/live/work_live/show.ex:260
 #, elixir-autogen, elixir-format
 msgid "Visible par"
 msgstr "Visible par"
 
-#: lib/smovie_web/live/work_live/show.ex:232
+#: lib/smovie_web/live/work_live/show.ex:233
 #, elixir-autogen, elixir-format
 msgid "Votre review"
 msgstr "Votre review"
 
-#: lib/smovie_web/live/review_live/show.ex:147
+#: lib/smovie_web/live/review_live/show.ex:148
 #, elixir-autogen, elixir-format
 msgid "%{count} commentaire"
 msgid_plural "%{count} commentaires"
 msgstr[0] "%{count} commentaire"
 msgstr[1] "%{count} commentaires"
 
-#: lib/smovie_web/live/review_live/show.ex:141
+#: lib/smovie_web/live/review_live/show.ex:142
 #, elixir-autogen, elixir-format
 msgid "%{count} j'aime"
 msgid_plural "%{count} j'aime"
 msgstr[0] "%{count} j'aime"
 msgstr[1] "%{count} j'aime"
 
-#: lib/smovie_web/live/review_live/show.ex:167
+#: lib/smovie_web/live/review_live/show.ex:168
 #, elixir-autogen, elixir-format
 msgid "Annuler la reponse"
 msgstr "Annuler la reponse"
@@ -662,53 +662,53 @@ msgstr "Ce commentaire n'a pas pu etre publie."
 msgid "Connectez-vous pour reagir aux reviews."
 msgstr "Connectez-vous pour reagir aux reviews."
 
-#: lib/smovie_web/live/review_live/show.ex:165
+#: lib/smovie_web/live/review_live/show.ex:166
 #, elixir-autogen, elixir-format
 msgid "Envoyer"
 msgstr "Envoyer"
 
-#: lib/smovie_web/live/review_live/show.ex:216
+#: lib/smovie_web/live/review_live/show.ex:217
 #, elixir-autogen, elixir-format
 msgid "Repondre"
 msgstr "Repondre"
 
-#: lib/smovie_web/live/review_live/show.ex:161
+#: lib/smovie_web/live/review_live/show.ex:162
 #, elixir-autogen, elixir-format
 msgid "Votre commentaire"
 msgstr "Votre commentaire"
 
-#: lib/smovie_web/live/review_live/show.ex:161
+#: lib/smovie_web/live/review_live/show.ex:162
 #, elixir-autogen, elixir-format
 msgid "Votre reponse"
 msgstr "Votre reponse"
 
-#: lib/smovie_web/live/profile_live.ex:307
-#: lib/smovie_web/live/review_live/index.ex:101
+#: lib/smovie_web/live/profile_live.ex:308
+#: lib/smovie_web/live/review_live/index.ex:102
 #, elixir-autogen, elixir-format
 msgid "Aucune review pour l'instant."
 msgstr "Aucune review pour l'instant."
 
-#: lib/smovie_web/live/review_live/index.ex:96
+#: lib/smovie_web/live/review_live/index.ex:97
 #, elixir-autogen, elixir-format
 msgid "Connectez-vous pour voir les reviews des comptes que vous suivez."
 msgstr "Connectez-vous pour voir les reviews des comptes que vous suivez."
 
-#: lib/smovie_web/live/review_live/index.ex:90
+#: lib/smovie_web/live/review_live/index.ex:91
 #, elixir-autogen, elixir-format
 msgid "De vos abonnements"
 msgstr "De vos abonnements"
 
-#: lib/smovie_web/live/review_live/index.ex:99
+#: lib/smovie_web/live/review_live/index.ex:100
 #, elixir-autogen, elixir-format
 msgid "Les comptes que vous suivez n'ont encore rien publie."
 msgstr "Les comptes que vous suivez n'ont encore rien publie."
 
-#: lib/smovie_web/live/review_live/index.ex:89
+#: lib/smovie_web/live/review_live/index.ex:90
 #, elixir-autogen, elixir-format
 msgid "Populaires"
 msgstr "Populaires"
 
-#: lib/smovie_web/live/review_live/index.ex:91
+#: lib/smovie_web/live/review_live/index.ex:92
 #, elixir-autogen, elixir-format
 msgid "Recentes"
 msgstr "Recentes"
@@ -738,109 +738,109 @@ msgstr "%{member} a vu %{work}"
 msgid "%{member} suit desormais %{other}"
 msgstr "%{member} suit desormais %{other}"
 
-#: lib/smovie_web/live/home_live.ex:113
+#: lib/smovie_web/live/home_live.ex:114
 #, elixir-autogen, elixir-format
 msgid "Activite de vos abonnements"
 msgstr "Activite de vos abonnements"
 
-#: lib/smovie_web/live/notifications_live.ex:86
+#: lib/smovie_web/live/notifications_live.ex:87
 #, elixir-autogen, elixir-format
 msgid "%{member} a aime votre review"
 msgstr "%{member} a aime votre review"
 
-#: lib/smovie_web/live/notifications_live.ex:89
+#: lib/smovie_web/live/notifications_live.ex:90
 #, elixir-autogen, elixir-format
 msgid "%{member} a commente votre review"
 msgstr "%{member} a commente votre review"
 
-#: lib/smovie_web/live/notifications_live.ex:99
+#: lib/smovie_web/live/notifications_live.ex:100
 #, elixir-autogen, elixir-format
 msgid "%{member} a note %{work}, qui est dans votre liste a voir"
 msgstr "%{member} a note %{work}, qui est dans votre liste a voir"
 
-#: lib/smovie_web/live/notifications_live.ex:92
+#: lib/smovie_web/live/notifications_live.ex:93
 #, elixir-autogen, elixir-format
 msgid "%{member} a repondu a votre commentaire"
 msgstr "%{member} a repondu a votre commentaire"
 
-#: lib/smovie_web/live/notifications_live.ex:83
+#: lib/smovie_web/live/notifications_live.ex:84
 #, elixir-autogen, elixir-format
 msgid "%{member} s'est abonne a votre profil"
 msgstr "%{member} s'est abonne a votre profil"
 
-#: lib/smovie_web/live/notifications_live.ex:95
+#: lib/smovie_web/live/notifications_live.ex:96
 #, elixir-autogen, elixir-format
 msgid "%{member} vous a envoye un message"
 msgstr "%{member} vous a envoye un message"
 
-#: lib/smovie_web/live/notifications_live.ex:74
+#: lib/smovie_web/live/notifications_live.ex:75
 #, elixir-autogen, elixir-format
 msgid "Aucune notification pour l'instant."
 msgstr "Aucune notification pour l'instant."
 
-#: lib/smovie_web/components/layouts.ex:127
+#: lib/smovie_web/components/layouts.ex:132
 #: lib/smovie_web/live/notifications_live.ex:13
-#: lib/smovie_web/live/notifications_live.ex:36
+#: lib/smovie_web/live/notifications_live.ex:37
 #, elixir-autogen, elixir-format
 msgid "Notifications"
 msgstr "Notifications"
 
-#: lib/smovie_web/live/notifications_live.ex:44
+#: lib/smovie_web/live/notifications_live.ex:45
 #, elixir-autogen, elixir-format
 msgid "Tout marquer comme lu"
 msgstr "Tout marquer comme lu"
 
-#: lib/smovie_web/live/notifications_live.ex:108
+#: lib/smovie_web/live/notifications_live.ex:109
 #, elixir-autogen, elixir-format
 msgid "Un membre"
 msgstr "Un membre"
 
-#: lib/smovie_web/live/notifications_live.ex:111
+#: lib/smovie_web/live/notifications_live.ex:112
 #, elixir-autogen, elixir-format
 msgid "une oeuvre"
 msgstr "une oeuvre"
 
-#: lib/smovie_web/live/home_live.ex:56
+#: lib/smovie_web/live/home_live.ex:57
 #, elixir-autogen, elixir-format
 msgid "En tendance cette semaine"
 msgstr "En tendance cette semaine"
 
-#: lib/smovie_web/live/home_live.ex:171
+#: lib/smovie_web/live/home_live.ex:172
 #, elixir-autogen, elixir-format
 msgid "Le catalogue se remplit : revenez dans un moment."
 msgstr "Le catalogue se remplit : revenez dans un moment."
 
-#: lib/smovie_web/live/home_live.ex:46
+#: lib/smovie_web/live/home_live.ex:47
 #, elixir-autogen, elixir-format
 msgid "Nouveautes"
 msgstr "Nouveautes"
 
-#: lib/smovie_web/live/home_live.ex:67
+#: lib/smovie_web/live/home_live.ex:68
 #, elixir-autogen, elixir-format
 msgid "Populaire chez vos abonnements"
 msgstr "Populaire chez vos abonnements"
 
-#: lib/smovie_web/live/home_live.ex:91
+#: lib/smovie_web/live/home_live.ex:92
 #, elixir-autogen, elixir-format
 msgid "Reviews a la une"
 msgstr "Reviews a la une"
 
-#: lib/smovie_web/live/home_live.ex:77
+#: lib/smovie_web/live/home_live.ex:78
 #, elixir-autogen, elixir-format
 msgid "Series du moment"
 msgstr "Series du moment"
 
-#: lib/smovie_web/live/home_live.ex:140
+#: lib/smovie_web/live/home_live.ex:141
 #, elixir-autogen, elixir-format
 msgid "Tendance n°1"
 msgstr "Tendance n°1"
 
-#: lib/smovie_web/live/home_live.ex:148
+#: lib/smovie_web/live/home_live.ex:149
 #, elixir-autogen, elixir-format
 msgid "Voir la fiche"
 msgstr "Voir la fiche"
 
-#: lib/smovie_web/live/search_live.ex:136
+#: lib/smovie_web/live/search_live.ex:137
 #, elixir-autogen, elixir-format
 msgid "Aucun resultat pour « %{terme} »."
 msgstr "Aucun resultat pour « %{terme} »."
@@ -850,33 +850,33 @@ msgstr "Aucun resultat pour « %{terme} »."
 msgid "Cette oeuvre n'a pas pu etre importee."
 msgstr "Cette oeuvre n'a pas pu etre importee."
 
-#: lib/smovie_web/live/search_live.ex:80
+#: lib/smovie_web/live/search_live.ex:81
 #, elixir-autogen, elixir-format
 msgid "Entrez au moins trois caracteres."
 msgstr "Entrez au moins trois caracteres."
 
-#: lib/smovie_web/live/search_live.ex:158
+#: lib/smovie_web/live/search_live.ex:159
 #, elixir-autogen, elixir-format
 msgid "Film"
 msgstr "Film"
 
-#: lib/smovie_web/live/search_live.ex:85
+#: lib/smovie_web/live/search_live.ex:86
 #, elixir-autogen, elixir-format
 msgid "Films et series"
 msgstr "Films et series"
 
-#: lib/smovie_web/live/search_live.ex:115
+#: lib/smovie_web/live/search_live.ex:116
 #, elixir-autogen, elixir-format
 msgid "Importer"
 msgstr "Importer"
 
-#: lib/smovie_web/live/messaging_live/new.ex:83
-#: lib/smovie_web/live/search_live.ex:123
+#: lib/smovie_web/live/messaging_live/new.ex:84
+#: lib/smovie_web/live/search_live.ex:124
 #, elixir-autogen, elixir-format
 msgid "Membres"
 msgstr "Membres"
 
-#: lib/smovie_web/live/search_live.ex:105
+#: lib/smovie_web/live/search_live.ex:106
 #, elixir-autogen, elixir-format
 msgid "Ouvrir"
 msgstr "Ouvrir"
@@ -886,239 +886,239 @@ msgstr "Ouvrir"
 msgid "Recherche"
 msgstr "Recherche"
 
-#: lib/smovie_web/live/search_live.ex:157
+#: lib/smovie_web/live/search_live.ex:158
 #, elixir-autogen, elixir-format
 msgid "Serie"
 msgstr "Serie"
 
-#: lib/smovie_web/live/search_live.ex:73
+#: lib/smovie_web/live/search_live.ex:74
 #, elixir-autogen, elixir-format
 msgid "Un film, une serie, un membre…"
 msgstr "Un film, une serie, un membre…"
 
-#: lib/smovie_web/live/search_live.ex:145
+#: lib/smovie_web/live/search_live.ex:146
 #, elixir-autogen, elixir-format
 msgid "pas encore dans Smovie"
 msgstr "pas encore dans Smovie"
 
-#: lib/smovie_web/live/watchlist_live.ex:147
+#: lib/smovie_web/live/watchlist_live.ex:148
 #, elixir-autogen, elixir-format
 msgid "%{count} oeuvre"
 msgid_plural "%{count} oeuvres"
 msgstr[0] "%{count} oeuvre"
 msgstr[1] "%{count} oeuvres"
 
-#: lib/smovie_web/live/watchlist_live.ex:149
+#: lib/smovie_web/live/watchlist_live.ex:150
 #, elixir-autogen, elixir-format
 msgid "%{hours} h %{rest} de visionnage"
 msgstr "%{hours} h %{rest} de visionnage"
 
-#: lib/smovie_web/live/profile_live.ex:212
+#: lib/smovie_web/live/profile_live.ex:213
 #, elixir-autogen, elixir-format
 msgid "Activite recente"
 msgstr "Activite recente"
 
-#: lib/smovie_web/live/profile_live.ex:364
+#: lib/smovie_web/live/profile_live.ex:365
 #, elixir-autogen, elixir-format
 msgid "Apercu"
 msgstr "Apercu"
 
-#: lib/smovie_web/live/profile_live.ex:231
+#: lib/smovie_web/live/profile_live.ex:232
 #, elixir-autogen, elixir-format
 msgid "Aucun film vu pour l'instant."
 msgstr "Aucun film vu pour l'instant."
 
-#: lib/smovie_web/live/watchlist_live.ex:156
+#: lib/smovie_web/live/watchlist_live.ex:157
 #, elixir-autogen, elixir-format
 msgid "Aucune oeuvre ne correspond a ce filtre."
 msgstr "Aucune oeuvre ne correspond a ce filtre."
 
-#: lib/smovie_web/live/profile_live.ex:246
+#: lib/smovie_web/live/profile_live.ex:247
 #, elixir-autogen, elixir-format
 msgid "Aucune serie suivie pour l'instant."
 msgstr "Aucune serie suivie pour l'instant."
 
-#: lib/smovie_web/live/watchlist_live.ex:122
+#: lib/smovie_web/live/watchlist_live.ex:123
 #, elixir-autogen, elixir-format
 msgid "Date d'ajout"
 msgstr "Date d'ajout"
 
-#: lib/smovie_web/live/profile_live.ex:197
+#: lib/smovie_web/live/profile_live.ex:198
 #, elixir-autogen, elixir-format
 msgid "Derniers films vus"
 msgstr "Derniers films vus"
 
-#: lib/smovie_web/live/watchlist_live.ex:125
+#: lib/smovie_web/live/watchlist_live.ex:126
 #, elixir-autogen, elixir-format
 msgid "Duree"
 msgstr "Duree"
 
-#: lib/smovie_web/live/profile_live.ex:189
-#: lib/smovie_web/live/profile_live.ex:365
-#: lib/smovie_web/live/watchlist_live.ex:131
+#: lib/smovie_web/live/profile_live.ex:190
+#: lib/smovie_web/live/profile_live.ex:366
+#: lib/smovie_web/live/watchlist_live.ex:132
 #, elixir-autogen, elixir-format
 msgid "Films"
 msgstr "Films"
 
-#: lib/smovie_web/live/profile_live.ex:192
-#: lib/smovie_web/live/profile_live.ex:290
+#: lib/smovie_web/live/profile_live.ex:193
+#: lib/smovie_web/live/profile_live.ex:291
 #, elixir-autogen, elixir-format
 msgid "Heures"
 msgstr "Heures"
 
-#: lib/smovie_web/live/watchlist_live.ex:124
+#: lib/smovie_web/live/watchlist_live.ex:125
 #, elixir-autogen, elixir-format
 msgid "Note Smovie"
 msgstr "Note Smovie"
 
-#: lib/smovie_web/live/profile_live.ex:190
+#: lib/smovie_web/live/profile_live.ex:191
 #, elixir-autogen, elixir-format
 msgid "Notes"
 msgstr "Notes"
 
-#: lib/smovie_web/live/watchlist_live.ex:105
+#: lib/smovie_web/live/watchlist_live.ex:106
 #, elixir-autogen, elixir-format
 msgid "Retirer de la liste"
 msgstr "Retirer de la liste"
 
-#: lib/smovie_web/live/profile_live.ex:366
-#: lib/smovie_web/live/watchlist_live.ex:131
+#: lib/smovie_web/live/profile_live.ex:367
+#: lib/smovie_web/live/watchlist_live.ex:132
 #, elixir-autogen, elixir-format
 msgid "Series"
 msgstr "Series"
 
-#: lib/smovie_web/live/watchlist_live.ex:123
+#: lib/smovie_web/live/watchlist_live.ex:124
 #, elixir-autogen, elixir-format
 msgid "Sortie"
 msgstr "Sortie"
 
-#: lib/smovie_web/live/watchlist_live.ex:126
+#: lib/smovie_web/live/watchlist_live.ex:127
 #, elixir-autogen, elixir-format
 msgid "Titre"
 msgstr "Titre"
 
-#: lib/smovie_web/live/watchlist_live.ex:131
+#: lib/smovie_web/live/watchlist_live.ex:132
 #, elixir-autogen, elixir-format
 msgid "Tout"
 msgstr "Tout"
 
-#: lib/smovie_web/live/watchlist_live.ex:154
+#: lib/smovie_web/live/watchlist_live.ex:155
 #, elixir-autogen, elixir-format
 msgid "Votre liste a voir est vide. Ajoutez un film depuis sa fiche."
 msgstr "Votre liste a voir est vide. Ajoutez un film depuis sa fiche."
 
-#: lib/smovie_web/live/profile_live.ex:262
+#: lib/smovie_web/live/profile_live.ex:263
 #, elixir-autogen, elixir-format
 msgid "%{count} notes"
 msgstr "%{count} notes"
 
-#: lib/smovie_web/live/profile_live.ex:277
+#: lib/smovie_web/live/profile_live.ex:278
 #, elixir-autogen, elixir-format
 msgid "Genres preferes"
 msgstr "Genres preferes"
 
-#: lib/smovie_web/live/profile_live.ex:295
+#: lib/smovie_web/live/profile_live.ex:296
 #, elixir-autogen, elixir-format
 msgid "Notez quelques oeuvres pour voir apparaitre vos statistiques."
 msgstr "Notez quelques oeuvres pour voir apparaitre vos statistiques."
 
-#: lib/smovie_web/live/profile_live.ex:284
+#: lib/smovie_web/live/profile_live.ex:285
 #, elixir-autogen, elixir-format
 msgid "Realisateurs preferes"
 msgstr "Realisateurs preferes"
 
-#: lib/smovie_web/live/profile_live.ex:253
+#: lib/smovie_web/live/profile_live.ex:254
 #, elixir-autogen, elixir-format
 msgid "Repartition de vos notes"
 msgstr "Repartition de vos notes"
 
-#: lib/smovie_web/live/profile_live.ex:291
+#: lib/smovie_web/live/profile_live.ex:292
 #, elixir-autogen, elixir-format
 msgid "Revus"
 msgstr "Revus"
 
-#: lib/smovie_web/live/profile_live.ex:368
+#: lib/smovie_web/live/profile_live.ex:369
 #, elixir-autogen, elixir-format
 msgid "Stats"
 msgstr "Stats"
 
-#: lib/smovie_web/live/profile_live.ex:255
+#: lib/smovie_web/live/profile_live.ex:256
 #, elixir-autogen, elixir-format
 msgid "moyenne %{value}"
 msgstr "moyenne %{value}"
 
-#: lib/smovie_web/live/messaging_live/index.ex:108
-#: lib/smovie_web/live/messaging_live/show.ex:263
+#: lib/smovie_web/live/messaging_live/index.ex:109
+#: lib/smovie_web/live/messaging_live/show.ex:318
 #, elixir-autogen, elixir-format
 msgid "%{count} membre"
 msgid_plural "%{count} membres"
 msgstr[0] "%{count} membre"
 msgstr[1] "%{count} membres"
 
-#: lib/smovie_web/live/messaging_live/index.ex:72
+#: lib/smovie_web/live/messaging_live/index.ex:73
 #, elixir-autogen, elixir-format
 msgid "Aucune conversation. Ouvrez-en une depuis le profil d'un membre."
 msgstr "Aucune conversation. Ouvrez-en une depuis le profil d'un membre."
 
-#: lib/smovie_web/live/messaging_live/show.ex:80
+#: lib/smovie_web/live/messaging_live/show.ex:118
 #, elixir-autogen, elixir-format
 msgid "Ce message n'a pas pu etre envoye."
 msgstr "Ce message n'a pas pu etre envoye."
 
-#: lib/smovie_web/live/messaging_live/show.ex:76
+#: lib/smovie_web/live/messaging_live/show.ex:114
 #, elixir-autogen, elixir-format
 msgid "Cette review n'est pas visible par tous les membres de la conversation."
 msgstr "Cette review n'est pas visible par tous les membres de la conversation."
 
-#: lib/smovie_web/live/messaging_live/show.ex:237
+#: lib/smovie_web/live/messaging_live/show.ex:284
 #, elixir-autogen, elixir-format
 msgid "Contenu partage indisponible"
 msgstr "Contenu partage indisponible"
 
-#: lib/smovie_web/live/messaging_live/index.ex:111
-#: lib/smovie_web/live/messaging_live/show.ex:266
+#: lib/smovie_web/live/messaging_live/index.ex:112
+#: lib/smovie_web/live/messaging_live/show.ex:321
 #, elixir-autogen, elixir-format
 msgid "Conversation privee"
 msgstr "Conversation privee"
 
-#: lib/smovie_web/live/messaging_live/show.ex:188
+#: lib/smovie_web/live/messaging_live/show.ex:235
 #, elixir-autogen, elixir-format
 msgid "Film partage"
 msgstr "Film partage"
 
-#: lib/smovie_web/live/messaging_live/show.ex:166
+#: lib/smovie_web/live/messaging_live/show.ex:213
 #, elixir-autogen, elixir-format
 msgid "Message supprime"
 msgstr "Message supprime"
 
-#: lib/smovie_web/live/messaging_live/index.ex:39
+#: lib/smovie_web/live/messaging_live/index.ex:40
 #: lib/smovie_web/live/messaging_live/new.ex:18
-#: lib/smovie_web/live/messaging_live/new.ex:69
+#: lib/smovie_web/live/messaging_live/new.ex:70
 #, elixir-autogen, elixir-format
 msgid "Nouveau groupe"
 msgstr "Nouveau groupe"
 
-#: lib/smovie_web/live/messaging_live/show.ex:216
+#: lib/smovie_web/live/messaging_live/show.ex:263
 #, elixir-autogen, elixir-format
 msgid "Review partagee"
 msgstr "Review partagee"
 
-#: lib/smovie_web/live/messaging_live/show.ex:149
+#: lib/smovie_web/live/messaging_live/show.ex:196
 #, elixir-autogen, elixir-format
 msgid "Un message…"
 msgstr "Un message…"
 
-#: lib/smovie_web/live/messaging_live/show.ex:79
+#: lib/smovie_web/live/messaging_live/show.ex:117
 #, elixir-autogen, elixir-format
 msgid "Vous avez quitte cette conversation."
 msgstr "Vous avez quitte cette conversation."
 
-#: lib/smovie_web/live/messaging_live/show.ex:78
+#: lib/smovie_web/live/messaging_live/show.ex:116
 #, elixir-autogen, elixir-format
 msgid "Vous ne faites pas partie de cette conversation."
 msgstr "Vous ne faites pas partie de cette conversation."
 
-#: lib/smovie_web/live/messaging_live/show.ex:219
+#: lib/smovie_web/live/messaging_live/show.ex:266
 #, elixir-autogen, elixir-format
 msgid "par %{member}"
 msgstr "par %{member}"
@@ -1128,7 +1128,7 @@ msgstr "par %{member}"
 msgid "Aucune conversation ouverte. Ecrivez d'abord a quelqu'un."
 msgstr "Aucune conversation ouverte. Ecrivez d'abord a quelqu'un."
 
-#: lib/smovie_web/live/messaging_live/new.ex:109
+#: lib/smovie_web/live/messaging_live/new.ex:110
 #, elixir-autogen, elixir-format
 msgid "Creer le groupe"
 msgstr "Creer le groupe"
@@ -1138,14 +1138,14 @@ msgstr "Creer le groupe"
 msgid "Donnez un nom a ce groupe."
 msgstr "Donnez un nom a ce groupe."
 
-#: lib/smovie_web/components/share_components.ex:75
+#: lib/smovie_web/components/share_components.ex:83
 #, elixir-autogen, elixir-format
 msgid "Envoyer a %{count} conversation"
 msgid_plural "Envoyer a %{count} conversations"
 msgstr[0] "Envoyer a %{count} conversation"
 msgstr[1] "Envoyer a %{count} conversations"
 
-#: lib/smovie_web/live/messaging_live/new.ex:78
+#: lib/smovie_web/live/messaging_live/new.ex:79
 #, elixir-autogen, elixir-format
 msgid "Nom du groupe"
 msgstr "Nom du groupe"
@@ -1155,17 +1155,32 @@ msgstr "Nom du groupe"
 msgid "Partage envoye."
 msgstr "Partage envoye."
 
-#: lib/smovie_web/live/work_live/show.ex:396
+#: lib/smovie_web/live/work_live/show.ex:397
 #, elixir-autogen, elixir-format
 msgid "Partager"
 msgstr "Partager"
 
-#: lib/smovie_web/live/work_live/show.ex:413
+#: lib/smovie_web/live/work_live/show.ex:414
 #, elixir-autogen, elixir-format
 msgid "Partager %{work}"
 msgstr "Partager %{work}"
 
-#: lib/smovie_web/live/messaging_live/new.ex:105
+#: lib/smovie_web/live/messaging_live/new.ex:106
 #, elixir-autogen, elixir-format
 msgid "Suivez d'abord quelques membres pour pouvoir les reunir dans un groupe."
 msgstr "Suivez d'abord quelques membres pour pouvoir les reunir dans un groupe."
+
+#: lib/smovie_web/live/messaging_live/show.ex:307
+#, elixir-autogen, elixir-format
+msgid "%{count} personnes ecrivent…"
+msgstr "%{count} personnes ecrivent…"
+
+#: lib/smovie_web/live/messaging_live/show.ex:305
+#, elixir-autogen, elixir-format
+msgid "%{first} et %{second} ecrivent…"
+msgstr "%{first} et %{second} ecrivent…"
+
+#: lib/smovie_web/live/messaging_live/show.ex:302
+#, elixir-autogen, elixir-format
+msgid "%{member} ecrit…"
+msgstr "%{member} ecrit…"

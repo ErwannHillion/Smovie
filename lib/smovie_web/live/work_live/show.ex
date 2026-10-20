@@ -217,6 +217,7 @@ defmodule SmovieWeb.WorkLive.Show do
       locale={@locale}
       current_path={@current_path}
       unread_count={@unread_count}
+      unread_messages={@unread_messages}
       full_bleed
     >
       <.work_header work={@work} directors={@directors} genres={@genres} />

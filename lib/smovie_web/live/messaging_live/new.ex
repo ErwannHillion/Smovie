@@ -60,6 +60,7 @@ defmodule SmovieWeb.MessagingLive.New do
       locale={@locale}
       current_path={@current_path}
       unread_count={@unread_count}
+      unread_messages={@unread_messages}
     >
       <header class="flex items-center gap-3 py-4">
         <.link navigate={~p"/messages"} class="text-base-content/50 hover:text-base-content">
