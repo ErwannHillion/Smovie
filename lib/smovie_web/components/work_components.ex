@@ -52,7 +52,7 @@ defmodule SmovieWeb.WorkComponents do
           />
           <div
             :if={is_nil(@poster_path)}
-            class="text-base-content/40 font-display flex h-full w-full items-end p-2 text-lg leading-tight"
+            class="text-base-content/40 font-display flex h-full w-full items-end p-2 text-lg font-semibold leading-tight"
           >
             {@title}
           </div>

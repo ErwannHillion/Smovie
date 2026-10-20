@@ -23,7 +23,7 @@ defmodule SmovieWeb.HomeLive do
       current_path={@current_path}
     >
       <div class="flex max-w-3xl flex-col gap-4 py-10 md:py-16">
-        <h1 class="font-display text-5xl leading-none md:text-6xl">
+        <h1 class="font-display text-5xl font-extrabold leading-none tracking-tight md:text-6xl">
           S<span class="text-smovie">movie</span>
         </h1>
         <p class="text-base-content/70 max-w-prose">

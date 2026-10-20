@@ -74,7 +74,10 @@ defmodule SmovieWeb.Layouts do
     ~H"""
     <header class="bg-base-100/90 border-base-300 sticky top-0 z-40 border-b backdrop-blur">
       <div class={[@container, "flex items-center gap-4 py-2.5"]}>
-        <.link navigate={~p"/"} class="font-display text-2xl leading-none">
+        <.link
+          navigate={~p"/"}
+          class="font-display text-2xl leading-none font-extrabold tracking-tight"
+        >
           S<span class="text-smovie">movie</span>
         </.link>
 
