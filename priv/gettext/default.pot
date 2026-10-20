@@ -34,7 +34,7 @@ msgstr ""
 msgid "Adresse e-mail ou mot de passe incorrect"
 msgstr ""
 
-#: lib/smovie_web/components/layouts.ex:125
+#: lib/smovie_web/components/layouts.ex:241
 #, elixir-autogen, elixir-format
 msgid "Attempting to reconnect"
 msgstr ""
@@ -74,7 +74,7 @@ msgstr ""
 msgid "Connectez-vous"
 msgstr ""
 
-#: lib/smovie_web/components/layouts.ex:45
+#: lib/smovie_web/components/layouts.ex:111
 #: lib/smovie_web/live/user_live/login.ex:16
 #, elixir-autogen, elixir-format
 msgid "Connexion"
@@ -100,7 +100,8 @@ msgstr ""
 msgid "Creer un compte"
 msgstr ""
 
-#: lib/smovie_web/components/layouts.ex:41
+#: lib/smovie_web/components/layouts.ex:104
+#: lib/smovie_web/components/layouts.ex:105
 #, elixir-autogen, elixir-format
 msgid "Deconnexion"
 msgstr ""
@@ -125,12 +126,12 @@ msgstr ""
 msgid "Gerez votre adresse e-mail et votre mot de passe"
 msgstr ""
 
-#: lib/smovie_web/components/layouts.ex:137
+#: lib/smovie_web/components/layouts.ex:253
 #, elixir-autogen, elixir-format
 msgid "Hang in there while we get back on track"
 msgstr ""
 
-#: lib/smovie_web/components/layouts.ex:48
+#: lib/smovie_web/components/layouts.ex:114
 #, elixir-autogen, elixir-format
 msgid "Inscription"
 msgstr ""
@@ -175,11 +176,6 @@ msgstr ""
 msgid "Nouveau mot de passe"
 msgstr ""
 
-#: lib/smovie_web/components/layouts.ex:38
-#, elixir-autogen, elixir-format
-msgid "Parametres"
-msgstr ""
-
 #: lib/smovie_web/live/user_live/settings.ex:17
 #, elixir-autogen, elixir-format
 msgid "Parametres du compte"
@@ -213,7 +209,7 @@ msgstr ""
 msgid "Si cette adresse est enregistree, vous recevrez sous peu les instructions de connexion."
 msgstr ""
 
-#: lib/smovie_web/components/layouts.ex:132
+#: lib/smovie_web/components/layouts.ex:248
 #, elixir-autogen, elixir-format
 msgid "Something went wrong!"
 msgstr ""
@@ -239,7 +235,7 @@ msgstr ""
 msgid "Vous devez vous reconnecter pour effectuer une action sensible sur votre compte."
 msgstr ""
 
-#: lib/smovie_web/components/layouts.ex:120
+#: lib/smovie_web/components/layouts.ex:236
 #, elixir-autogen, elixir-format
 msgid "We can't find the internet"
 msgstr ""
@@ -257,4 +253,115 @@ msgstr ""
 #: lib/smovie_web/live/user_live/login.ex:66
 #, elixir-autogen, elixir-format
 msgid "ou"
+msgstr ""
+
+#: lib/smovie_web/components/work_components.ex:247
+#, elixir-autogen, elixir-format
+msgid "%{count} note"
+msgid_plural "%{count} notes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: lib/smovie_web/components/work_components.ex:159
+#: lib/smovie_web/components/work_components.ex:169
+#: lib/smovie_web/components/work_components.ex:207
+#, elixir-autogen, elixir-format
+msgid "%{stars} sur 5"
+msgstr ""
+
+#: lib/smovie_web/components/layouts.ex:164
+#, elixir-autogen, elixir-format
+msgid "A voir"
+msgstr ""
+
+#: lib/smovie_web/components/layouts.ex:153
+#: lib/smovie_web/components/layouts.ex:162
+#, elixir-autogen, elixir-format
+msgid "Accueil"
+msgstr ""
+
+#: lib/smovie_web/components/layouts.ex:163
+#, elixir-autogen, elixir-format
+msgid "Chercher"
+msgstr ""
+
+#: lib/smovie_web/live/home_live.ex:30
+#, elixir-autogen, elixir-format
+msgid "Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watchlist et messagerie."
+msgstr ""
+
+#: lib/smovie_web/components/work_components.ex:215
+#, elixir-autogen, elixir-format
+msgid "Glissez pour noter"
+msgstr ""
+
+#: lib/smovie_web/live/home_live.ex:35
+#, elixir-autogen, elixir-format
+msgid "La page d'accueil arrive avec SMOVIE-026."
+msgstr ""
+
+#: lib/smovie_web/components/layouts.ex:156
+#: lib/smovie_web/components/layouts.ex:165
+#, elixir-autogen, elixir-format
+msgid "Messages"
+msgstr ""
+
+#: lib/smovie_web/components/work_components.ex:249
+#, elixir-autogen, elixir-format
+msgid "Presse"
+msgstr ""
+
+#: lib/smovie_web/components/layouts.ex:166
+#, elixir-autogen, elixir-format
+msgid "Profil"
+msgstr ""
+
+#: lib/smovie_web/components/layouts.ex:84
+#, elixir-autogen, elixir-format
+msgid "Rechercher"
+msgstr ""
+
+#: lib/smovie_web/live/soon_live.ex:48
+#, elixir-autogen, elixir-format
+msgid "Retour a l'accueil"
+msgstr ""
+
+#: lib/smovie_web/components/layouts.ex:154
+#, elixir-autogen, elixir-format
+msgid "Reviews"
+msgstr ""
+
+#: lib/smovie_web/components/work_components.ex:243
+#, elixir-autogen, elixir-format
+msgid "Smovie"
+msgstr ""
+
+#: lib/smovie_web/components/work_components.ex:252
+#, elixir-autogen, elixir-format
+msgid "TMDB"
+msgstr ""
+
+#: lib/smovie_web/components/work_components.ex:132
+#, elixir-autogen, elixir-format
+msgid "Tout voir"
+msgstr ""
+
+#: lib/smovie_web/components/work_components.ex:194
+#, elixir-autogen, elixir-format
+msgid "Votre note"
+msgstr ""
+
+#: lib/smovie_web/components/layouts.ex:155
+#, elixir-autogen, elixir-format
+msgid "Watchlist"
+msgstr ""
+
+#: lib/smovie_web/components/work_components.ex:250
+#, elixir-autogen, elixir-format
+msgid "presse"
+msgstr ""
+
+#: lib/smovie_web/components/work_components.ex:253
+#, elixir-autogen, elixir-format
+msgid "public"
 msgstr ""
