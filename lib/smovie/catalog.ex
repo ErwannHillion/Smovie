@@ -10,9 +10,11 @@ defmodule Smovie.Catalog do
   import Ecto.Query, warn: false
 
   alias Smovie.Catalog.Slug
+  alias Smovie.Catalog.Sync.Importer
   alias Smovie.Catalog.Work
   alias Smovie.Config
   alias Smovie.Repo
+  alias Smovie.Workers.SyncWorkWorker
 
   ## Lecture
 
@@ -235,6 +237,78 @@ defmodule Smovie.Catalog do
   end
 
   defp sync_window_days(%Work{}), do: 7
+
+  @doc """
+  Recupere une oeuvre par slug, en l'important de TMDB si elle manque.
+
+  L'oeuvre deja presente est rendue immediatement, et remise en file de
+  rafraichissement si sa synchro a vieilli : la page s'affiche avec ce qu'on a
+  plutot que d'attendre TMDB.
+  """
+  def fetch_work_by_slug(kind, slug) do
+    case Repo.get_by(Work, slug: slug, kind: kind) do
+      nil -> {:error, :not_found}
+      work -> {:ok, refresh_if_stale(work)}
+    end
+  end
+
+  @doc """
+  Importe une oeuvre TMDB si elle n'est pas deja en base.
+
+  Appele au clic sur un resultat de recherche venu de TMDB.
+  """
+  def import_work(kind, tmdb_id) do
+    case get_work_by_tmdb_id(kind, tmdb_id) do
+      nil -> Importer.import_work(kind, tmdb_id)
+      work -> {:ok, refresh_if_stale(work)}
+    end
+  end
+
+  @doc """
+  Saisons d'une serie, importees au premier affichage.
+
+  Un appel TMDB par saison ramene tous ses episodes d'un coup : importer les
+  episodes un par un multiplierait les appels par vingt.
+  """
+  def fetch_seasons(%Work{kind: :tv_show} = show) do
+    case list_seasons(show) do
+      [] -> import_and_list_seasons(show)
+      seasons -> seasons
+    end
+  end
+
+  defp import_and_list_seasons(show) do
+    Importer.import_all_seasons(show)
+    list_seasons(show)
+  end
+
+  @doc """
+  Episodes d'une saison, importes si la saison est vide.
+  """
+  def fetch_episodes(%Work{kind: :season} = season) do
+    case list_episodes(season) do
+      [] -> import_and_list_episodes(season)
+      episodes -> episodes
+    end
+  end
+
+  defp import_and_list_episodes(season) do
+    case Repo.get(Work, season.parent_id) do
+      %Work{kind: :tv_show} = show ->
+        Importer.import_season(show, season.season_number)
+        list_episodes(season)
+
+      _other ->
+        []
+    end
+  end
+
+  defp refresh_if_stale(%Work{kind: kind} = work) when kind in [:movie, :tv_show] do
+    if stale?(work), do: SyncWorkWorker.enqueue(kind, work.tmdb_id)
+    work
+  end
+
+  defp refresh_if_stale(work), do: work
 
   @doc """
   Seuil de votes en dessous duquel la moyenne communautaire n'est pas affichee.
