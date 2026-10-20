@@ -5,6 +5,7 @@ defmodule SmovieWeb.UserLive.Settings do
 
   alias Smovie.Accounts
   alias Smovie.Accounts.Scope
+  alias Smovie.Accounts.Visibility
 
   def render(assigns) do
     ~H"""
@@ -54,6 +55,35 @@ defmodule SmovieWeb.UserLive.Settings do
         <.button variant="primary" phx-disable-with={gettext("Enregistrement...")}>
           {gettext("Enregistrer le profil")}
         </.button>
+      </.form>
+
+      <div class="divider"></div>
+
+      <.form
+        for={@visibility_form}
+        id="visibility_form"
+        phx-submit="update_visibility"
+        phx-change="update_visibility"
+      >
+        <h2 class="text-base font-semibold">{gettext("Qui voit quoi")}</h2>
+        <.input
+          field={@visibility_form[:profile_visibility]}
+          type="select"
+          options={Visibility.options()}
+          label={gettext("Profil et reviews")}
+        />
+        <.input
+          field={@visibility_form[:watchlist_visibility]}
+          type="select"
+          options={Visibility.options()}
+          label={gettext("Watchlist")}
+        />
+        <.input
+          field={@visibility_form[:default_review_visibility]}
+          type="select"
+          options={Visibility.options()}
+          label={gettext("Visibilite par defaut d'une nouvelle review")}
+        />
       </.form>
 
       <div class="divider"></div>
@@ -135,11 +165,33 @@ defmodule SmovieWeb.UserLive.Settings do
       socket
       |> assign(:current_email, user.email)
       |> assign(:profile_form, to_form(Accounts.change_user_profile(user)))
+      |> assign(:visibility_form, to_form(Accounts.change_user_visibility(user)))
       |> assign(:email_form, to_form(email_changeset))
       |> assign(:password_form, to_form(password_changeset))
       |> assign(:trigger_submit, false)
 
     {:ok, socket}
+  end
+
+  def handle_event(
+        "update_visibility",
+        %{"user" => params},
+        %{assigns: %{current_scope: scope}} = socket
+      ) do
+    case Accounts.update_user_visibility(scope, scope.user, params) do
+      {:ok, user} ->
+        {:noreply,
+         socket
+         |> assign(:current_scope, Scope.for_user(user))
+         |> assign(:visibility_form, to_form(Accounts.change_user_visibility(user)))
+         |> put_flash(:info, gettext("Visibilite enregistree."))}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :visibility_form, to_form(changeset, action: :insert))}
+
+      {:error, :unauthorized} ->
+        {:noreply, redirect_to_reauthentication(socket)}
+    end
   end
 
   def handle_event(
@@ -166,6 +218,7 @@ defmodule SmovieWeb.UserLive.Settings do
          socket
          |> assign(:current_scope, Scope.for_user(user))
          |> assign(:profile_form, to_form(Accounts.change_user_profile(user)))
+         |> assign(:visibility_form, to_form(Accounts.change_user_visibility(user)))
          |> put_flash(:info, gettext("Profil mis a jour."))}
 
       {:error, %Ecto.Changeset{} = changeset} ->

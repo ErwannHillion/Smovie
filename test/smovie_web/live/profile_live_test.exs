@@ -59,4 +59,48 @@ defmodule SmovieWeb.ProfileLiveTest do
 
     assert html =~ ~s(href="/u/cinephile")
   end
+
+  describe "visibilite" do
+    test "un profil prive masque la bio et le lieu", %{conn: conn, user: user} do
+      {:ok, _user} =
+        Accounts.update_user_visibility(Scope.for_user(user), user, %{
+          "profile_visibility" => "private"
+        })
+
+      {:ok, _lv, html} = live(conn, ~p"/u/cinephile")
+
+      assert html =~ "Ce profil est prive."
+      refute html =~ "cinema japonais contemplatif"
+      refute html =~ "Montpellier"
+    end
+
+    test "le nom et l'identifiant restent visibles sur un profil prive", %{
+      conn: conn,
+      user: user
+    } do
+      # Un profil prive n'est pas un profil inexistant : l'adresse publique
+      # doit continuer a designer quelqu'un.
+      {:ok, _user} =
+        Accounts.update_user_visibility(Scope.for_user(user), user, %{
+          "profile_visibility" => "private"
+        })
+
+      {:ok, _lv, html} = live(conn, ~p"/u/cinephile")
+
+      assert html =~ "Cinephile"
+      assert html =~ "@cinephile"
+    end
+
+    test "le proprietaire voit son profil prive en entier", %{conn: conn, user: user} do
+      {:ok, user} =
+        Accounts.update_user_visibility(Scope.for_user(user), user, %{
+          "profile_visibility" => "private"
+        })
+
+      {:ok, _lv, html} = conn |> log_in_user(user) |> live(~p"/u/cinephile")
+
+      assert html =~ "cinema japonais contemplatif"
+      refute html =~ "Ce profil est prive."
+    end
+  end
 end

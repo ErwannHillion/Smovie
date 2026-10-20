@@ -7,6 +7,8 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- Réglages de visibilité du profil, de la watchlist et des reviews
+  (public / abonnés / privé)
 - Profil public d'un membre sur `/u/:username`, avec avatar, nom affiché, bio et lieu
 - Formulaire de profil dans les paramètres
 - `mix gettext.sync` et vérification des traductions dans `mix quality`

@@ -11,13 +11,18 @@ defmodule SmovieWeb.ProfileLive do
   alias Smovie.Accounts
 
   @impl true
-  def mount(%{"username" => username}, _session, socket) do
+  def mount(%{"username" => username}, _session, %{assigns: %{current_scope: scope}} = socket) do
     case Accounts.get_user_by_username(username) do
       nil ->
         raise SmovieWeb.ProfileLive.NotFound, username
 
       user ->
-        {:ok, assign(socket, user: user, page_title: user.display_name)}
+        {:ok,
+         assign(socket,
+           user: user,
+           visible: Accounts.visible?(scope, user, :profile),
+           page_title: user.display_name
+         )}
     end
   end
 
@@ -35,9 +40,12 @@ defmodule SmovieWeb.ProfileLive do
         <div class="min-w-0">
           <h1 class="font-display text-3xl leading-none md:text-4xl">{@user.display_name}</h1>
           <p class="text-base-content/50 mt-1.5 font-mono text-xs">
-            @{@user.username}<span :if={@user.location}> · {@user.location}</span>
+            @{@user.username}<span :if={@visible and @user.location}> · {@user.location}</span>
           </p>
-          <p :if={@user.bio} class="text-base-content/80 mt-3 max-w-prose text-sm leading-relaxed">
+          <p
+            :if={@visible and @user.bio}
+            class="text-base-content/80 mt-3 max-w-prose text-sm leading-relaxed"
+          >
             {@user.bio}
           </p>
         </div>
@@ -50,9 +58,15 @@ defmodule SmovieWeb.ProfileLive do
         </.link>
       </header>
 
-      <p class="text-base-content/40 border-base-300 border-t pt-6 font-mono text-xs">
-        {gettext("Films vus, series, reviews et statistiques arrivent avec SMOVIE-028.")}
-      </p>
+      <div class="border-base-300 border-t pt-6">
+        <p :if={@visible} class="text-base-content/40 font-mono text-xs">
+          {gettext("Films vus, series, reviews et statistiques arrivent avec SMOVIE-028.")}
+        </p>
+        <p :if={not @visible} class="text-base-content/60 flex items-center gap-2 text-sm">
+          <.icon name="hero-lock-closed" class="size-4" />
+          {gettext("Ce profil est prive.")}
+        </p>
+      </div>
     </Layouts.app>
     """
   end

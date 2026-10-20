@@ -254,4 +254,40 @@ defmodule SmovieWeb.UserLive.SettingsTest do
       assert html =~ "smovie.fr/u/#{user.username}"
     end
   end
+
+  describe "formulaire de visibilite" do
+    setup %{conn: conn} do
+      user = user_fixture()
+      %{conn: log_in_user(conn, user), user: user}
+    end
+
+    test "enregistre un changement de visibilite", %{conn: conn, user: user} do
+      {:ok, lv, _html} = live(conn, ~p"/users/settings")
+
+      result =
+        lv
+        |> form("#visibility_form", %{
+          "user" => %{
+            "profile_visibility" => "private",
+            "watchlist_visibility" => "followers",
+            "default_review_visibility" => "public"
+          }
+        })
+        |> render_submit()
+
+      assert result =~ "Visibilite enregistree."
+
+      updated = Smovie.Accounts.get_user!(user.id)
+      assert updated.profile_visibility == :private
+      assert updated.watchlist_visibility == :followers
+    end
+
+    test "propose les trois reglages", %{conn: conn} do
+      {:ok, _lv, html} = live(conn, ~p"/users/settings")
+
+      assert html =~ "Public"
+      assert html =~ "Abonnes seulement"
+      assert html =~ "Prive"
+    end
+  end
 end

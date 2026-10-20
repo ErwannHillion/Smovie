@@ -126,6 +126,55 @@ defmodule Smovie.Accounts do
 
   def update_user_profile(%Scope{}, %User{}, _attrs), do: {:error, :unauthorized}
 
+  @doc """
+  Changeset des reglages de visibilite, pour les formulaires.
+  """
+  def change_user_visibility(%User{} = user, attrs \\ %{}) do
+    User.visibility_changeset(user, attrs)
+  end
+
+  @doc """
+  Met a jour les reglages de visibilite d'un membre.
+  """
+  def update_user_visibility(%Scope{user: %User{id: id}}, %User{id: id} = user, attrs) do
+    user
+    |> User.visibility_changeset(attrs)
+    |> Repo.update()
+  end
+
+  def update_user_visibility(%Scope{}, %User{}, _attrs), do: {:error, :unauthorized}
+
+  @doc """
+  Dit si `viewer` peut voir la donnee `scope_key` de `owner`.
+
+  `scope_key` vaut `:profile`, `:watchlist` ou `:reviews`.
+
+  La decision vit ici et non dans chaque LiveView : trois reglages multiplies
+  par autant d'ecrans, c'est exactement le genre de regle qu'on finit par
+  ecrire differemment a deux endroits.
+  """
+  def visible?(viewer, owner, scope_key)
+
+  # Un membre voit toujours ses propres donnees, quel que soit le reglage.
+  def visible?(%Scope{user: %User{id: id}}, %User{id: id}, _scope_key), do: true
+
+  def visible?(viewer, %User{} = owner, scope_key) do
+    case visibility_of(owner, scope_key) do
+      :public -> true
+      :private -> false
+      :followers -> follows?(viewer, owner)
+    end
+  end
+
+  defp visibility_of(user, :profile), do: user.profile_visibility
+  defp visibility_of(user, :watchlist), do: user.watchlist_visibility
+  defp visibility_of(user, :reviews), do: user.profile_visibility
+
+  # Les abonnements arrivent avec SMOVIE-019. D'ici la personne ne suit
+  # personne : `:followers` se comporte donc exactement comme `:private` pour
+  # les tiers, ce qui est le bon resultat et non un raccourci.
+  defp follows?(_viewer, _owner), do: false
+
   ## Settings
 
   @doc """
