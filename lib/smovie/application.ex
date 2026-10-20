@@ -12,8 +12,10 @@ defmodule Smovie.Application do
       Smovie.Repo,
       {DNSCluster, query: Application.get_env(:smovie, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Smovie.PubSub},
-      # Start a worker by calling: Smovie.Worker.start_link(arg)
-      # {Smovie.Worker, arg},
+      # Cache des reponses TMDB et OMDb. Demarre avant Oban : les workers de
+      # synchronisation s'en servent des leur premiere execution.
+      {Cachex, name: :smovie_http_cache},
+      {Oban, Application.fetch_env!(:smovie, Oban)},
       # Start to serve requests, typically the last entry
       SmovieWeb.Endpoint
     ]

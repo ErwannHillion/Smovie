@@ -73,6 +73,25 @@ config :logger, :default_formatter,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+# Oban — les files sont dimensionnees par ce qu'elles appellent, pas par le
+# nombre de jobs attendus.
+#
+# `external_ratings` est volontairement a 2 : la file sert de limiteur de debit
+# vers OMDb, dont le palier gratuit plafonne a 1000 requetes par jour.
+config :smovie, Oban,
+  repo: Smovie.Repo,
+  engine: Oban.Engines.Basic,
+  queues: [
+    default: 10,
+    catalog: 5,
+    external_ratings: 2,
+    notifications: 10
+  ],
+  plugins: [
+    # Les jobs termines sont purges au bout d'une semaine.
+    {Oban.Plugins.Pruner, max_age: 60 * 60 * 24 * 7}
+  ]
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

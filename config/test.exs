@@ -23,6 +23,14 @@ config :smovie, SmovieWeb.Endpoint,
   secret_key_base: "mnlosZqH3jYmkf7iaN09uNaI9zWCgBeav85uMjWcdlwiJAQyHMao8Mwgo8w5sXYN",
   server: false
 
+# Oban n'execute rien de lui-meme en test : les jobs sont declenches
+# explicitement par `Oban.Testing`.
+config :smovie, Oban, testing: :manual
+
+# Les doublures Mox des clients externes sont declarees avec leurs
+# comportements : TMDB en SMOVIE-009, OMDb en SMOVIE-012. Aucun test ne doit
+# sortir sur le reseau.
+
 # In test we don't send emails
 config :smovie, Smovie.Mailer, adapter: Swoosh.Adapters.Test
 

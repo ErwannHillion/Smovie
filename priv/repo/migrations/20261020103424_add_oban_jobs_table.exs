@@ -2,7 +2,7 @@ defmodule Smovie.Repo.Migrations.AddObanJobsTable do
   use Ecto.Migration
 
   def up do
-    Oban.Migration.up(version: 12)
+    Oban.Migration.up(version: 14)
   end
 
   # La version 1 est la plus ancienne : le rollback supprime entierement les
