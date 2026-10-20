@@ -266,7 +266,7 @@ msgstr[1] "%{count} notes"
 #: lib/smovie_web/components/work_components.ex:165
 #: lib/smovie_web/components/work_components.ex:175
 #: lib/smovie_web/components/work_components.ex:213
-#: lib/smovie_web/live/work_live/season.ex:200
+#: lib/smovie_web/live/work_live/season.ex:192
 #, elixir-autogen, elixir-format
 msgid "%{stars} sur 5"
 msgstr "%{stars} sur 5"
@@ -435,7 +435,7 @@ msgstr "Visibilite enregistree."
 msgid "Visibilite par defaut d'une nouvelle review"
 msgstr "Visibilite par defaut d'une nouvelle review"
 
-#: lib/smovie_web/live/work_live/season.ex:217
+#: lib/smovie_web/live/work_live/season.ex:209
 #: lib/smovie_web/live/work_live/show.ex:496
 #, elixir-autogen, elixir-format
 msgid "%{count} min"
@@ -462,7 +462,7 @@ msgstr "Distribution"
 msgid "J'aime"
 msgstr "J'aime"
 
-#: lib/smovie_web/live/work_live/season.ex:151
+#: lib/smovie_web/live/work_live/season.ex:143
 #: lib/smovie_web/live/work_live/show.ex:385
 #, elixir-autogen, elixir-format
 msgid "Marquer vu"
@@ -478,7 +478,7 @@ msgstr "Vu"
 msgid "de"
 msgstr "de"
 
-#: lib/smovie_web/live/work_live/season.ex:128
+#: lib/smovie_web/live/work_live/season.ex:120
 #: lib/smovie_web/live/work_live/show.ex:514
 #, elixir-autogen, elixir-format
 msgid "%{count} episode"
@@ -486,13 +486,13 @@ msgid_plural "%{count} episodes"
 msgstr[0] "%{count} episode"
 msgstr[1] "%{count} episodes"
 
-#: lib/smovie_web/live/work_live/season.ex:128
+#: lib/smovie_web/live/work_live/season.ex:120
 #: lib/smovie_web/live/work_live/show.ex:515
 #, elixir-autogen, elixir-format
 msgid "%{watched} vus"
 msgstr "%{watched} vus"
 
-#: lib/smovie_web/live/work_live/season.ex:176
+#: lib/smovie_web/live/work_live/season.ex:168
 #, elixir-autogen, elixir-format
 msgid "Les episodes de cette saison ne sont pas encore disponibles."
 msgstr "Les episodes de cette saison ne sont pas encore disponibles."
@@ -502,7 +502,7 @@ msgstr "Les episodes de cette saison ne sont pas encore disponibles."
 msgid "Saisons"
 msgstr "Saisons"
 
-#: lib/smovie_web/live/work_live/season.ex:172
+#: lib/smovie_web/live/work_live/season.ex:164
 #, elixir-autogen, elixir-format
 msgid "Marquer toute la saison comme vue"
 msgstr "Marquer toute la saison comme vue"
@@ -1184,3 +1184,33 @@ msgstr "%{first} et %{second} ecrivent…"
 #, elixir-autogen, elixir-format
 msgid "%{member} ecrit…"
 msgstr "%{member} ecrit…"
+
+#: lib/smovie_web/controllers/error_html.ex:20
+#, elixir-autogen, elixir-format
+msgid "Cette page n'existe pas, ou n'existe plus."
+msgstr "Cette page n'existe pas, ou n'existe plus."
+
+#: lib/smovie_web/controllers/error_html.ex:40
+#, elixir-autogen, elixir-format
+msgid "Cette requete n'a pas pu aboutir."
+msgstr "Cette requete n'a pas pu aboutir."
+
+#: lib/smovie_web/controllers/error_html.ex:30
+#, elixir-autogen, elixir-format
+msgid "L'erreur est de notre cote. Reessayez dans un instant."
+msgstr "L'erreur est de notre cote. Reessayez dans un instant."
+
+#: lib/smovie_web/controllers/error_html.ex:19
+#, elixir-autogen, elixir-format
+msgid "Page introuvable"
+msgstr "Page introuvable"
+
+#: lib/smovie_web/controllers/error_html.ex:29
+#, elixir-autogen, elixir-format
+msgid "Quelque chose a casse"
+msgstr "Quelque chose a casse"
+
+#: lib/smovie_web/controllers/error_html.ex:55
+#, elixir-autogen, elixir-format
+msgid "Retour a l'accueil"
+msgstr "Retour a l'accueil"
