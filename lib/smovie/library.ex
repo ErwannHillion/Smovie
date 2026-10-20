@@ -13,10 +13,10 @@ defmodule Smovie.Library do
   alias Smovie.Accounts.Scope
   alias Smovie.Accounts.User
   alias Smovie.Catalog.Work
+  alias Smovie.Catalog.WorkGenre
   alias Smovie.Config
   alias Smovie.Library.Rating
   alias Smovie.Library.RatingStats
-  alias Smovie.Catalog.WorkGenre
   alias Smovie.Library.WatchEntry
   alias Smovie.Library.WatchlistItem
   alias Smovie.Library.WorkLike
@@ -114,11 +114,27 @@ defmodule Smovie.Library do
   bouton « retirer la note » separe serait une cible de plus a atteindre.
   """
   def toggle_rating(%Scope{} = scope, %Work{} = work, value) do
+    half_stars = cast_value(value)
+
     case get_rating(scope, work) do
-      %Rating{value: ^value} -> unrate_work(scope, work)
-      _other -> rate_work(scope, work, value)
+      %Rating{value: ^half_stars} -> unrate_work(scope, work)
+      _other -> rate_work(scope, work, half_stars)
     end
   end
+
+  # La valeur arrive en chaine depuis le DOM. La conversion vit ici, dans le
+  # contexte, et non dans la LiveView : une valeur illisible devient `nil`, que
+  # le changeset refusera proprement, la ou String.to_integer/1 leverait.
+  defp cast_value(value) when is_integer(value), do: value
+
+  defp cast_value(value) when is_binary(value) do
+    case Integer.parse(value) do
+      {integer, ""} -> integer
+      _other -> nil
+    end
+  end
+
+  defp cast_value(_value), do: nil
 
   @doc """
   Recalcule la moyenne bayesienne d'une oeuvre.
@@ -504,7 +520,10 @@ defmodule Smovie.Library do
 
   defp sort_watchlist(query, :title), do: from([_i, w] in query, order_by: [asc: w.title])
 
-  defp sort_watchlist(query, _added), do: from([i, _w] in query, order_by: [desc: i.inserted_at])
+  # Second critere sur l'identifiant : `inserted_at` est a la seconde, et deux
+  # ajouts dans la meme seconde sortiraient dans un ordre arbitraire.
+  defp sort_watchlist(query, _added),
+    do: from([i, _w] in query, order_by: [desc: i.inserted_at, desc: i.id])
 
   @doc """
   Nombre d'oeuvres dans la liste a voir.
