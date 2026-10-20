@@ -287,7 +287,7 @@ msgstr "Accueil"
 msgid "Chercher"
 msgstr "Chercher"
 
-#: lib/smovie_web/live/home_live.ex:33
+#: lib/smovie_web/live/home_live.ex:166
 #, elixir-autogen, elixir-format
 msgid "Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watchlist et messagerie."
 msgstr "Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watchlist et messagerie."
@@ -341,6 +341,7 @@ msgid "TMDB"
 msgstr "TMDB"
 
 #: lib/smovie_web/components/work_components.ex:138
+#: lib/smovie_web/live/home_live.ex:97
 #, elixir-autogen, elixir-format
 msgid "Tout voir"
 msgstr "Tout voir"
@@ -738,15 +739,10 @@ msgstr "%{member} a vu %{work}"
 msgid "%{member} suit desormais %{other}"
 msgstr "%{member} suit desormais %{other}"
 
-#: lib/smovie_web/live/home_live.ex:44
+#: lib/smovie_web/live/home_live.ex:113
 #, elixir-autogen, elixir-format
 msgid "Activite de vos abonnements"
 msgstr "Activite de vos abonnements"
-
-#: lib/smovie_web/live/home_live.ex:38
-#, elixir-autogen, elixir-format
-msgid "La page d'accueil arrive avec SMOVIE-027."
-msgstr "La page d'accueil arrive avec SMOVIE-027."
 
 #: lib/smovie_web/live/notifications_live.ex:86
 #, elixir-autogen, elixir-format
@@ -804,3 +800,43 @@ msgstr "Un membre"
 #, elixir-autogen, elixir-format
 msgid "une oeuvre"
 msgstr "une oeuvre"
+
+#: lib/smovie_web/live/home_live.ex:56
+#, elixir-autogen, elixir-format
+msgid "En tendance cette semaine"
+msgstr "En tendance cette semaine"
+
+#: lib/smovie_web/live/home_live.ex:171
+#, elixir-autogen, elixir-format
+msgid "Le catalogue se remplit : revenez dans un moment."
+msgstr "Le catalogue se remplit : revenez dans un moment."
+
+#: lib/smovie_web/live/home_live.ex:46
+#, elixir-autogen, elixir-format
+msgid "Nouveautes"
+msgstr "Nouveautes"
+
+#: lib/smovie_web/live/home_live.ex:67
+#, elixir-autogen, elixir-format
+msgid "Populaire chez vos abonnements"
+msgstr "Populaire chez vos abonnements"
+
+#: lib/smovie_web/live/home_live.ex:91
+#, elixir-autogen, elixir-format
+msgid "Reviews a la une"
+msgstr "Reviews a la une"
+
+#: lib/smovie_web/live/home_live.ex:77
+#, elixir-autogen, elixir-format
+msgid "Series du moment"
+msgstr "Series du moment"
+
+#: lib/smovie_web/live/home_live.ex:140
+#, elixir-autogen, elixir-format
+msgid "Tendance n°1"
+msgstr "Tendance n°1"
+
+#: lib/smovie_web/live/home_live.ex:148
+#, elixir-autogen, elixir-format
+msgid "Voir la fiche"
+msgstr "Voir la fiche"
