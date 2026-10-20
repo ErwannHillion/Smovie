@@ -7,6 +7,8 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- Table `works` unifiée : films, séries, saisons et épisodes dans un seul modèle,
+  avec recherche plein texte et tolérance aux fautes de frappe
 - Réglages de visibilité du profil, de la watchlist et des reviews
   (public / abonnés / privé)
 - Profil public d'un membre sur `/u/:username`, avec avatar, nom affiché, bio et lieu
