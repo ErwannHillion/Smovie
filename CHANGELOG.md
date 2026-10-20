@@ -7,6 +7,9 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- Profil public d'un membre sur `/u/:username`, avec avatar, nom affiché, bio et lieu
+- Formulaire de profil dans les paramètres
+- `mix gettext.sync` et vérification des traductions dans `mix quality`
 - Design system : palette violet Elixir, trois accents sémantiques (communauté,
   presse, tendance), typographies Instrument Serif / Archivo / IBM Plex Mono
   hébergées par l'application
@@ -46,6 +49,8 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 - Navigation du scaffold Phoenix dans le layout applicatif
 
 ### Fixed
+- `mix gettext.merge` avait traduit « Modifier mon profil » par « Modifier mon
+  adresse » via sa correspondance floue ; le fuzzy est désactivé
 - Le check Credo sur la lecture de configuration cherchait `:intranet` en dur et
   ne détectait donc rien ; il couvre `:smovie`, `fetch_env!/2` et `fetch_env/2`
 - Un mode sudo expiré renvoie vers une reconnexion au lieu de sortir en 500
