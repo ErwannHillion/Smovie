@@ -9,6 +9,8 @@ defmodule SmovieWeb.Layouts do
   """
   use SmovieWeb, :html
 
+  alias Smovie.Config
+
   embed_templates "layouts/*"
 
   @doc """
@@ -20,6 +22,8 @@ defmodule SmovieWeb.Layouts do
   """
   attr :flash, :map, required: true
   attr :current_scope, :map, default: nil
+  attr :locale, :string, default: nil
+  attr :current_path, :string, default: "/"
   slot :inner_block, required: true
 
   def app(assigns) do
@@ -30,14 +34,21 @@ defmodule SmovieWeb.Layouts do
         <div class="flex-1"></div>
         <%= if @current_scope do %>
           <span class="text-base-content/70 text-sm">{@current_scope.user.email}</span>
-          <.link href={~p"/users/settings"} class="btn btn-ghost btn-sm">Parametres</.link>
+          <.link href={~p"/users/settings"} class="btn btn-ghost btn-sm">
+            {gettext("Parametres")}
+          </.link>
           <.link href={~p"/users/log-out"} method="delete" class="btn btn-ghost btn-sm">
-            Deconnexion
+            {gettext("Deconnexion")}
           </.link>
         <% else %>
-          <.link navigate={~p"/users/log-in"} class="btn btn-ghost btn-sm">Connexion</.link>
-          <.link navigate={~p"/users/register"} class="btn btn-primary btn-sm">Inscription</.link>
+          <.link navigate={~p"/users/log-in"} class="btn btn-ghost btn-sm">
+            {gettext("Connexion")}
+          </.link>
+          <.link navigate={~p"/users/register"} class="btn btn-primary btn-sm">
+            {gettext("Inscription")}
+          </.link>
         <% end %>
+        <.locale_switcher locale={@locale} current_path={@current_path} />
         <.theme_toggle />
       </div>
     </header>
@@ -47,6 +58,43 @@ defmodule SmovieWeb.Layouts do
     </main>
 
     <.flash_group flash={@flash} />
+    """
+  end
+
+  @doc """
+  Selecteur de langue.
+
+  Un formulaire et non des liens : changer de langue modifie l'etat du compte
+  ou du navigateur. Le chemin courant est renvoye pour revenir sur la meme page
+  apres le changement.
+  """
+  attr :locale, :string, default: nil
+  attr :current_path, :string, default: "/"
+
+  def locale_switcher(assigns) do
+    assigns = assign_new(assigns, :current, fn -> assigns.locale || Config.default_locale() end)
+
+    ~H"""
+    <div class="flex items-center gap-1">
+      <.form
+        :for={locale <- Config.locales()}
+        for={%{}}
+        action={~p"/locale/#{locale}"}
+        method="put"
+      >
+        <input type="hidden" name="return_to" value={@current_path} />
+        <button
+          type="submit"
+          class={[
+            "btn btn-ghost btn-xs uppercase",
+            locale == @current && "btn-active"
+          ]}
+          aria-current={locale == @current}
+        >
+          {locale}
+        </button>
+      </.form>
+    </div>
     """
   end
 

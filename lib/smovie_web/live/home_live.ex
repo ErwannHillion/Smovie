@@ -16,7 +16,12 @@ defmodule SmovieWeb.HomeLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <Layouts.app flash={@flash} current_scope={@current_scope}>
+    <Layouts.app
+      flash={@flash}
+      current_scope={@current_scope}
+      locale={@locale}
+      current_path={@current_path}
+    >
       <div class="flex flex-col gap-4 py-12">
         <h1 class="text-3xl font-semibold">Smovie</h1>
         <p class="text-base-content/70">

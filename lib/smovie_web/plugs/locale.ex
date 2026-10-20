@@ -31,6 +31,7 @@ defmodule SmovieWeb.Plugs.Locale do
 
     conn
     |> assign(:locale, locale)
+    |> assign(:current_path, conn.request_path)
     |> put_session(:locale, locale)
   end
 
