@@ -33,6 +33,8 @@ defmodule SmovieWeb.Router do
       live "/recherche", SoonLive, :search
       live "/watchlist", SoonLive, :watchlist
       live "/messages", SoonLive, :messages
+
+      live "/u/:username", ProfileLive
     end
   end
 

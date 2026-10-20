@@ -83,13 +83,16 @@ defmodule Smovie.Accounts.User do
       |> pad_if_short()
 
     if base in @reserved_usernames or taken?.(base) do
-      Enum.find_value(2..999, fn n ->
-        candidate = "#{base}#{n}"
-        unless taken?.(candidate), do: candidate
-      end)
+      first_available(base, taken?)
     else
       base
     end
+  end
+
+  defp first_available(base, taken?) do
+    2..999
+    |> Stream.map(&"#{base}#{&1}")
+    |> Enum.find(&(not taken?.(&1)))
   end
 
   defp pad_if_short(base) when byte_size(base) >= 3, do: base
