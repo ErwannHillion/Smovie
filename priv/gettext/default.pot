@@ -19,12 +19,12 @@ msgstr ""
 #: lib/smovie_web/live/user_live/login.ex:56
 #: lib/smovie_web/live/user_live/login.ex:80
 #: lib/smovie_web/live/user_live/registration.ex:30
-#: lib/smovie_web/live/user_live/settings.ex:65
+#: lib/smovie_web/live/user_live/settings.ex:95
 #, elixir-autogen, elixir-format
 msgid "Adresse e-mail"
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:117
+#: lib/smovie_web/live/user_live/settings.ex:147
 #, elixir-autogen, elixir-format
 msgid "Adresse e-mail modifiee."
 msgstr ""
@@ -39,7 +39,7 @@ msgstr ""
 msgid "Attempting to reconnect"
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:123
+#: lib/smovie_web/live/user_live/settings.ex:153
 #, elixir-autogen, elixir-format
 msgid "Ce lien de changement d'adresse est invalide ou a expire."
 msgstr ""
@@ -59,7 +59,7 @@ msgstr ""
 msgid "Confirmation..."
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:102
+#: lib/smovie_web/live/user_live/settings.ex:132
 #, elixir-autogen, elixir-format
 msgid "Confirmer le nouveau mot de passe"
 msgstr ""
@@ -111,18 +111,18 @@ msgstr ""
 msgid "Deja inscrit ?"
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:54
-#: lib/smovie_web/live/user_live/settings.ex:105
+#: lib/smovie_web/live/user_live/settings.ex:55
+#: lib/smovie_web/live/user_live/settings.ex:135
 #, elixir-autogen, elixir-format
 msgid "Enregistrement..."
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:106
+#: lib/smovie_web/live/user_live/settings.ex:136
 #, elixir-autogen, elixir-format
 msgid "Enregistrer le mot de passe"
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:19
+#: lib/smovie_web/live/user_live/settings.ex:20
 #, elixir-autogen, elixir-format
 msgid "Gerez votre adresse e-mail et votre mot de passe"
 msgstr ""
@@ -152,12 +152,12 @@ msgstr ""
 msgid "Les messages envoyes sont consultables sur"
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:69
+#: lib/smovie_web/live/user_live/settings.ex:99
 #, elixir-autogen, elixir-format
 msgid "Modification..."
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:70
+#: lib/smovie_web/live/user_live/settings.ex:100
 #, elixir-autogen, elixir-format
 msgid "Modifier mon adresse"
 msgstr ""
@@ -172,12 +172,12 @@ msgstr ""
 msgid "Mot de passe mis a jour."
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:95
+#: lib/smovie_web/live/user_live/settings.ex:125
 #, elixir-autogen, elixir-format
 msgid "Nouveau mot de passe"
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:18
+#: lib/smovie_web/live/user_live/settings.ex:19
 #, elixir-autogen, elixir-format
 msgid "Parametres du compte"
 msgstr ""
@@ -215,7 +215,7 @@ msgstr ""
 msgid "Something went wrong!"
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:207
+#: lib/smovie_web/live/user_live/settings.ex:260
 #, elixir-autogen, elixir-format
 msgid "Un lien de confirmation a ete envoye a la nouvelle adresse."
 msgstr ""
@@ -226,7 +226,7 @@ msgid "Un message a ete envoye a %{email}. Ouvrez-le pour confirmer votre compte
 msgstr ""
 
 #: lib/smovie_web/controllers/user_session_controller.ex:67
-#: lib/smovie_web/live/user_live/settings.ex:264
+#: lib/smovie_web/live/user_live/settings.ex:317
 #, elixir-autogen, elixir-format
 msgid "Votre session a expire. Reconnectez-vous pour continuer."
 msgstr ""
@@ -353,6 +353,7 @@ msgid "Votre note"
 msgstr ""
 
 #: lib/smovie_web/components/layouts.ex:154
+#: lib/smovie_web/live/user_live/settings.ex:79
 #, elixir-autogen, elixir-format
 msgid "Watchlist"
 msgstr ""
@@ -367,47 +368,72 @@ msgstr ""
 msgid "public"
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:52
+#: lib/smovie_web/live/user_live/settings.ex:53
 #, elixir-autogen, elixir-format
 msgid "Bio"
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:55
+#: lib/smovie_web/live/user_live/settings.ex:56
 #, elixir-autogen, elixir-format
 msgid "Enregistrer le profil"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:54
+#: lib/smovie_web/live/profile_live.ex:63
 #, elixir-autogen, elixir-format
 msgid "Films vus, series, reviews et statistiques arrivent avec SMOVIE-028."
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:44
+#: lib/smovie_web/live/user_live/settings.ex:45
 #, elixir-autogen, elixir-format
 msgid "Identifiant public"
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:31
+#: lib/smovie_web/live/user_live/settings.ex:32
 #, elixir-autogen, elixir-format
 msgid "L'avatar televersable arrive plus tard : pour l'instant, c'est votre initiale."
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:51
+#: lib/smovie_web/live/user_live/settings.ex:52
 #, elixir-autogen, elixir-format
 msgid "Lieu"
 msgstr ""
 
-#: lib/smovie_web/live/profile_live.ex:49
+#: lib/smovie_web/live/profile_live.ex:57
 #, elixir-autogen, elixir-format
 msgid "Modifier mon profil"
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:38
+#: lib/smovie_web/live/user_live/settings.ex:39
 #, elixir-autogen, elixir-format
 msgid "Nom affiche"
 msgstr ""
 
-#: lib/smovie_web/live/user_live/settings.ex:169
+#: lib/smovie_web/live/user_live/settings.ex:222
 #, elixir-autogen, elixir-format
 msgid "Profil mis a jour."
+msgstr ""
+
+#: lib/smovie_web/live/profile_live.ex:67
+#, elixir-autogen, elixir-format
+msgid "Ce profil est prive."
+msgstr ""
+
+#: lib/smovie_web/live/user_live/settings.ex:73
+#, elixir-autogen, elixir-format
+msgid "Profil et reviews"
+msgstr ""
+
+#: lib/smovie_web/live/user_live/settings.ex:68
+#, elixir-autogen, elixir-format
+msgid "Qui voit quoi"
+msgstr ""
+
+#: lib/smovie_web/live/user_live/settings.ex:187
+#, elixir-autogen, elixir-format
+msgid "Visibilite enregistree."
+msgstr ""
+
+#: lib/smovie_web/live/user_live/settings.ex:85
+#, elixir-autogen, elixir-format
+msgid "Visibilite par defaut d'une nouvelle review"
 msgstr ""
