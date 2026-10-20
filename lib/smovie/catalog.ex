@@ -10,6 +10,7 @@ defmodule Smovie.Catalog do
   import Ecto.Query, warn: false
 
   alias Smovie.Catalog.Credit
+  alias Smovie.Catalog.ExternalRating
   alias Smovie.Catalog.Genre
   alias Smovie.Catalog.Person
   alias Smovie.Catalog.Slug
@@ -18,6 +19,7 @@ defmodule Smovie.Catalog do
   alias Smovie.Catalog.WorkGenre
   alias Smovie.Config
   alias Smovie.Repo
+  alias Smovie.Workers.FetchExternalRatingsWorker
   alias Smovie.Workers.SyncWorkWorker
 
   ## Lecture
@@ -242,6 +244,74 @@ defmodule Smovie.Catalog do
 
   defp sync_window_days(%Work{}), do: 7
 
+  ## Notes externes
+
+  @doc """
+  Remplace les notes externes d'une oeuvre.
+  """
+  def put_external_ratings(%Work{id: work_id}, rating_attrs) when is_list(rating_attrs) do
+    Enum.map(rating_attrs, fn attrs ->
+      %ExternalRating{}
+      |> ExternalRating.changeset(Map.put(attrs, :work_id, work_id))
+      |> Repo.insert(
+        on_conflict: {:replace, [:score, :scale, :votes_count, :url, :fetched_at]},
+        conflict_target: [:work_id, :source],
+        returning: true
+      )
+    end)
+  end
+
+  @doc """
+  Notes externes d'une oeuvre, indexees par source.
+  """
+  def external_ratings(%Work{id: work_id}) do
+    Repo.all(from r in ExternalRating, where: r.work_id == ^work_id)
+    |> Map.new(&{&1.source, &1})
+  end
+
+  @doc """
+  Note presse a afficher, et sa source.
+
+  Ordre de repli : IMDb, puis Metacritic, puis Rotten Tomatoes. L'etiquette
+  dit toujours la source reelle — afficher une note TMDB sous le mot
+  « presse » serait faux, et c'est la raison d'etre de ce tuple.
+  """
+  def press_rating(%Work{} = work), do: work |> external_ratings() |> pick_press()
+
+  def press_rating(ratings) when is_map(ratings), do: pick_press(ratings)
+
+  defp pick_press(ratings) do
+    Enum.find_value([:imdb, :metacritic, :rotten_tomatoes], fn source ->
+      case ratings[source] do
+        nil -> nil
+        rating -> {ExternalRating.label(source), ExternalRating.out_of_ten(rating)}
+      end
+    end)
+  end
+
+  @doc """
+  Vrai si les notes presse de l'oeuvre meritent d'etre rafraichies.
+
+  Un appel par oeuvre tous les sept jours au maximum : le palier gratuit
+  d'OMDb plafonne a mille requetes par jour, et une note presse ne bouge pas
+  d'un jour a l'autre.
+  """
+  def press_rating_stale?(%Work{imdb_id: nil}), do: false
+
+  def press_rating_stale?(%Work{} = work) do
+    case external_ratings(work) do
+      ratings when ratings == %{} ->
+        true
+
+      ratings ->
+        ratings
+        |> Map.values()
+        |> Enum.map(& &1.fetched_at)
+        |> Enum.max(DateTime)
+        |> then(&(DateTime.diff(DateTime.utc_now(), &1, :day) > 7))
+    end
+  end
+
   ## Genres, personnes et casting
 
   @doc """
@@ -447,6 +517,7 @@ defmodule Smovie.Catalog do
 
   defp refresh_if_stale(%Work{kind: kind} = work) when kind in [:movie, :tv_show] do
     if stale?(work), do: SyncWorkWorker.enqueue(kind, work.tmdb_id)
+    if press_rating_stale?(work), do: FetchExternalRatingsWorker.enqueue(work)
     work
   end
 

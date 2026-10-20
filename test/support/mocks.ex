@@ -4,3 +4,4 @@
 # suite qui depend du reseau echoue pour des raisons qui n'ont rien a voir
 # avec le code.
 Mox.defmock(Smovie.External.TMDBMock, for: Smovie.External.TMDB)
+Mox.defmock(Smovie.External.OMDbMock, for: Smovie.External.OMDb)
