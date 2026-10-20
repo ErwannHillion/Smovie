@@ -59,7 +59,8 @@ defmodule Smovie.MixProject do
       {:gettext, "~> 0.26"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.5"}
+      {:bandit, "~> 1.5"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -77,6 +78,7 @@ defmodule Smovie.MixProject do
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind smovie", "esbuild smovie"],
+      quality: ["format --check-formatted", "credo --strict"],
       "assets.deploy": [
         "tailwind smovie --minify",
         "esbuild smovie --minify",
