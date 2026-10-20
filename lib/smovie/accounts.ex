@@ -6,7 +6,7 @@ defmodule Smovie.Accounts do
   import Ecto.Query, warn: false
   alias Smovie.Repo
 
-  alias Smovie.Accounts.{User, UserToken, UserNotifier, UserFollow}
+  alias Smovie.Accounts.{User, UserNotifier, UserToken}
 
   ## Database getters
 
@@ -289,158 +289,22 @@ defmodule Smovie.Accounts do
     :ok
   end
 
-  @doc """
-  Lists all users with their movie count.
-  """
-  def list_users_with_movie_count do
-    query =
-      from u in User,
-        left_join: um in Smovie.Movies.UserMovie,
-        on: u.id == um.user_id and um.status == "watched",
-        group_by: u.id,
-        select: %{
-          id: u.id,
-          email: u.email,
-          inserted_at: u.inserted_at,
-          movie_count: count(um.id)
-        },
-        order_by: [desc: count(um.id)]
-
-    Repo.all(query)
-  end
-
-  ## Follow system
-
-  @doc """
-  Follows a user.
-  """
-  def follow_user(follower_id, followed_id) do
-    %UserFollow{}
-    |> UserFollow.changeset(%{follower_id: follower_id, followed_id: followed_id})
-    |> Repo.insert()
-  end
-
-  @doc """
-  Unfollows a user.
-  """
-  def unfollow_user(follower_id, followed_id) do
-    query =
-      from uf in UserFollow,
-        where: uf.follower_id == ^follower_id and uf.followed_id == ^followed_id
-
-    case Repo.delete_all(query) do
-      {1, _} -> :ok
-      {0, _} -> {:error, :not_found}
-    end
-  end
-
-  @doc """
-  Checks if a user is following another user.
-  """
-  def following?(follower_id, followed_id) do
-    query =
-      from uf in UserFollow,
-        where: uf.follower_id == ^follower_id and uf.followed_id == ^followed_id
-
-    Repo.exists?(query)
-  end
-
-  @doc """
-  Gets the list of users that a user is following.
-  """
-  def get_following(user_id) do
-    query =
-      from uf in UserFollow,
-        join: u in User,
-        on: uf.followed_id == u.id,
-        where: uf.follower_id == ^user_id,
-        select: u
-
-    Repo.all(query)
-  end
-
-  @doc """
-  Gets the list of users following a user.
-  """
-  def get_followers(user_id) do
-    query =
-      from uf in UserFollow,
-        join: u in User,
-        on: uf.follower_id == u.id,
-        where: uf.followed_id == ^user_id,
-        select: u
-
-    Repo.all(query)
-  end
-
-  @doc """
-  Gets the IDs of users that a user is following.
-  """
-  def get_following_ids(user_id) do
-    query =
-      from uf in UserFollow,
-        where: uf.follower_id == ^user_id,
-        select: uf.followed_id
-
-    Repo.all(query)
-  end
-
-  @doc """
-  Gets follow counts for a user.
-  """
-  def get_follow_counts(user_id) do
-    following_count =
-      from(uf in UserFollow, where: uf.follower_id == ^user_id, select: count())
-      |> Repo.one()
-
-    followers_count =
-      from(uf in UserFollow, where: uf.followed_id == ^user_id, select: count())
-      |> Repo.one()
-
-    %{following: following_count, followers: followers_count}
-  end
-
-  @doc """
-  Gets a user by ID with follow counts and movie count.
-  """
-  def get_user_profile(user_id) do
-    user = Repo.get(User, user_id)
-
-    if user do
-      follow_counts = get_follow_counts(user_id)
-
-      movie_count =
-        from(um in Smovie.Movies.UserMovie,
-          where: um.user_id == ^user_id and um.status == "watched",
-          select: count()
-        )
-        |> Repo.one()
-
-      %{
-        id: user.id,
-        email: user.email,
-        inserted_at: user.inserted_at,
-        movie_count: movie_count,
-        following_count: follow_counts.following,
-        followers_count: follow_counts.followers
-      }
-    end
-  end
-
   ## Token helper
 
   defp update_user_and_delete_all_tokens(changeset) do
     %{data: %User{} = user} = changeset
 
-    with {:ok, %{user: user, tokens_to_expire: expired_tokens}} <-
-           Ecto.Multi.new()
-           |> Ecto.Multi.update(:user, changeset)
-           |> Ecto.Multi.all(:tokens_to_expire, UserToken.by_user_and_contexts_query(user, :all))
-           |> Ecto.Multi.delete_all(:tokens, fn %{tokens_to_expire: tokens_to_expire} ->
-             UserToken.delete_all_query(tokens_to_expire)
-           end)
-           |> Repo.transaction() do
-      {:ok, user, expired_tokens}
+    multi =
+      Ecto.Multi.new()
+      |> Ecto.Multi.update(:user, changeset)
+      |> Ecto.Multi.all(:tokens_to_expire, UserToken.by_user_and_contexts_query(user, :all))
+      |> Ecto.Multi.delete_all(:tokens, fn %{tokens_to_expire: tokens_to_expire} ->
+        UserToken.delete_all_query(tokens_to_expire)
+      end)
+
+    case Repo.transaction(multi) do
+      {:ok, %{user: user, tokens_to_expire: expired_tokens}} -> {:ok, user, expired_tokens}
+      {:error, step, reason, changes} -> {:error, step, reason, changes}
     end
   end
 end
