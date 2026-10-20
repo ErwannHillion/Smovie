@@ -9,6 +9,7 @@ defmodule SmovieWeb.WorkLive.Season do
 
   alias Smovie.Catalog
   alias Smovie.Library
+  alias Smovie.Repo
 
   @impl true
   def mount(%{"slug" => slug, "number" => number}, _session, socket) do
@@ -30,8 +31,67 @@ defmodule SmovieWeb.WorkLive.Season do
       season: season,
       episodes: episodes,
       progress: Library.season_progress(scope, season),
+      ratings: Library.ratings_by_work_id(scope, episodes),
       watched: watched_ids(scope, episodes)
     )
+  end
+
+  @impl true
+  def handle_event("rate_episode", %{"work-id" => work_id, "value" => value}, socket) do
+    with_episode(socket, work_id, &Library.toggle_rating(&1, &2, value))
+  end
+
+  def handle_event("toggle_watched", %{"work-id" => work_id}, socket) do
+    with_episode(socket, work_id, fn scope, episode ->
+      if Library.watched?(scope, episode) do
+        Library.unmark_watched(scope, episode)
+      else
+        Library.mark_watched(scope, episode)
+      end
+    end)
+  end
+
+  def handle_event("mark_season_watched", _params, %{assigns: %{current_scope: nil}} = socket) do
+    {:noreply, redirect_to_login(socket)}
+  end
+
+  def handle_event(
+        "mark_season_watched",
+        _params,
+        %{assigns: %{current_scope: scope, episodes: episodes}} = socket
+      ) do
+    Enum.each(episodes, &Library.mark_watched(scope, &1))
+
+    {:noreply, reload(socket)}
+  end
+
+  defp with_episode(%{assigns: %{current_scope: nil}} = socket, _work_id, _fun) do
+    {:noreply, redirect_to_login(socket)}
+  end
+
+  defp with_episode(
+         %{assigns: %{current_scope: scope, episodes: episodes}} = socket,
+         work_id,
+         fun
+       ) do
+    case Enum.find(episodes, &(to_string(&1.id) == work_id)) do
+      nil ->
+        {:noreply, socket}
+
+      episode ->
+        fun.(scope, episode)
+        {:noreply, reload(socket)}
+    end
+  end
+
+  defp redirect_to_login(socket) do
+    socket
+    |> put_flash(:info, gettext("Connectez-vous pour noter et suivre vos films."))
+    |> push_navigate(to: ~p"/users/log-in")
+  end
+
+  defp reload(%{assigns: %{show: show, season: season}} = socket) do
+    assign_season(socket, show, Repo.reload!(season))
   end
 
   defp watched_ids(nil, _episodes), do: MapSet.new()
@@ -82,18 +142,65 @@ defmodule SmovieWeb.WorkLive.Season do
               {episode_meta(episode)}
             </span>
           </span>
-          <.icon
-            :if={MapSet.member?(@watched, episode.id)}
-            name="hero-eye"
-            class="text-smovie size-4 shrink-0"
-          />
+          <button
+            type="button"
+            phx-click="toggle_watched"
+            phx-value-work-id={episode.id}
+            aria-pressed={to_string(MapSet.member?(@watched, episode.id))}
+            aria-label={gettext("Marquer vu")}
+            class={[
+              "grid size-11 shrink-0 place-items-center rounded-lg",
+              MapSet.member?(@watched, episode.id) && "text-smovie",
+              !MapSet.member?(@watched, episode.id) &&
+                "text-base-content/25 hover:text-base-content/60"
+            ]}
+          >
+            <.icon name="hero-eye" class="size-4" />
+          </button>
+
+          <.episode_rating episode={episode} rating={@ratings[episode.id]} />
         </li>
       </ul>
+
+      <button
+        :if={@episodes != [] and @progress.watched < @progress.total}
+        type="button"
+        phx-click="mark_season_watched"
+        class="btn btn-ghost btn-sm mt-4"
+      >
+        {gettext("Marquer toute la saison comme vue")}
+      </button>
 
       <p :if={@episodes == []} class="text-base-content/50 py-10 text-sm">
         {gettext("Les episodes de cette saison ne sont pas encore disponibles.")}
       </p>
     </Layouts.app>
+    """
+  end
+
+  # Selecteur de note d'un episode : dix zones de contact superposees aux
+  # etoiles, comme sur une fiche. Au doigt, dix petits boutons cote a cote
+  # seraient intouchables, et une liste d'episodes en aligne vingt.
+  attr :episode, :map, required: true
+  attr :rating, :map, default: nil
+
+  defp episode_rating(assigns) do
+    ~H"""
+    <div class="relative shrink-0 py-1">
+      <.rating_stars value={(@rating && @rating.value) || 0} />
+      <div class="absolute inset-x-0 -inset-y-1.5 grid grid-cols-10">
+        <button
+          :for={half <- 1..10}
+          type="button"
+          phx-click="rate_episode"
+          phx-value-work-id={@episode.id}
+          phx-value-value={half}
+          class="min-h-11 min-w-2 cursor-pointer"
+          aria-label={gettext("%{stars} sur 5", stars: format_stars(half))}
+          aria-pressed={to_string(@rating && @rating.value == half)}
+        ></button>
+      </div>
+    </div>
     """
   end
 
