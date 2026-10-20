@@ -560,7 +560,7 @@ msgstr "following"
 msgid "abonnes"
 msgstr "followers"
 
-#: lib/smovie_web/live/review_live/show.ex:45
+#: lib/smovie_web/live/review_live/show.ex:127
 #, elixir-autogen, elixir-format
 msgid "Afficher les spoilers"
 msgstr "Show spoilers"
@@ -616,6 +616,7 @@ msgstr "Review published."
 msgid "Reviews populaires"
 msgstr "Popular reviews"
 
+#: lib/smovie_web/live/review_live/show.ex:225
 #: lib/smovie_web/live/work_live/show.ex:232
 #, elixir-autogen, elixir-format
 msgid "Supprimer"
@@ -635,3 +636,52 @@ msgstr "Visible to"
 #, elixir-autogen, elixir-format
 msgid "Votre review"
 msgstr "Your review"
+
+#: lib/smovie_web/live/review_live/show.ex:147
+#, elixir-autogen, elixir-format
+msgid "%{count} commentaire"
+msgid_plural "%{count} commentaires"
+msgstr[0] "%{count} comment"
+msgstr[1] "%{count} comments"
+
+#: lib/smovie_web/live/review_live/show.ex:141
+#, elixir-autogen, elixir-format
+msgid "%{count} j'aime"
+msgid_plural "%{count} j'aime"
+msgstr[0] "%{count} like"
+msgstr[1] "%{count} likes"
+
+#: lib/smovie_web/live/review_live/show.ex:167
+#, elixir-autogen, elixir-format
+msgid "Annuler la reponse"
+msgstr "Cancel reply"
+
+#: lib/smovie_web/live/review_live/show.ex:84
+#, elixir-autogen, elixir-format
+msgid "Ce commentaire n'a pas pu etre publie."
+msgstr "This comment could not be posted."
+
+#: lib/smovie_web/live/review_live/show.ex:105
+#, elixir-autogen, elixir-format
+msgid "Connectez-vous pour reagir aux reviews."
+msgstr "Log in to react to reviews."
+
+#: lib/smovie_web/live/review_live/show.ex:165
+#, elixir-autogen, elixir-format
+msgid "Envoyer"
+msgstr "Send"
+
+#: lib/smovie_web/live/review_live/show.ex:216
+#, elixir-autogen, elixir-format
+msgid "Repondre"
+msgstr "Reply"
+
+#: lib/smovie_web/live/review_live/show.ex:161
+#, elixir-autogen, elixir-format
+msgid "Votre commentaire"
+msgstr "Your comment"
+
+#: lib/smovie_web/live/review_live/show.ex:161
+#, elixir-autogen, elixir-format
+msgid "Votre reponse"
+msgstr "Your reply"

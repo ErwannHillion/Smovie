@@ -125,4 +125,62 @@ defmodule SmovieWeb.ReviewLive.ShowTest do
                lv |> element(~s(button[phx-click="edit_review"])) |> render_click()
     end
   end
+
+  describe "likes et commentaires" do
+    setup %{conn: conn, user: user} do
+      lecteur = user_fixture()
+      %{conn: log_in_user(conn, lecteur), lecteur: lecteur, auteur: user}
+    end
+
+    test "liker met a jour le compteur affiche", %{conn: conn, review: review} do
+      {:ok, lv, _html} = live(conn, ~p"/review/#{review.id}")
+
+      html = lv |> element(~s(button[phx-click="toggle_like"])) |> render_click()
+
+      assert html =~ "1 j&#39;aime" or html =~ "1 j'aime"
+    end
+
+    test "publier un commentaire l'affiche", %{conn: conn, review: review} do
+      {:ok, lv, _html} = live(conn, ~p"/review/#{review.id}")
+
+      html =
+        lv
+        |> form("#comment_form", %{"comment" => %{"body" => "Entierement d'accord."}})
+        |> render_submit()
+
+      assert html =~ "Entierement d&#39;accord." or html =~ "Entierement d'accord."
+      assert html =~ "1 commentaire"
+    end
+
+    test "repondre a un commentaire", %{conn: conn, review: review} do
+      {:ok, lv, _html} = live(conn, ~p"/review/#{review.id}")
+
+      lv |> form("#comment_form", %{"comment" => %{"body" => "Racine"}}) |> render_submit()
+      lv |> element(~s(button[phx-click="reply_to"])) |> render_click()
+
+      html =
+        lv
+        |> form("#comment_form", %{"comment" => %{"body" => "Une reponse"}})
+        |> render_submit()
+
+      assert html =~ "Une reponse"
+      assert html =~ "2 commentaires"
+    end
+
+    test "supprimer son commentaire", %{conn: conn, review: review} do
+      {:ok, lv, _html} = live(conn, ~p"/review/#{review.id}")
+
+      lv |> form("#comment_form", %{"comment" => %{"body" => "A effacer"}}) |> render_submit()
+      html = lv |> element(~s(button[phx-click="delete_comment"])) |> render_click()
+
+      refute html =~ "A effacer"
+    end
+
+    test "un visiteur est renvoye vers la connexion", %{review: review} do
+      {:ok, lv, _html} = live(build_conn(), ~p"/review/#{review.id}")
+
+      assert {:error, {:live_redirect, %{to: "/users/log-in"}}} =
+               lv |> element(~s(button[phx-click="toggle_like"])) |> render_click()
+    end
+  end
 end
