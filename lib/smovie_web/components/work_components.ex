@@ -32,12 +32,16 @@ defmodule SmovieWeb.WorkComponents do
   attr :subtitle, :string, default: nil
   attr :navigate, :string, default: nil
   attr :size, :atom, default: :default, values: [:small, :default, :large]
+  attr :static, :boolean, default: false, doc: "rendu en span, pour un parent deja cliquable"
   attr :eager, :boolean, default: false, doc: "charge l'image sans attendre le defilement"
   attr :class, :string, default: nil
 
   def poster(assigns) do
     ~H"""
-    <.poster_wrapper navigate={@navigate} class={["group block text-left", width(@size), @class]}>
+    <.poster_wrapper
+      navigate={if @static, do: nil, else: @navigate}
+      class={["group block text-left", width(@size), @class]}
+    >
       <div class="relative">
         <div class="bg-base-300 ring-base-content/10 aspect-[2/3] overflow-hidden rounded-lg ring-1">
           <img
