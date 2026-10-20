@@ -13,6 +13,7 @@ defmodule SmovieWeb.WorkComponents do
   use Gettext, backend: SmovieWeb.Gettext
 
   alias Smovie.Config
+  alias SmovieWeb.Layouts
 
   # Largeurs TMDB utilisees, de la vignette mobile au backdrop desktop.
   @poster_widths [185, 342, 500]
@@ -99,6 +100,7 @@ defmodule SmovieWeb.WorkComponents do
     ~H"""
     <div class={[
       "grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-6 md:gap-4 lg:grid-cols-8",
+      "xl:grid-cols-10 2xl:grid-cols-12",
       @class
     ]}>
       {render_slot(@inner_block)}
@@ -120,7 +122,7 @@ defmodule SmovieWeb.WorkComponents do
   def carousel(assigns) do
     ~H"""
     <section class={["mt-7 md:mt-9", @class]}>
-      <div class="flex items-baseline gap-3 px-4 pb-2.5 md:px-8">
+      <div class={[Layouts.container_class(), "flex items-baseline gap-3 pb-2.5"]}>
         <h2 class="text-base-content/70 font-mono text-[0.65rem] font-medium tracking-[0.15em] uppercase">
           {@title}
         </h2>
@@ -132,7 +134,7 @@ defmodule SmovieWeb.WorkComponents do
           {gettext("Tout voir")}
         </.link>
       </div>
-      <div class="snap-row flex gap-2.5 overflow-x-auto px-4 pb-1 md:gap-3.5 md:px-8">
+      <div class={[Layouts.container_class(), "snap-row flex gap-2.5 overflow-x-auto pb-1 md:gap-3.5"]}>
         {render_slot(@inner_block)}
       </div>
     </section>

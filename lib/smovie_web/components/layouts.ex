@@ -11,6 +11,19 @@ defmodule SmovieWeb.Layouts do
 
   alias Smovie.Config
 
+  # Gouttiere unique de l'application, de 360 px a l'ultra-large.
+  #
+  # Pas de `max-w-6xl` : sur un ecran de 1920 il laissait deux bandes vides de
+  # 380 px de chaque cote, alors qu'une grille d'affiches gagne a etre remplie.
+  # Le plafond a 120rem (1920 px) n'existe que pour les ecrans ultra-larges, ou
+  # une rangee sans fin deviendrait illisible.
+  @container "mx-auto w-full max-w-[120rem] px-4 sm:px-6 lg:px-10 xl:px-14"
+
+  @doc """
+  Classes de la gouttiere, partagees par la mise en page et les carrousels.
+  """
+  def container_class, do: @container
+
   embed_templates "layouts/*"
 
   @doc """
@@ -31,12 +44,14 @@ defmodule SmovieWeb.Layouts do
   slot :inner_block, required: true
 
   def app(assigns) do
+    assigns = assign(assigns, :container, @container)
+
     ~H"""
     <.top_nav current_scope={@current_scope} locale={@locale} current_path={@current_path} />
 
     <main class={[
       "pb-safe min-h-dvh md:pb-10",
-      not @full_bleed && "mx-auto max-w-6xl px-4 py-6 md:px-8"
+      not @full_bleed && [@container, "py-6"]
     ]}>
       {render_slot(@inner_block)}
     </main>
@@ -54,14 +69,16 @@ defmodule SmovieWeb.Layouts do
   attr :current_path, :string, default: "/"
 
   def top_nav(assigns) do
+    assigns = assign(assigns, :container, @container)
+
     ~H"""
     <header class="bg-base-100/90 border-base-300 sticky top-0 z-40 border-b backdrop-blur">
-      <div class="mx-auto flex max-w-6xl items-center gap-4 px-4 py-2.5 md:px-8">
+      <div class={[@container, "flex items-center gap-4 py-2.5"]}>
         <.link navigate={~p"/"} class="font-display text-2xl leading-none">
           S<span class="text-smovie">movie</span>
         </.link>
 
-        <nav class="ml-6 hidden items-center gap-1 md:flex">
+        <nav class="ml-4 hidden items-center gap-1 lg:ml-6 lg:flex">
           <.link
             :for={{path, label} <- main_sections()}
             navigate={path}
@@ -80,13 +97,17 @@ defmodule SmovieWeb.Layouts do
 
         <.link
           navigate={~p"/recherche"}
-          class="text-base-content/50 hover:text-base-content md:hidden"
+          class="text-base-content/50 hover:text-base-content lg:hidden"
           aria-label={gettext("Rechercher")}
         >
           <.icon name="hero-magnifying-glass" class="size-5" />
         </.link>
 
-        <.locale_switcher locale={@locale} current_path={@current_path} />
+        <.locale_switcher
+          locale={@locale}
+          current_path={@current_path}
+          class="hidden lg:flex"
+        />
         <.theme_toggle />
 
         <%= if @current_scope do %>
@@ -183,12 +204,13 @@ defmodule SmovieWeb.Layouts do
   """
   attr :locale, :string, default: nil
   attr :current_path, :string, default: "/"
+  attr :class, :string, default: nil
 
   def locale_switcher(assigns) do
     assigns = assign_new(assigns, :current, fn -> assigns.locale || Config.default_locale() end)
 
     ~H"""
-    <div class="flex items-center gap-1">
+    <div class={["flex items-center gap-1", @class]}>
       <.form
         :for={locale <- Config.locales()}
         for={%{}}

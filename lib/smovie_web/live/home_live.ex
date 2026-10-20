@@ -22,7 +22,7 @@ defmodule SmovieWeb.HomeLive do
       locale={@locale}
       current_path={@current_path}
     >
-      <div class="flex flex-col gap-4 py-10 md:py-16">
+      <div class="flex max-w-3xl flex-col gap-4 py-10 md:py-16">
         <h1 class="font-display text-5xl leading-none md:text-6xl">
           S<span class="text-smovie">movie</span>
         </h1>
