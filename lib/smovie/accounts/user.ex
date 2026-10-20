@@ -9,7 +9,23 @@ defmodule Smovie.Accounts.User do
     field :confirmed_at, :utc_datetime
     field :authenticated_at, :utc_datetime, virtual: true
 
+    # NULL signifie « suivre le navigateur », pas « francais ».
+    field :locale, :string
+
     timestamps(type: :utc_datetime)
+  end
+
+  @doc """
+  Changeset de preference de langue.
+
+  Une locale inconnue est refusee plutot qu'ignoree : accepter n'importe quelle
+  chaine ferait rendre l'application dans la langue par defaut sans rien dire a
+  l'utilisateur, qui croirait son choix pris en compte.
+  """
+  def locale_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:locale])
+    |> validate_inclusion(:locale, Smovie.Config.locales())
   end
 
   @doc """

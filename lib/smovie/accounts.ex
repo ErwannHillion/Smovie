@@ -175,6 +175,17 @@ defmodule Smovie.Accounts do
     end
   end
 
+  @doc """
+  Enregistre la langue choisie par l'utilisateur.
+
+  `nil` remet le compte sur « suivre le navigateur ».
+  """
+  def update_user_locale(%User{} = user, locale) do
+    user
+    |> User.locale_changeset(%{locale: locale})
+    |> Repo.update()
+  end
+
   ## Session
 
   @doc """
