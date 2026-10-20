@@ -35,6 +35,8 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 - `.env.example` documentant toutes les variables, avec leurs valeurs par défaut
 
 ### Changed
+- Police d'affichage : Bricolage Grotesque remplace Instrument Serif
+- La page occupe toute la largeur de l'écran, avec une gouttière par palier
 - README décrivant le projet cible : fonctionnalités, configuration, architecture
 - Elixir 1.19, Phoenix 1.8.15, LiveView 1.2, Gettext 1.0 et l'ensemble des dépendances
 - Image PostgreSQL épinglée en 17, données dans un volume Docker nommé

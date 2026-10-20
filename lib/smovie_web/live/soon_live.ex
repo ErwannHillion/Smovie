@@ -42,7 +42,7 @@ defmodule SmovieWeb.SoonLive do
         <p class="text-base-content/40 font-mono text-[0.65rem] tracking-[0.15em] uppercase">
           {@ticket}
         </p>
-        <h1 class="font-display text-4xl leading-none">{@title}</h1>
+        <h1 class="font-display text-4xl font-bold leading-none tracking-tight">{@title}</h1>
         <p class="text-base-content/70">{@description}</p>
         <.link navigate={~p"/"} class="btn btn-primary btn-sm mt-2">
           {gettext("Retour a l'accueil")}

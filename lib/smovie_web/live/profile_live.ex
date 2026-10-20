@@ -38,7 +38,9 @@ defmodule SmovieWeb.ProfileLive do
       <header class="flex flex-col gap-4 py-6 md:flex-row md:items-center md:gap-6 md:py-10">
         <.avatar user={@user} size={:large} />
         <div class="min-w-0">
-          <h1 class="font-display text-3xl leading-none md:text-4xl">{@user.display_name}</h1>
+          <h1 class="font-display text-3xl font-bold leading-none tracking-tight md:text-4xl">
+            {@user.display_name}
+          </h1>
           <p class="text-base-content/50 mt-1.5 font-mono text-xs">
             @{@user.username}<span :if={@visible and @user.location}> · {@user.location}</span>
           </p>
