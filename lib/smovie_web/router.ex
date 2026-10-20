@@ -9,7 +9,7 @@ defmodule SmovieWeb.Router do
     plug :fetch_live_flash
     plug :put_root_layout, html: {SmovieWeb.Layouts, :root}
     plug :protect_from_forgery
-    plug :put_secure_browser_headers
+    plug SmovieWeb.Plugs.ContentSecurityPolicy
     plug :fetch_current_scope_for_user
   end
 
