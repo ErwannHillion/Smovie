@@ -44,6 +44,8 @@ defmodule SmovieWeb.Plugs.ContentSecurityPolicy do
         "object-src 'none'",
         "form-action 'self'",
         "img-src 'self' data: #{@image_host}",
+        # Les polices sont hebergees par l'application : aucun domaine tiers.
+        "font-src 'self'",
         # Tailwind pose des styles en ligne sur certains composants.
         "style-src 'self' 'unsafe-inline'",
         "script-src 'self' 'nonce-#{nonce}'",
