@@ -299,6 +299,8 @@ msgstr "Slide to rate"
 
 #: lib/smovie_web/components/layouts.ex:200
 #: lib/smovie_web/components/layouts.ex:209
+#: lib/smovie_web/live/messaging_live/index.ex:13
+#: lib/smovie_web/live/messaging_live/index.ex:36
 #, elixir-autogen, elixir-format
 msgid "Messages"
 msgstr "Messages"
@@ -318,11 +320,6 @@ msgstr "Profile"
 #, elixir-autogen, elixir-format
 msgid "Rechercher"
 msgstr "Search"
-
-#: lib/smovie_web/live/soon_live.ex:49
-#, elixir-autogen, elixir-format
-msgid "Retour a l'accueil"
-msgstr "Back to home"
 
 #: lib/smovie_web/components/layouts.ex:198
 #: lib/smovie_web/live/profile_live.ex:191
@@ -614,6 +611,7 @@ msgstr "Review published."
 msgid "Reviews populaires"
 msgstr "Popular reviews"
 
+#: lib/smovie_web/live/messaging_live/show.ex:124
 #: lib/smovie_web/live/review_live/show.ex:225
 #: lib/smovie_web/live/work_live/show.ex:232
 #, elixir-autogen, elixir-format
@@ -1047,3 +1045,77 @@ msgstr "Stats"
 #, elixir-autogen, elixir-format
 msgid "moyenne %{value}"
 msgstr "average %{value}"
+
+#: lib/smovie_web/live/messaging_live/index.ex:108
+#: lib/smovie_web/live/messaging_live/show.ex:256
+#, elixir-autogen, elixir-format
+msgid "%{count} membre"
+msgid_plural "%{count} membres"
+msgstr[0] "%{count} member"
+msgstr[1] "%{count} members"
+
+#: lib/smovie_web/live/messaging_live/index.ex:72
+#, elixir-autogen, elixir-format
+msgid "Aucune conversation. Ouvrez-en une depuis le profil d'un membre."
+msgstr "No conversations. Start one from a member's profile."
+
+#: lib/smovie_web/live/messaging_live/show.ex:73
+#, elixir-autogen, elixir-format
+msgid "Ce message n'a pas pu etre envoye."
+msgstr "This message could not be sent."
+
+#: lib/smovie_web/live/messaging_live/show.ex:69
+#, elixir-autogen, elixir-format
+msgid "Cette review n'est pas visible par tous les membres de la conversation."
+msgstr "This review is not visible to everyone in this conversation."
+
+#: lib/smovie_web/live/messaging_live/show.ex:230
+#, elixir-autogen, elixir-format
+msgid "Contenu partage indisponible"
+msgstr "Shared content unavailable"
+
+#: lib/smovie_web/live/messaging_live/index.ex:111
+#: lib/smovie_web/live/messaging_live/show.ex:259
+#, elixir-autogen, elixir-format
+msgid "Conversation privee"
+msgstr "Direct conversation"
+
+#: lib/smovie_web/live/messaging_live/show.ex:181
+#, elixir-autogen, elixir-format
+msgid "Film partage"
+msgstr "Shared film"
+
+#: lib/smovie_web/live/messaging_live/show.ex:159
+#, elixir-autogen, elixir-format
+msgid "Message supprime"
+msgstr "Message deleted"
+
+#: lib/smovie_web/live/messaging_live/index.ex:39
+#, elixir-autogen, elixir-format
+msgid "Nouveau groupe"
+msgstr "New group"
+
+#: lib/smovie_web/live/messaging_live/show.ex:209
+#, elixir-autogen, elixir-format
+msgid "Review partagee"
+msgstr "Shared review"
+
+#: lib/smovie_web/live/messaging_live/show.ex:142
+#, elixir-autogen, elixir-format
+msgid "Un message…"
+msgstr "A message…"
+
+#: lib/smovie_web/live/messaging_live/show.ex:72
+#, elixir-autogen, elixir-format
+msgid "Vous avez quitte cette conversation."
+msgstr "You have left this conversation."
+
+#: lib/smovie_web/live/messaging_live/show.ex:71
+#, elixir-autogen, elixir-format
+msgid "Vous ne faites pas partie de cette conversation."
+msgstr "You are not part of this conversation."
+
+#: lib/smovie_web/live/messaging_live/show.ex:212
+#, elixir-autogen, elixir-format
+msgid "par %{member}"
+msgstr "by %{member}"
