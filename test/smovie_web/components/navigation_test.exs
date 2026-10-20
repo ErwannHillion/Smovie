@@ -79,10 +79,22 @@ defmodule SmovieWeb.NavigationTest do
   end
 
   describe "destinations de la navigation" do
-    test "chaque entree mene a une page, pas a une 404", %{conn: conn} do
-      for path <- ["/reviews", "/recherche", "/watchlist", "/messages"] do
+    test "les sections publiques s'affichent", %{conn: conn} do
+      for path <- ["/reviews", "/recherche", "/messages"] do
         assert {:ok, _lv, _html} = live(conn, path)
       end
+    end
+
+    test "les sections personnelles renvoient vers la connexion, pas vers une 404", %{conn: conn} do
+      # Une watchlist est personnelle : un visiteur doit comprendre qu'il lui
+      # manque un compte, pas croire que la page n'existe pas.
+      assert {:error, {:redirect, %{to: "/users/log-in"}}} = live(conn, "/watchlist")
+    end
+
+    test "une section personnelle s'affiche une fois connecte", %{conn: conn} do
+      user = Smovie.AccountsFixtures.user_fixture()
+
+      assert {:ok, _lv, _html} = conn |> log_in_user(user) |> live("/watchlist")
     end
   end
 end
