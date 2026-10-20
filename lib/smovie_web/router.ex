@@ -27,6 +27,12 @@ defmodule SmovieWeb.Router do
     live_session :default,
       on_mount: [{SmovieWeb.UserAuth, :mount_current_scope}, SmovieWeb.Hooks.Locale] do
       live "/", HomeLive
+
+      # Sections dont la navigation existe deja : voir SmovieWeb.SoonLive.
+      live "/reviews", SoonLive, :reviews
+      live "/recherche", SoonLive, :search
+      live "/watchlist", SoonLive, :watchlist
+      live "/messages", SoonLive, :messages
     end
   end
 

@@ -22,14 +22,17 @@ defmodule SmovieWeb.HomeLive do
       locale={@locale}
       current_path={@current_path}
     >
-      <div class="flex flex-col gap-4 py-12">
-        <h1 class="text-3xl font-semibold">Smovie</h1>
-        <p class="text-base-content/70">
-          Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watchlist
-          et messagerie.
+      <div class="flex flex-col gap-4 py-10 md:py-16">
+        <h1 class="font-display text-5xl leading-none md:text-6xl">
+          S<span class="text-smovie">movie</span>
+        </h1>
+        <p class="text-base-content/70 max-w-prose">
+          {gettext(
+            "Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watchlist et messagerie."
+          )}
         </p>
-        <p class="text-base-content/50 text-sm">
-          Reconstruction en cours. La page d'accueil arrive avec SMOVIE-026.
+        <p class="text-base-content/40 font-mono text-xs">
+          {gettext("La page d'accueil arrive avec SMOVIE-026.")}
         </p>
       </div>
     </Layouts.app>

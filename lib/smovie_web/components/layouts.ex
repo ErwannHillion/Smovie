@@ -16,50 +16,166 @@ defmodule SmovieWeb.Layouts do
   @doc """
   Mise en page applicative.
 
-  Provisoire : SMOVIE-006 la remplace par la navigation definitive — barre basse
-  sur mobile, barre haute a partir de `md:`. Elle n'a ici que ce qu'il faut pour
-  identifier le compte connecte.
+  Mobile d'abord : barre de navigation **basse** jusqu'a `md:`, barre haute
+  au-dela. Sur telephone, le pouce atteint le bas de l'ecran, pas le haut — et
+  une barre haute se retrouve sous l'encoche ou la barre d'URL.
+
+  Le contenu reserve la hauteur de la barre basse et l'encoche (`pb-safe`),
+  sans quoi la derniere ligne de chaque page serait masquee.
   """
   attr :flash, :map, required: true
   attr :current_scope, :map, default: nil
   attr :locale, :string, default: nil
   attr :current_path, :string, default: "/"
+  attr :full_bleed, :boolean, default: false, doc: "colle le contenu aux bords (heros)"
   slot :inner_block, required: true
 
   def app(assigns) do
     ~H"""
-    <header class="border-base-300 border-b">
-      <div class="mx-auto flex max-w-5xl items-center gap-4 px-4 py-3">
-        <.link navigate={~p"/"} class="text-lg font-semibold">Smovie</.link>
-        <div class="flex-1"></div>
-        <%= if @current_scope do %>
-          <span class="text-base-content/70 text-sm">{@current_scope.user.email}</span>
-          <.link href={~p"/users/settings"} class="btn btn-ghost btn-sm">
-            {gettext("Parametres")}
+    <.top_nav current_scope={@current_scope} locale={@locale} current_path={@current_path} />
+
+    <main class={[
+      "pb-safe min-h-dvh md:pb-10",
+      not @full_bleed && "mx-auto max-w-6xl px-4 py-6 md:px-8"
+    ]}>
+      {render_slot(@inner_block)}
+    </main>
+
+    <.bottom_nav current_scope={@current_scope} current_path={@current_path} />
+    <.flash_group flash={@flash} />
+    """
+  end
+
+  @doc """
+  Barre haute, a partir de `md:`.
+  """
+  attr :current_scope, :map, default: nil
+  attr :locale, :string, default: nil
+  attr :current_path, :string, default: "/"
+
+  def top_nav(assigns) do
+    ~H"""
+    <header class="bg-base-100/90 border-base-300 sticky top-0 z-40 border-b backdrop-blur">
+      <div class="mx-auto flex max-w-6xl items-center gap-4 px-4 py-2.5 md:px-8">
+        <.link navigate={~p"/"} class="font-display text-2xl leading-none">
+          S<span class="text-smovie">movie</span>
+        </.link>
+
+        <nav class="ml-6 hidden items-center gap-1 md:flex">
+          <.link
+            :for={{path, label} <- main_sections()}
+            navigate={path}
+            aria-current={to_string(active?(@current_path, path))}
+            class={[
+              "rounded-lg px-3 py-2 text-sm transition-colors",
+              active?(@current_path, path) && "bg-base-200 text-base-content",
+              !active?(@current_path, path) && "text-base-content/60 hover:bg-base-200"
+            ]}
+          >
+            {label}
           </.link>
-          <.link href={~p"/users/log-out"} method="delete" class="btn btn-ghost btn-sm">
-            {gettext("Deconnexion")}
+        </nav>
+
+        <div class="flex-1"></div>
+
+        <.link
+          navigate={~p"/recherche"}
+          class="text-base-content/50 hover:text-base-content md:hidden"
+          aria-label={gettext("Rechercher")}
+        >
+          <.icon name="hero-magnifying-glass" class="size-5" />
+        </.link>
+
+        <.locale_switcher locale={@locale} current_path={@current_path} />
+        <.theme_toggle />
+
+        <%= if @current_scope do %>
+          <.link
+            navigate={~p"/users/settings"}
+            class="bg-smovie grid size-8 place-items-center rounded-full font-mono text-sm font-semibold text-[#190f2b]"
+            title={@current_scope.user.email}
+          >
+            {initial(@current_scope.user.email)}
+          </.link>
+          <.link
+            href={~p"/users/log-out"}
+            method="delete"
+            class="text-base-content/50 hover:text-base-content"
+            aria-label={gettext("Deconnexion")}
+            title={gettext("Deconnexion")}
+          >
+            <.icon name="hero-arrow-right-start-on-rectangle" class="size-5" />
           </.link>
         <% else %>
           <.link navigate={~p"/users/log-in"} class="btn btn-ghost btn-sm">
             {gettext("Connexion")}
           </.link>
-          <.link navigate={~p"/users/register"} class="btn btn-primary btn-sm">
+          <.link navigate={~p"/users/register"} class="btn btn-primary btn-sm hidden sm:inline-flex">
             {gettext("Inscription")}
           </.link>
         <% end %>
-        <.locale_switcher locale={@locale} current_path={@current_path} />
-        <.theme_toggle />
       </div>
     </header>
-
-    <main class="mx-auto max-w-5xl px-4 py-8">
-      {render_slot(@inner_block)}
-    </main>
-
-    <.flash_group flash={@flash} />
     """
   end
+
+  @doc """
+  Barre basse, jusqu'a `md:`.
+
+  Cinq entrees, chacune d'au moins 44 px de haut, et l'encoche est reservee :
+  sans `tabbar-safe`, la derniere rangee passe sous la barre de geste iOS.
+  """
+  attr :current_scope, :map, default: nil
+  attr :current_path, :string, default: "/"
+
+  def bottom_nav(assigns) do
+    ~H"""
+    <nav class="bg-base-100/95 border-base-300 tabbar-safe fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 border-t px-1 pt-1.5 backdrop-blur md:hidden">
+      <.link
+        :for={{path, label, icon} <- bottom_sections()}
+        navigate={path}
+        aria-current={to_string(active?(@current_path, path))}
+        class={[
+          "flex min-h-11 flex-col items-center gap-0.5 py-1 font-mono text-[0.6rem] tracking-[0.05em] uppercase",
+          active?(@current_path, path) && "text-base-content",
+          !active?(@current_path, path) && "text-base-content/40"
+        ]}
+      >
+        <.icon name={icon} class={icon_class(active?(@current_path, path))} />
+        {label}
+      </.link>
+    </nav>
+    """
+  end
+
+  defp main_sections do
+    [
+      {~p"/", gettext("Accueil")},
+      {~p"/reviews", gettext("Reviews")},
+      {~p"/watchlist", gettext("Watchlist")},
+      {~p"/messages", gettext("Messages")}
+    ]
+  end
+
+  defp bottom_sections do
+    [
+      {~p"/", gettext("Accueil"), "hero-home"},
+      {~p"/recherche", gettext("Chercher"), "hero-magnifying-glass"},
+      {~p"/watchlist", gettext("A voir"), "hero-bookmark"},
+      {~p"/messages", gettext("Messages"), "hero-chat-bubble-left-right"},
+      {~p"/users/settings", gettext("Profil"), "hero-user-circle"}
+    ]
+  end
+
+  # La racine ne doit s'allumer que sur elle-meme : un prefixe la rendrait
+  # active sur toutes les pages.
+  defp active?(current, "/"), do: current == "/"
+  defp active?(current, path), do: current == path or String.starts_with?(current, path <> "/")
+
+  defp icon_class(true), do: "size-5 text-smovie"
+  defp icon_class(false), do: "size-5"
+
+  defp initial(email), do: email |> String.first() |> String.upcase()
 
   @doc """
   Selecteur de langue.
