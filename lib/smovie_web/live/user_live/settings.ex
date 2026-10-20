@@ -63,9 +63,9 @@ defmodule SmovieWeb.UserLive.Settings do
     """
   end
 
-  def mount(%{"token" => token}, _session, socket) do
+  def mount(%{"token" => token}, _session, %{assigns: %{current_scope: %{user: user}}} = socket) do
     socket =
-      case Accounts.update_user_email(socket.assigns.current_scope.user, token) do
+      case Accounts.update_user_email(user, token) do
         :ok ->
           put_flash(socket, :info, "Email changed successfully.")
 
@@ -76,8 +76,7 @@ defmodule SmovieWeb.UserLive.Settings do
     {:ok, push_navigate(socket, to: ~p"/users/settings")}
   end
 
-  def mount(_params, _session, socket) do
-    user = socket.assigns.current_scope.user
+  def mount(_params, _session, %{assigns: %{current_scope: %{user: user}}} = socket) do
     email_changeset = Accounts.change_user_email(user, %{}, validate_email: false)
     password_changeset = Accounts.change_user_password(user, %{}, hash_password: false)
 
@@ -91,11 +90,13 @@ defmodule SmovieWeb.UserLive.Settings do
     {:ok, socket}
   end
 
-  def handle_event("validate_email", params, socket) do
-    %{"user" => user_params} = params
-
+  def handle_event(
+        "validate_email",
+        %{"user" => user_params},
+        %{assigns: %{current_scope: %{user: user}}} = socket
+      ) do
     email_form =
-      socket.assigns.current_scope.user
+      user
       |> Accounts.change_user_email(user_params, validate_email: false)
       |> Map.put(:action, :validate)
       |> to_form()
@@ -103,12 +104,12 @@ defmodule SmovieWeb.UserLive.Settings do
     {:noreply, assign(socket, email_form: email_form)}
   end
 
-  def handle_event("update_email", params, socket) do
-    %{"user" => user_params} = params
-    user = socket.assigns.current_scope.user
-    true = Accounts.sudo_mode?(user)
-
-    case Accounts.change_user_email(user, user_params) do
+  def handle_event(
+        "update_email",
+        %{"user" => user_params},
+        %{assigns: %{current_scope: %{user: user}}} = socket
+      ) do
+    case authorize_sudo(user, &Accounts.change_user_email(&1, user_params)) do
       %{valid?: true} = changeset ->
         Accounts.deliver_user_update_email_instructions(
           Ecto.Changeset.apply_action!(changeset, :insert),
@@ -119,16 +120,21 @@ defmodule SmovieWeb.UserLive.Settings do
         info = "A link to confirm your email change has been sent to the new address."
         {:noreply, socket |> put_flash(:info, info)}
 
+      {:error, :sudo_mode_expired} ->
+        {:noreply, redirect_to_reauthentication(socket)}
+
       changeset ->
         {:noreply, assign(socket, :email_form, to_form(changeset, action: :insert))}
     end
   end
 
-  def handle_event("validate_password", params, socket) do
-    %{"user" => user_params} = params
-
+  def handle_event(
+        "validate_password",
+        %{"user" => user_params},
+        %{assigns: %{current_scope: %{user: user}}} = socket
+      ) do
     password_form =
-      socket.assigns.current_scope.user
+      user
       |> Accounts.change_user_password(user_params, hash_password: false)
       |> Map.put(:action, :validate)
       |> to_form()
@@ -136,17 +142,38 @@ defmodule SmovieWeb.UserLive.Settings do
     {:noreply, assign(socket, password_form: password_form)}
   end
 
-  def handle_event("update_password", params, socket) do
-    %{"user" => user_params} = params
-    user = socket.assigns.current_scope.user
-    true = Accounts.sudo_mode?(user)
-
-    case Accounts.change_user_password(user, user_params) do
+  def handle_event(
+        "update_password",
+        %{"user" => user_params},
+        %{assigns: %{current_scope: %{user: user}}} = socket
+      ) do
+    case authorize_sudo(user, &Accounts.change_user_password(&1, user_params)) do
       %{valid?: true} = changeset ->
         {:noreply, assign(socket, trigger_submit: true, password_form: to_form(changeset))}
+
+      {:error, :sudo_mode_expired} ->
+        {:noreply, redirect_to_reauthentication(socket)}
 
       changeset ->
         {:noreply, assign(socket, password_form: to_form(changeset, action: :insert))}
     end
+  end
+
+  # Le scaffold Phoenix ecrivait `true = Accounts.sudo_mode?(user)`. Un mode sudo
+  # expire est un cas normal, pas un bug : le match levait un MatchError sans
+  # message, qui sort en 500 au lieu de renvoyer l'utilisateur vers une
+  # reauthentification (voir .claude/rules/elixir-code.md).
+  defp authorize_sudo(user, fun) do
+    if Accounts.sudo_mode?(user) do
+      fun.(user)
+    else
+      {:error, :sudo_mode_expired}
+    end
+  end
+
+  defp redirect_to_reauthentication(socket) do
+    socket
+    |> put_flash(:error, "Votre session a expire. Reconnectez-vous pour continuer.")
+    |> push_navigate(to: ~p"/users/log-in")
   end
 end

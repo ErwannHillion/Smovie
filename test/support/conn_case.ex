@@ -17,6 +17,9 @@ defmodule SmovieWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
+  alias Smovie.Accounts.Scope
+  alias Smovie.AccountsFixtures
+
   using do
     quote do
       # The default endpoint for testing
@@ -45,8 +48,8 @@ defmodule SmovieWeb.ConnCase do
   test context.
   """
   def register_and_log_in_user(%{conn: conn} = context) do
-    user = Smovie.AccountsFixtures.user_fixture()
-    scope = Smovie.Accounts.Scope.for_user(user)
+    user = AccountsFixtures.user_fixture()
+    scope = Scope.for_user(user)
 
     opts =
       context

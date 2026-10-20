@@ -46,17 +46,27 @@ defmodule SmovieWeb.UserSessionController do
     end
   end
 
-  def update_password(conn, %{"user" => user_params} = params) do
-    user = conn.assigns.current_scope.user
-    true = Accounts.sudo_mode?(user)
-    {:ok, _user, expired_tokens} = Accounts.update_user_password(user, user_params)
+  def update_password(
+        %{assigns: %{current_scope: %{user: user}}} = conn,
+        %{"user" => user_params} = params
+      ) do
+    # Le scaffold ecrivait `true = Accounts.sudo_mode?(user)` : un mode sudo
+    # expire sortait en 500 avec un MatchError sans message, au lieu d'un refus
+    # lisible (voir .claude/rules/elixir-code.md).
+    if Accounts.sudo_mode?(user) do
+      {:ok, _user, expired_tokens} = Accounts.update_user_password(user, user_params)
 
-    # disconnect all existing LiveViews with old sessions
-    UserAuth.disconnect_sessions(expired_tokens)
+      # disconnect all existing LiveViews with old sessions
+      UserAuth.disconnect_sessions(expired_tokens)
 
-    conn
-    |> put_session(:user_return_to, ~p"/users/settings")
-    |> create(params, "Password updated successfully!")
+      conn
+      |> put_session(:user_return_to, ~p"/users/settings")
+      |> create(params, "Password updated successfully!")
+    else
+      conn
+      |> put_flash(:error, "Votre session a expire. Reconnectez-vous pour continuer.")
+      |> redirect(to: ~p"/users/log-in")
+    end
   end
 
   def delete(conn, _params) do

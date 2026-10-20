@@ -1,8 +1,8 @@
 defmodule Smovie.Accounts.UserNotifier do
   import Swoosh.Email
 
-  alias Smovie.Mailer
   alias Smovie.Accounts.User
+  alias Smovie.Mailer
 
   # Delivers the email using the application mailer.
   defp deliver(recipient, subject, body) do
@@ -13,8 +13,9 @@ defmodule Smovie.Accounts.UserNotifier do
       |> subject(subject)
       |> text_body(body)
 
-    with {:ok, _metadata} <- Mailer.deliver(email) do
-      {:ok, email}
+    case Mailer.deliver(email) do
+      {:ok, _metadata} -> {:ok, email}
+      {:error, reason} -> {:error, reason}
     end
   end
 

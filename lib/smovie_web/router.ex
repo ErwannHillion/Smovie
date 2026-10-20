@@ -23,18 +23,6 @@ defmodule SmovieWeb.Router do
     live_session :default,
       on_mount: [{SmovieWeb.UserAuth, :mount_current_scope}] do
       live "/", HomeLive
-      live "/users", UsersLive
-      live "/movie/:id", MovieLive
-    end
-  end
-
-  scope "/", SmovieWeb do
-    pipe_through [:browser, :require_authenticated_user]
-
-    live_session :authenticated,
-      on_mount: [{SmovieWeb.UserAuth, :require_authenticated}] do
-      live "/my-movies", MyMoviesLive
-      live "/watchlist", WatchlistLive
     end
   end
 
