@@ -99,6 +99,30 @@ defmodule Smovie.Accounts do
   end
 
   @doc """
+  Recherche de membres, par identifiant ou par nom affiche.
+
+  Les profils prives restent trouvables : leur nom n'est pas secret, seul leur
+  contenu l'est. Les rendre introuvables empecherait qu'on les suive.
+  """
+  def search_members(term, opts \\ []) when is_binary(term) do
+    term = String.trim(term)
+    limit = Keyword.get(opts, :limit, 10)
+
+    if String.length(term) < 3 do
+      []
+    else
+      pattern = "%#{term}%"
+
+      Repo.all(
+        from u in User,
+          where: ilike(u.username, ^pattern) or ilike(u.display_name, ^pattern),
+          order_by: [desc: u.followers_count],
+          limit: ^limit
+      )
+    end
+  end
+
+  @doc """
   Recharge un membre depuis la base.
   """
   def reload_user(%User{id: id}), do: Repo.get(User, id)

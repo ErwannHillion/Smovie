@@ -15,9 +15,12 @@ defmodule Smovie.Catalog do
   alias Smovie.Catalog.Person
   alias Smovie.Catalog.Slug
   alias Smovie.Catalog.Sync.Importer
+  alias Smovie.Catalog.Sync.Mapper
   alias Smovie.Catalog.Work
   alias Smovie.Catalog.WorkGenre
+  alias Smovie.Catalog.WorkKind
   alias Smovie.Config
+  alias Smovie.External.TMDB
   alias Smovie.Repo
   alias Smovie.Workers.FetchExternalRatingsWorker
   alias Smovie.Workers.SyncSeasonsWorker
@@ -164,6 +167,50 @@ defmodule Smovie.Catalog do
         order_by: [desc: fragment("similarity(?, ?)", w.title, ^term)],
         limit: ^limit
     )
+  end
+
+  @doc """
+  Recherche locale completee par TMDB.
+
+  Le catalogue local d'abord : il est instantane, et ce qu'on y trouve est
+  deja enrichi des notes de la communaute. TMDB ne sert qu'a completer quand
+  le local ne rend pas grand-chose — appeler TMDB systematiquement ajouterait
+  une latence reseau a chaque frappe.
+
+  Les resultats TMDB sont marques `imported: false` : l'interface doit pouvoir
+  dire qu'une oeuvre n'est pas encore dans Smovie plutot que de faire croire
+  a une fiche qui n'existe pas.
+  """
+  def search_everywhere(term, opts \\ []) do
+    locaux = search(term, opts)
+    seuil = Keyword.get(opts, :local_threshold, 5)
+
+    if length(locaux) >= seuil do
+      Enum.map(locaux, &%{work: &1, imported: true})
+    else
+      Enum.map(locaux, &%{work: &1, imported: true}) ++ remote_results(term, locaux, opts)
+    end
+  end
+
+  defp remote_results(term, locaux, opts) do
+    limit = Keyword.get(opts, :remote_limit, 10)
+    connus = MapSet.new(locaux, &{&1.kind, &1.tmdb_id})
+
+    case TMDB.search_multi(term, []) do
+      {:ok, %{"results" => results}} ->
+        results
+        |> Enum.map(&Mapper.search_result_attrs/1)
+        |> Enum.filter(&match?({:ok, _attrs}, &1))
+        |> Enum.map(fn {:ok, attrs} -> attrs end)
+        |> Enum.reject(&MapSet.member?(connus, {&1.kind, &1.tmdb_id}))
+        |> Enum.take(limit)
+        |> Enum.map(&%{work: &1, imported: false})
+
+      _error ->
+        # TMDB indisponible ne doit pas vider la page : les resultats locaux
+        # restent affiches.
+        []
+    end
   end
 
   ## Ecriture
@@ -489,6 +536,22 @@ defmodule Smovie.Catalog do
 
   Appele au clic sur un resultat de recherche venu de TMDB.
   """
+  def import_work(kind, tmdb_id) when is_binary(kind) do
+    case WorkKind.cast(kind) do
+      {:ok, parsed} -> import_work(parsed, tmdb_id)
+      :error -> {:error, :invalid_kind}
+    end
+  end
+
+  # Les deux valeurs viennent du DOM : leur conversion vit ici, ou une entree
+  # trafiquee donne une erreur plutot qu'une exception.
+  def import_work(kind, tmdb_id) when is_binary(tmdb_id) do
+    case Integer.parse(tmdb_id) do
+      {parsed, ""} -> import_work(kind, parsed)
+      _other -> {:error, :invalid_tmdb_id}
+    end
+  end
+
   def import_work(kind, tmdb_id) do
     case get_work_by_tmdb_id(kind, tmdb_id) do
       nil -> Importer.import_work(kind, tmdb_id)

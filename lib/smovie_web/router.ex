@@ -34,7 +34,7 @@ defmodule SmovieWeb.Router do
 
       # Sections dont la navigation existe deja : voir SmovieWeb.SoonLive.
       live "/reviews", ReviewLive.Index
-      live "/recherche", SoonLive, :search
+      live "/recherche", SearchLive
       live "/watchlist", SoonLive, :watchlist
       live "/notifications", NotificationsLive
       live "/messages", SoonLive, :messages
