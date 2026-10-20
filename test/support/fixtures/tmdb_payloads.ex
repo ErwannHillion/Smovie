@@ -136,4 +136,24 @@ defmodule Smovie.TMDBPayloads do
       overrides
     )
   end
+
+  @doc "Fiche OMDb, avec ses formats de chaines caracteristiques."
+  def omdb(overrides \\ %{}) do
+    Map.merge(
+      %{
+        "Response" => "True",
+        "Title" => "Dune: Part Two",
+        "imdbID" => "tt15239678",
+        "imdbRating" => "8.5",
+        "imdbVotes" => "612,483",
+        "Metascore" => "79",
+        "Ratings" => [
+          %{"Source" => "Internet Movie Database", "Value" => "8.5/10"},
+          %{"Source" => "Rotten Tomatoes", "Value" => "92%"},
+          %{"Source" => "Metacritic", "Value" => "79/100"}
+        ]
+      },
+      overrides
+    )
+  end
 end
