@@ -8,13 +8,12 @@ defmodule SmovieWeb.WorkLive.Show do
   """
   use SmovieWeb, :live_view
 
+  alias Smovie.Accounts.Visibility
   alias Smovie.Catalog
   alias Smovie.Catalog.Work
   alias Smovie.Library
-  alias Smovie.Accounts.Visibility
   alias Smovie.Reviews
   alias Smovie.Reviews.Review
-  alias Smovie.Repo
   alias SmovieWeb.Layouts
 
   @impl true
@@ -84,7 +83,7 @@ defmodule SmovieWeb.WorkLive.Show do
         {:noreply,
          socket
          |> assign(editing_review: false)
-         |> assign_work(Repo.reload!(work))
+         |> assign_work(Catalog.reload_work(work))
          |> put_flash(:info, gettext("Review publiee."))}
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -103,7 +102,7 @@ defmodule SmovieWeb.WorkLive.Show do
 
       review ->
         Reviews.delete(scope, review)
-        {:noreply, assign_work(socket, Repo.reload!(work))}
+        {:noreply, assign_work(socket, Catalog.reload_work(work))}
     end
   end
 
@@ -138,7 +137,7 @@ defmodule SmovieWeb.WorkLive.Show do
   defp with_scope(%{assigns: %{current_scope: scope, work: work}} = socket, fun) do
     fun.(scope, work)
 
-    {:noreply, assign_work(socket, Repo.reload!(work))}
+    {:noreply, assign_work(socket, Catalog.reload_work(work))}
   end
 
   defp redirect_to_login(socket) do
@@ -152,7 +151,7 @@ defmodule SmovieWeb.WorkLive.Show do
         {:rating_updated, %Work{id: id}},
         %{assigns: %{work: %Work{id: id} = work}} = socket
       ) do
-    {:noreply, assign_work(socket, Repo.reload!(work))}
+    {:noreply, assign_work(socket, Catalog.reload_work(work))}
   end
 
   def handle_info(_message, socket), do: {:noreply, socket}

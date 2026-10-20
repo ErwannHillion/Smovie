@@ -99,6 +99,11 @@ defmodule Smovie.Accounts do
   end
 
   @doc """
+  Recharge un membre depuis la base.
+  """
+  def reload_user(%User{id: id}), do: Repo.get(User, id)
+
+  @doc """
   Recupere un membre par son username public.
   """
   def get_user_by_username(username) when is_binary(username) do

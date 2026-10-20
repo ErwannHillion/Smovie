@@ -18,6 +18,8 @@ defmodule Smovie.Reviews do
   alias Smovie.Library
   alias Smovie.Repo
   alias Smovie.Reviews.Review
+  alias Smovie.Reviews.ReviewComment
+  alias Smovie.Reviews.ReviewLike
   alias Smovie.Social
 
   ## Lecture
@@ -48,6 +50,11 @@ defmodule Smovie.Reviews do
       _other -> nil
     end
   end
+
+  @doc """
+  Recharge une review avec son auteur et son oeuvre.
+  """
+  def reload(%Review{id: id}), do: get_review(id)
 
   @doc """
   Vrai si `scope` peut lire cette review.
@@ -216,6 +223,192 @@ defmodule Smovie.Reviews do
     Repo.update_all(from(w in Work, where: w.id == ^work_id),
       set: [smovie_review_count: count]
     )
+
+    {:ok, count}
+  end
+
+  ## Likes
+
+  @doc """
+  Bascule le like d'un membre sur une review.
+
+  Le compteur est mis a jour dans la meme transaction : un compteur recalcule
+  apres coup se desynchronise au premier plantage, et c'est precisement le
+  chiffre qui classe les reviews populaires.
+  """
+  def toggle_like(%Scope{user: %User{id: user_id}}, %Review{id: review_id}) do
+    query = from l in ReviewLike, where: l.user_id == ^user_id and l.review_id == ^review_id
+
+    Multi.new()
+    |> Multi.run(:toggle, fn repo, _changes ->
+      case repo.delete_all(query) do
+        {0, _} -> insert_like(repo, user_id, review_id)
+        {_count, _} -> {:ok, :unliked}
+      end
+    end)
+    |> Multi.run(:count, fn repo, _changes -> refresh_like_count(repo, review_id) end)
+    |> Repo.transaction()
+    |> case do
+      {:ok, %{toggle: result}} -> {:ok, result}
+      {:error, _step, reason, _changes} -> {:error, reason}
+    end
+  end
+
+  def toggle_like(%Scope{}, %Review{}), do: {:error, :unauthorized}
+
+  defp insert_like(repo, user_id, review_id) do
+    %ReviewLike{}
+    |> ReviewLike.changeset(%{user_id: user_id, review_id: review_id})
+    |> repo.insert()
+    |> case do
+      {:ok, _like} -> {:ok, :liked}
+      {:error, changeset} -> {:error, changeset}
+    end
+  end
+
+  defp refresh_like_count(repo, review_id) do
+    count = repo.aggregate(from(l in ReviewLike, where: l.review_id == ^review_id), :count)
+
+    repo.update_all(from(r in Review, where: r.id == ^review_id), set: [likes_count: count])
+
+    {:ok, count}
+  end
+
+  @doc """
+  Vrai si le membre a like cette review.
+  """
+  def liked?(%Scope{user: %User{id: user_id}}, %Review{id: review_id}) do
+    Repo.exists?(from l in ReviewLike, where: l.user_id == ^user_id and l.review_id == ^review_id)
+  end
+
+  def liked?(nil, %Review{}), do: false
+
+  @doc """
+  Identifiants des reviews likees parmi une liste.
+
+  Une requete pour toute une page plutot qu'une par review.
+  """
+  def liked_review_ids(%Scope{user: %User{id: user_id}}, reviews) when is_list(reviews) do
+    ids = Enum.map(reviews, & &1.id)
+
+    from(l in ReviewLike,
+      where: l.user_id == ^user_id and l.review_id in ^ids,
+      select: l.review_id
+    )
+    |> Repo.all()
+    |> MapSet.new()
+  end
+
+  def liked_review_ids(nil, _reviews), do: MapSet.new()
+
+  ## Commentaires
+
+  @doc """
+  Commente une review.
+
+  Un commentaire ne peut repondre qu'a un commentaire de la meme review : sans
+  cette verification, un identifiant forge rattacherait une reponse a un fil
+  etranger.
+  """
+  def comment(%Scope{user: %User{id: user_id}} = scope, %Review{} = review, attrs) do
+    if visible?(scope, review) do
+      insert_comment(user_id, review, normalize(attrs))
+    else
+      {:error, :unauthorized}
+    end
+  end
+
+  def comment(%Scope{}, %Review{}, _attrs), do: {:error, :unauthorized}
+
+  defp insert_comment(user_id, review, attrs) do
+    attrs = Map.merge(attrs, %{"user_id" => user_id, "review_id" => review.id})
+
+    case valid_parent?(review.id, attrs["parent_id"]) do
+      false ->
+        {:error, :invalid_parent}
+
+      true ->
+        Multi.new()
+        |> Multi.insert(:comment, ReviewComment.changeset(%ReviewComment{}, attrs))
+        |> Multi.run(:count, fn repo, _changes -> refresh_comment_count(repo, review.id) end)
+        |> Repo.transaction()
+        |> case do
+          {:ok, %{comment: comment}} -> {:ok, Repo.preload(comment, :user)}
+          {:error, _step, changeset, _changes} -> {:error, changeset}
+        end
+    end
+  end
+
+  defp valid_parent?(_review_id, nil), do: true
+  defp valid_parent?(_review_id, ""), do: true
+
+  defp valid_parent?(review_id, parent_id) do
+    Repo.exists?(
+      from c in ReviewComment,
+        where: c.id == ^parent_id and c.review_id == ^review_id and is_nil(c.parent_id)
+    )
+  end
+
+  @doc """
+  Supprime un commentaire. Son auteur, ou l'auteur de la review.
+  """
+  def delete_comment(%Scope{user: %User{id: user_id}}, %ReviewComment{user_id: user_id} = comment) do
+    do_delete_comment(comment)
+  end
+
+  def delete_comment(%Scope{} = scope, %ReviewComment{} = comment) do
+    review = Repo.get(Review, comment.review_id)
+
+    if review && scope.user.id == review.user_id do
+      do_delete_comment(comment)
+    else
+      {:error, :unauthorized}
+    end
+  end
+
+  defp do_delete_comment(comment) do
+    case Repo.delete(comment) do
+      {:ok, deleted} ->
+        refresh_comment_count(Repo, comment.review_id)
+        {:ok, deleted}
+
+      error ->
+        error
+    end
+  end
+
+  @doc """
+  Commentaires d'une review, racines d'abord et reponses imbriquees.
+  """
+  def list_comments(%Review{id: review_id}) do
+    Repo.all(
+      from c in ReviewComment,
+        where: c.review_id == ^review_id and is_nil(c.parent_id),
+        order_by: [asc: c.inserted_at],
+        preload: [:user, replies: ^replies_query()]
+    )
+  end
+
+  defp replies_query do
+    from c in ReviewComment, order_by: [asc: c.inserted_at], preload: [:user]
+  end
+
+  @doc """
+  Recupere un commentaire par identifiant.
+  """
+  def get_comment(id) when is_binary(id) do
+    case Integer.parse(id) do
+      {parsed, ""} -> Repo.get(ReviewComment, parsed)
+      _other -> nil
+    end
+  end
+
+  def get_comment(id) when is_integer(id), do: Repo.get(ReviewComment, id)
+
+  defp refresh_comment_count(repo, review_id) do
+    count = repo.aggregate(from(c in ReviewComment, where: c.review_id == ^review_id), :count)
+
+    repo.update_all(from(r in Review, where: r.id == ^review_id), set: [comments_count: count])
 
     {:ok, count}
   end

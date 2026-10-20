@@ -43,6 +43,14 @@ defmodule Smovie.Catalog do
     do: Repo.get_by(Work, slug: slug, kind: :tv_show)
 
   @doc """
+  Recharge une oeuvre depuis la base.
+
+  Les LiveViews en ont besoin apres une action qui modifie des compteurs ; le
+  rechargement vit ici plutot que dans la vue, ou `Repo` n'a rien a faire.
+  """
+  def reload_work(%Work{id: id}), do: Repo.get(Work, id)
+
+  @doc """
   Recupere une oeuvre par sa nature et son identifiant TMDB.
   """
   def get_work_by_tmdb_id(kind, tmdb_id), do: Repo.get_by(Work, kind: kind, tmdb_id: tmdb_id)
