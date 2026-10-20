@@ -8,13 +8,13 @@ defmodule SmovieWeb.WorkLive.Show do
   """
   use SmovieWeb, :live_view
 
+  alias Smovie.Accounts.Visibility
   alias Smovie.Catalog
   alias Smovie.Catalog.Work
   alias Smovie.Library
-  alias Smovie.Accounts.Visibility
+  alias Smovie.Repo
   alias Smovie.Reviews
   alias Smovie.Reviews.Review
-  alias Smovie.Repo
   alias SmovieWeb.Layouts
 
   @impl true
