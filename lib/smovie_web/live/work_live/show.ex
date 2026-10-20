@@ -33,7 +33,11 @@ defmodule SmovieWeb.WorkLive.Show do
   defp kind_for(:tv_show), do: :tv_show
 
   defp assign_work(%{assigns: %{current_scope: scope}} = socket, work) do
+    seasons = if work.kind == :tv_show, do: Catalog.fetch_seasons(work), else: []
+
     assign(socket,
+      seasons: seasons,
+      progress: Library.season_progress_by_id(scope, seasons),
       work: work,
       genres: Catalog.list_work_genres(work),
       directors: Catalog.list_directors(work),
@@ -111,6 +115,37 @@ defmodule SmovieWeb.WorkLive.Show do
           <p :if={@work.overview} class="text-base-content/80 max-w-prose leading-relaxed">
             {@work.overview}
           </p>
+
+          <section :if={@seasons != []}>
+            <h2 class="text-base-content/70 font-mono text-[0.65rem] font-medium tracking-[0.15em] uppercase">
+              {gettext("Saisons")}
+            </h2>
+            <ul class="border-base-300 mt-3 divide-base-300 divide-y border-t border-b">
+              <li :for={season <- @seasons}>
+                <.link
+                  navigate={~p"/serie/#{@work.slug}/saison/#{season.season_number}"}
+                  class="hover:bg-base-200 flex items-center gap-4 px-1 py-3.5"
+                >
+                  <span class="font-display text-base-content/50 w-9 text-xl leading-none font-bold">
+                    S{season.season_number}
+                  </span>
+                  <span class="min-w-0 flex-1">
+                    <span class="block text-sm font-medium">{season.title}</span>
+                    <span class="text-base-content/50 mt-0.5 block font-mono text-[0.65rem]">
+                      {season_summary(@progress[season.id])}
+                    </span>
+                    <span class="bg-base-300 mt-1.5 block h-1 overflow-hidden rounded-full">
+                      <span
+                        class="bg-smovie block h-full"
+                        style={"width: #{progress_percent(@progress[season.id])}%"}
+                      ></span>
+                    </span>
+                  </span>
+                  <.icon name="hero-chevron-right" class="text-base-content/30 size-4" />
+                </.link>
+              </li>
+            </ul>
+          </section>
 
           <section :if={@cast != []}>
             <h2 class="text-base-content/70 font-mono text-[0.65rem] font-medium tracking-[0.15em] uppercase">
@@ -264,4 +299,17 @@ defmodule SmovieWeb.WorkLive.Show do
 
   defp press_source(nil), do: nil
   defp press_source({source, _score}), do: source
+
+  # Les deux chiffres ensemble : « 7 vus » seul ne dit rien, et le total seul
+  # ne dit pas ou on en est.
+  defp season_summary(%{watched: watched, total: total}) do
+    ngettext("%{count} episode", "%{count} episodes", total, count: total) <>
+      " · " <> gettext("%{watched} vus", watched: watched)
+  end
+
+  defp season_summary(_absent), do: ""
+
+  defp progress_percent(%{total: 0}), do: 0
+  defp progress_percent(%{watched: watched, total: total}), do: round(watched / total * 100)
+  defp progress_percent(_absent), do: 0
 end
