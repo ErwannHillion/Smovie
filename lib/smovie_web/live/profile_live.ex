@@ -45,7 +45,7 @@ defmodule SmovieWeb.ProfileLive do
       ) do
     Social.toggle_follow(scope, user)
 
-    {:noreply, assign_profile(socket, Smovie.Repo.reload!(user))}
+    {:noreply, assign_profile(socket, Accounts.reload_user(user))}
   end
 
   @impl true

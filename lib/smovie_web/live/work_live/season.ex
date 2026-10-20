@@ -9,7 +9,6 @@ defmodule SmovieWeb.WorkLive.Season do
 
   alias Smovie.Catalog
   alias Smovie.Library
-  alias Smovie.Repo
 
   @impl true
   def mount(%{"slug" => slug, "number" => number}, _session, socket) do
@@ -91,7 +90,7 @@ defmodule SmovieWeb.WorkLive.Season do
   end
 
   defp reload(%{assigns: %{show: show, season: season}} = socket) do
-    assign_season(socket, show, Repo.reload!(season))
+    assign_season(socket, show, Catalog.reload_work(season))
   end
 
   defp watched_ids(nil, _episodes), do: MapSet.new()
