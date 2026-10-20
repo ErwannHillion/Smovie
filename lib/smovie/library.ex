@@ -13,10 +13,10 @@ defmodule Smovie.Library do
   alias Smovie.Accounts.Scope
   alias Smovie.Accounts.User
   alias Smovie.Catalog.Work
+  alias Smovie.Catalog.WorkGenre
   alias Smovie.Config
   alias Smovie.Library.Rating
   alias Smovie.Library.RatingStats
-  alias Smovie.Catalog.WorkGenre
   alias Smovie.Library.WatchEntry
   alias Smovie.Library.WatchlistItem
   alias Smovie.Library.WorkLike
