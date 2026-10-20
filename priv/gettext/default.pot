@@ -287,7 +287,7 @@ msgstr ""
 msgid "Chercher"
 msgstr ""
 
-#: lib/smovie_web/live/home_live.ex:33
+#: lib/smovie_web/live/home_live.ex:166
 #, elixir-autogen, elixir-format
 msgid "Films et series, notes en demi-etoiles jusqu'a l'episode, reviews, watchlist et messagerie."
 msgstr ""
@@ -341,6 +341,7 @@ msgid "TMDB"
 msgstr ""
 
 #: lib/smovie_web/components/work_components.ex:138
+#: lib/smovie_web/live/home_live.ex:97
 #, elixir-autogen, elixir-format
 msgid "Tout voir"
 msgstr ""
@@ -738,14 +739,9 @@ msgstr ""
 msgid "%{member} suit desormais %{other}"
 msgstr ""
 
-#: lib/smovie_web/live/home_live.ex:44
+#: lib/smovie_web/live/home_live.ex:113
 #, elixir-autogen, elixir-format
 msgid "Activite de vos abonnements"
-msgstr ""
-
-#: lib/smovie_web/live/home_live.ex:38
-#, elixir-autogen, elixir-format
-msgid "La page d'accueil arrive avec SMOVIE-027."
 msgstr ""
 
 #: lib/smovie_web/live/notifications_live.ex:86
@@ -803,4 +799,44 @@ msgstr ""
 #: lib/smovie_web/live/notifications_live.ex:111
 #, elixir-autogen, elixir-format
 msgid "une oeuvre"
+msgstr ""
+
+#: lib/smovie_web/live/home_live.ex:56
+#, elixir-autogen, elixir-format
+msgid "En tendance cette semaine"
+msgstr ""
+
+#: lib/smovie_web/live/home_live.ex:171
+#, elixir-autogen, elixir-format
+msgid "Le catalogue se remplit : revenez dans un moment."
+msgstr ""
+
+#: lib/smovie_web/live/home_live.ex:46
+#, elixir-autogen, elixir-format
+msgid "Nouveautes"
+msgstr ""
+
+#: lib/smovie_web/live/home_live.ex:67
+#, elixir-autogen, elixir-format
+msgid "Populaire chez vos abonnements"
+msgstr ""
+
+#: lib/smovie_web/live/home_live.ex:91
+#, elixir-autogen, elixir-format
+msgid "Reviews a la une"
+msgstr ""
+
+#: lib/smovie_web/live/home_live.ex:77
+#, elixir-autogen, elixir-format
+msgid "Series du moment"
+msgstr ""
+
+#: lib/smovie_web/live/home_live.ex:140
+#, elixir-autogen, elixir-format
+msgid "Tendance n°1"
+msgstr ""
+
+#: lib/smovie_web/live/home_live.ex:148
+#, elixir-autogen, elixir-format
+msgid "Voir la fiche"
 msgstr ""
