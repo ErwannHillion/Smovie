@@ -314,6 +314,7 @@ msgid "Profil"
 msgstr "Profile"
 
 #: lib/smovie_web/components/layouts.ex:111
+#: lib/smovie_web/live/search_live.ex:63
 #, elixir-autogen, elixir-format
 msgid "Rechercher"
 msgstr "Search"
@@ -840,3 +841,63 @@ msgstr "Trending #1"
 #, elixir-autogen, elixir-format
 msgid "Voir la fiche"
 msgstr "View details"
+
+#: lib/smovie_web/live/search_live.ex:136
+#, elixir-autogen, elixir-format
+msgid "Aucun resultat pour « %{terme} »."
+msgstr ""
+
+#: lib/smovie_web/live/search_live.ex:48
+#, elixir-autogen, elixir-format
+msgid "Cette oeuvre n'a pas pu etre importee."
+msgstr ""
+
+#: lib/smovie_web/live/search_live.ex:80
+#, elixir-autogen, elixir-format
+msgid "Entrez au moins trois caracteres."
+msgstr ""
+
+#: lib/smovie_web/live/search_live.ex:158
+#, elixir-autogen, elixir-format
+msgid "Film"
+msgstr ""
+
+#: lib/smovie_web/live/search_live.ex:85
+#, elixir-autogen, elixir-format
+msgid "Films et series"
+msgstr ""
+
+#: lib/smovie_web/live/search_live.ex:115
+#, elixir-autogen, elixir-format
+msgid "Importer"
+msgstr ""
+
+#: lib/smovie_web/live/search_live.ex:123
+#, elixir-autogen, elixir-format
+msgid "Membres"
+msgstr ""
+
+#: lib/smovie_web/live/search_live.ex:105
+#, elixir-autogen, elixir-format
+msgid "Ouvrir"
+msgstr ""
+
+#: lib/smovie_web/live/search_live.ex:13
+#, elixir-autogen, elixir-format
+msgid "Recherche"
+msgstr ""
+
+#: lib/smovie_web/live/search_live.ex:157
+#, elixir-autogen, elixir-format
+msgid "Serie"
+msgstr ""
+
+#: lib/smovie_web/live/search_live.ex:73
+#, elixir-autogen, elixir-format
+msgid "Un film, une serie, un membre…"
+msgstr ""
+
+#: lib/smovie_web/live/search_live.ex:145
+#, elixir-autogen, elixir-format
+msgid "pas encore dans Smovie"
+msgstr ""
