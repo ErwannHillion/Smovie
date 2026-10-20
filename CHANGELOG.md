@@ -7,6 +7,11 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 ## [Unreleased]
 
 ### Added
+- Oban pour les traitements de fond : synchronisation du catalogue, tendances,
+  notifications ; quatre files dimensionnées par ce qu'elles appellent
+- Cachex pour le cache des réponses TMDB et OMDb
+- Flop pour la pagination et le tri des listes
+- Content Security Policy avec nonce par requête, et Sobelow dans `mix quality`
 - Règles de développement et dix checks Credo custom versionnés dans le dépôt
 - Fichier `.credo.exs` : les dix checks s'exécutent enfin avec `mix credo --strict`
 - Alias `mix quality` : vérification du formatage puis Credo en mode strict
