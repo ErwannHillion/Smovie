@@ -16,6 +16,7 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/).
 - Profils avec onglets et statistiques
 - Messagerie privée et de groupe, partage de films et de reviews, présence et frappe
 - Intégration continue, image Docker de production, pages d'erreur habillées
+- Amorçage automatique du catalogue au démarrage, synchronisation toutes les 6 h
 
 ### Added
 - Table `works` unifiée : films, séries, saisons et épisodes dans un seul modèle,

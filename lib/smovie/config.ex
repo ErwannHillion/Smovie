@@ -110,6 +110,21 @@ defmodule Smovie.Config do
   def supported_locale?(locale) when is_binary(locale), do: locale in locales()
   def supported_locale?(_), do: false
 
+  ## Catalogue
+
+  @doc """
+  Vrai si le catalogue doit s'amorcer tout seul au demarrage.
+
+  Coupe en test : une suite ne doit pas mettre de job en file a chaque
+  demarrage de l'application.
+  """
+  def bootstrap_catalog?, do: get(:catalog, :bootstrap_on_boot) == true
+
+  @doc """
+  Nombre d'oeuvres en dessous duquel le catalogue est juge trop maigre.
+  """
+  def bootstrap_threshold, do: get(:catalog, :bootstrap_threshold) || 20
+
   ## Infrastructure
 
   def dns_cluster_query, do: Application.get_env(@app, :dns_cluster_query) || :ignore

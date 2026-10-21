@@ -27,6 +27,9 @@ config :smovie, SmovieWeb.Endpoint,
 # explicitement par `Oban.Testing`.
 config :smovie, Oban, testing: :manual
 
+# Une suite de tests ne doit pas mettre de job en file a chaque demarrage.
+config :smovie, :catalog, bootstrap_on_boot: false
+
 # Les clients externes passent par des doublures Mox : aucun test ne sort sur
 # le reseau. La cle est renseignee pour que le client ne court-circuite pas sur
 # :missing_api_key avant meme d'appeler la doublure.
