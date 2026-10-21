@@ -81,6 +81,12 @@ config :phoenix, :json_library, Jason
 #
 # `external_ratings` est volontairement a 2 : la file sert de limiteur de debit
 # vers OMDb, dont le palier gratuit plafonne a 1000 requetes par jour.
+# L'amorcage evite qu'une installation neuve reste sur une page d'accueil vide
+# en attendant la prochaine synchronisation planifiee.
+config :smovie, :catalog,
+  bootstrap_on_boot: true,
+  bootstrap_threshold: 20
+
 config :smovie, Oban,
   repo: Smovie.Repo,
   engine: Oban.Engines.Basic,
@@ -95,9 +101,10 @@ config :smovie, Oban,
     {Oban.Plugins.Pruner, max_age: 60 * 60 * 24 * 7},
     {Oban.Plugins.Cron,
      crontab: [
-       # 4 h du matin : TMDB a publie les sorties de la veille, et le trafic
-       # est au plus bas.
-       {"0 4 * * *", Smovie.Workers.SyncTrendingCatalogWorker},
+       # Toutes les six heures. Une execution ne coute que quatre appels TMDB
+       # — les listes, pas les fiches — donc l'etaler sur la journee ne pese
+       # rien et evite que les sorties du jour attendent le lendemain.
+       {"0 */6 * * *", Smovie.Workers.SyncTrendingCatalogWorker},
        {"0 * * * *", Smovie.Workers.RefreshRatingStatsWorker},
        {"*/15 * * * *", Smovie.Workers.RefreshTrendingWorker},
        {"30 4 * * 0", Smovie.Workers.PurgeActivitiesWorker}

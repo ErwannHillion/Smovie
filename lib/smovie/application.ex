@@ -19,6 +19,8 @@ defmodule Smovie.Application do
       {Cachex, name: :smovie_http_cache},
       {Oban, Config.oban()},
       SmovieWeb.Presence,
+      # Apres Oban : l'amorcage met un job en file, il faut que la file existe.
+      Smovie.Catalog.Bootstrap,
       # Start to serve requests, typically the last entry
       SmovieWeb.Endpoint
     ]

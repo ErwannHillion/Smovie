@@ -256,6 +256,32 @@ MIX_ENV=prod mix release
 Variables requises en production : `DATABASE_URL`, `SECRET_KEY_BASE`, `PHX_HOST`,
 `TMDB_API_KEY`, et `PHX_SERVER=true` si vous démarrez la release directement.
 
+## Traitements de fond
+
+Oban, avec quatre tâches planifiées :
+
+| Fréquence | Tâche | Rôle |
+|---|---|---|
+| toutes les **6 h** | `SyncTrendingCatalogWorker` | sorties en salle, séries en cours, tendances de la semaine |
+| toutes les **15 min** | `RefreshTrendingWorker` | `REFRESH MATERIALIZED VIEW CONCURRENTLY trending_works` |
+| toutes les **heures** | `RefreshRatingStatsWorker` | moyenne de la plateforme, a priori bayésien |
+| **dimanche 4 h 30** | `PurgeActivitiesWorker` | purge du fil au-delà de 90 jours |
+
+Trois autres tâches ne sont pas planifiées : elles sont mises en file par l'usage —
+`SyncWorkWorker` (fiche consultée dont la synchro a vieilli), `SyncSeasonsWorker`
+(première ouverture d'une série), `FetchExternalRatingsWorker` (notes presse).
+
+**Rien à lancer à la main.** Au démarrage, si le catalogue compte moins de 20 œuvres,
+la synchronisation est mise en file immédiatement : une installation neuve se remplit
+toute seule en quelques secondes. La tâche est idempotente — un redémarrage sur un
+catalogue fourni ne déclenche aucun appel.
+
+Pour la couper (tests, environnement hors-ligne) :
+
+```elixir
+config :smovie, :catalog, bootstrap_on_boot: false
+```
+
 ## Intégration continue
 
 `.github/workflows/elixir.yml`, sur chaque PR et sur `main` :
