@@ -67,7 +67,15 @@ prédilection, heures de visionnage.
 - **Elixir 1.19+** / **Erlang OTP 28+**
 - **PostgreSQL 17** — le `docker-compose.yml` du dépôt en fournit un
 - **Docker** (facultatif, si vous utilisez le compose plutôt qu'un PostgreSQL local)
-- Une **clé API TMDB**, gratuite : <https://www.themoviedb.org/settings/api>
+- Un **identifiant TMDB**, gratuit : <https://www.themoviedb.org/settings/api>
+
+  La page en propose deux, et rien n'indique lequel prendre. L'application accepte les
+  deux et reconnaît lequel vous avez donné :
+
+  | Valeur sur la page TMDB | Variable | Forme |
+  |---|---|---|
+  | **API Read Access Token** | `TMDB_ACCESS_TOKEN` | long jeton `eyJ…`, en-tête `Bearer` |
+  | **API Key** | `TMDB_API_KEY` | 32 caractères hexadécimaux, paramètre `api_key` |
 
 ## Installation
 
@@ -97,7 +105,7 @@ applicatif passe par `Smovie.Config` — jamais `System.get_env/1`, jamais
 
 | Variable | Rôle |
 |---|---|
-| `TMDB_API_KEY` | catalogue, affiches, casting |
+| `TMDB_ACCESS_TOKEN` **ou** `TMDB_API_KEY` | catalogue, affiches, casting |
 | `SECRET_KEY_BASE` | production uniquement — `mix phx.gen.secret` |
 | `DATABASE_URL` | production uniquement |
 

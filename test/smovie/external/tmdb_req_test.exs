@@ -15,11 +15,15 @@ defmodule Smovie.External.TMDB.ReqTest do
     %{original: original}
   end
 
-  describe "cle API absente" do
+  describe "identifiant absent" do
     test "renvoie une erreur au lieu de lever", %{original: original} do
       # Une cle absente est un probleme de deploiement, pas un bug :
       # l'application doit pouvoir degrader plutot que sortir en 500.
-      Application.put_env(:smovie, :tmdb, Keyword.put(original, :api_key, nil))
+      Application.put_env(
+        :smovie,
+        :tmdb,
+        original |> Keyword.put(:api_key, nil) |> Keyword.put(:access_token, nil)
+      )
 
       assert Client.get_movie(1) == {:error, :missing_api_key}
       assert Client.search_multi("dune", []) == {:error, :missing_api_key}
@@ -27,7 +31,11 @@ defmodule Smovie.External.TMDB.ReqTest do
     end
 
     test "traite une cle vide comme absente", %{original: original} do
-      Application.put_env(:smovie, :tmdb, Keyword.put(original, :api_key, ""))
+      Application.put_env(
+        :smovie,
+        :tmdb,
+        original |> Keyword.put(:api_key, "") |> Keyword.put(:access_token, nil)
+      )
 
       assert Client.get_movie(1) == {:error, :missing_api_key}
     end
