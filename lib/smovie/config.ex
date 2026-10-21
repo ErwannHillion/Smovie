@@ -18,8 +18,39 @@ defmodule Smovie.Config do
 
   ## TMDB — catalogue, images, casting
 
-  @doc "Cle API TMDB. `nil` si absente : les appels echouent alors proprement."
-  def tmdb_api_key, do: get(:tmdb, :api_key)
+  @doc """
+  Identifiant TMDB, quel qu'en soit le type.
+
+  TMDB propose deux formes sur la meme page de reglages, et rien ne dit
+  laquelle prendre : une **cle API v3** de 32 caracteres, qui se passe en
+  parametre `api_key`, et un **jeton de lecture** (JWT) qui se passe en
+  en-tete `Authorization: Bearer`. Se tromper donne un 401 sans explication.
+
+  `TMDB_ACCESS_TOKEN` est lu en premier, `TMDB_API_KEY` ensuite : la seconde
+  variable existait avant que les deux formes soient acceptees.
+  """
+  def tmdb_credential do
+    case get(:tmdb, :access_token) || get(:tmdb, :api_key) do
+      value when is_binary(value) -> classify(String.trim(value))
+      _absent -> nil
+    end
+  end
+
+  # Un jeton de lecture est un JWT : trois segments separes par des points.
+  # Une cle v3 est une chaine hexadecimale de 32 caracteres. La distinction
+  # est sans ambiguite, et evite de demander a l'utilisateur de la faire.
+  defp classify(""), do: nil
+
+  defp classify(value) do
+    if String.contains?(value, ".") and length(String.split(value, ".")) == 3 do
+      {:bearer, value}
+    else
+      {:api_key, value}
+    end
+  end
+
+  @doc "Vrai si un identifiant TMDB est configure."
+  def tmdb_configured?, do: not is_nil(tmdb_credential())
 
   def tmdb_base_url, do: get(:tmdb, :base_url)
   def tmdb_image_base_url, do: get(:tmdb, :image_base_url)
@@ -32,9 +63,6 @@ defmodule Smovie.Config do
   En test, la configuration designe une doublure Mox ; ailleurs, le client Req.
   """
   def tmdb_impl, do: get(:tmdb, :impl) || Smovie.External.TMDB.Req
-
-  @doc "Vrai si la cle TMDB est configuree. Sans elle, le catalogue ne s'alimente pas."
-  def tmdb_configured?, do: is_binary(tmdb_api_key()) and tmdb_api_key() != ""
 
   ## OMDb — notes presse
 

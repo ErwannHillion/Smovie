@@ -7,6 +7,10 @@ import Config
 
 # --- TMDB : catalogue et images. Obligatoire. ---
 config :smovie, :tmdb,
+  # TMDB propose deux formes : une cle v3 (parametre api_key) et un jeton de
+  # lecture (en-tete Bearer). L'application accepte les deux et les distingue
+  # elle-meme.
+  access_token: System.get_env("TMDB_ACCESS_TOKEN"),
   api_key: System.get_env("TMDB_API_KEY"),
   base_url: System.get_env("TMDB_BASE_URL", "https://api.themoviedb.org/3"),
   image_base_url: System.get_env("TMDB_IMAGE_BASE_URL", "https://image.tmdb.org/t/p"),

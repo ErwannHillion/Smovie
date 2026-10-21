@@ -4,6 +4,9 @@ defmodule Smovie.External.TMDB.Req do
 
   Trois choses que le client de l'ancienne version ne faisait pas :
 
+  - il accepte indifferemment une cle API v3 et un jeton de lecture, et choisit
+    le bon mecanisme d'authentification. TMDB propose les deux sur la meme page
+    de reglages, et se tromper donne un 401 sans explication.
   - il renvoie `{:error, :missing_api_key}` au lieu de lever. Une cle absente
     est un probleme de deploiement, pas un bug : l'application doit pouvoir
     afficher une page degradee plutot qu'une erreur 500.
@@ -64,17 +67,17 @@ defmodule Smovie.External.TMDB.Req do
   def genres(type) when type in [:movie, :tv], do: get("/genre/#{type}/list")
 
   defp get(path, params \\ [], opts \\ []) do
-    case Config.tmdb_api_key() do
-      key when is_binary(key) and key != "" -> fetch(path, params, key, opts)
-      _missing -> {:error, :missing_api_key}
+    case Config.tmdb_credential() do
+      nil -> {:error, :missing_api_key}
+      credential -> fetch(path, params, credential, opts)
     end
   end
 
-  defp fetch(path, params, api_key, opts) do
+  defp fetch(path, params, credential, opts) do
     if Keyword.get(opts, :cache, true) do
-      cached(cache_key(path, params), fn -> request(path, params, api_key) end)
+      cached(cache_key(path, params), fn -> request(path, params, credential) end)
     else
-      request(path, params, api_key)
+      request(path, params, credential)
     end
   end
 
@@ -102,23 +105,28 @@ defmodule Smovie.External.TMDB.Req do
 
   defp cache_key(path, params), do: {:tmdb, path, Enum.sort(params)}
 
-  defp request(path, params, api_key) do
+  defp request(path, params, credential) do
     params = Keyword.put_new(params, :language, Config.tmdb_language())
 
     [
       url: Config.tmdb_base_url() <> path,
-      params: params,
-      auth: {:bearer, api_key},
       receive_timeout: @receive_timeout,
       # :transient ne reessaie que ce qui peut reussir au second essai :
       # un 404 n'en fait pas partie.
       retry: :transient,
       max_retries: 3
     ]
+    |> Keyword.merge(authenticate(credential, params))
     |> Req.new()
     |> Req.get()
     |> handle_response(path)
   end
+
+  # Le jeton de lecture passe en en-tete, la cle v3 en parametre : ce sont deux
+  # mecanismes d'authentification distincts cote TMDB, pas deux valeurs du
+  # meme champ.
+  defp authenticate({:bearer, token}, params), do: [params: params, auth: {:bearer, token}]
+  defp authenticate({:api_key, key}, params), do: [params: Keyword.put(params, :api_key, key)]
 
   defp handle_response({:ok, %Req.Response{status: 200, body: body}}, _path), do: {:ok, body}
   defp handle_response({:ok, %Req.Response{status: 404}}, _path), do: {:error, :not_found}

@@ -13,21 +13,52 @@ defmodule Smovie.ConfigTest do
       assert Config.tmdb_region() == "FR"
     end
 
-    test "tmdb_configured?/0 est faux sans cle" do
-      with_env(:tmdb, [api_key: nil], fn ->
+    test "tmdb_configured?/0 est faux sans identifiant" do
+      with_env(:tmdb, [api_key: nil, access_token: nil], fn ->
         refute Config.tmdb_configured?()
+        assert Config.tmdb_credential() == nil
       end)
     end
 
-    test "tmdb_configured?/0 est faux sur une cle vide" do
-      with_env(:tmdb, [api_key: ""], fn ->
-        refute Config.tmdb_configured?()
+    test "tmdb_configured?/0 est faux sur une valeur vide ou blanche" do
+      for valeur <- ["", "   "] do
+        with_env(:tmdb, [api_key: valeur, access_token: nil], fn ->
+          refute Config.tmdb_configured?()
+        end)
+      end
+    end
+
+    test "reconnait une cle v3 a sa forme" do
+      # 32 caracteres hexadecimaux : elle se passe en parametre api_key.
+      with_env(:tmdb, [api_key: "3b27f2809e11b60591c81a8eb4014c35", access_token: nil], fn ->
+        assert Config.tmdb_credential() == {:api_key, "3b27f2809e11b60591c81a8eb4014c35"}
       end)
     end
 
-    test "tmdb_configured?/0 est vrai avec une cle" do
-      with_env(:tmdb, [api_key: "abc123"], fn ->
-        assert Config.tmdb_configured?()
+    test "reconnait un jeton de lecture a sa forme" do
+      # Un JWT a trois segments separes par des points : il se passe en
+      # en-tete Authorization: Bearer. Se tromper de mecanisme donne un 401
+      # sans explication, d'ou la detection automatique.
+      jeton = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.signature"
+
+      with_env(:tmdb, [access_token: jeton, api_key: nil], fn ->
+        assert Config.tmdb_credential() == {:bearer, jeton}
+      end)
+    end
+
+    test "le jeton l'emporte quand les deux sont renseignes" do
+      jeton = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.signature"
+
+      with_env(:tmdb, [access_token: jeton, api_key: "3b27f2809e11b60591c81a8eb4014c35"], fn ->
+        assert Config.tmdb_credential() == {:bearer, jeton}
+      end)
+    end
+
+    test "ignore les espaces autour de la valeur" do
+      # Une valeur copiee-collee depuis la page TMDB traine souvent un espace
+      # ou un retour a la ligne.
+      with_env(:tmdb, [api_key: "  abc123  ", access_token: nil], fn ->
+        assert Config.tmdb_credential() == {:api_key, "abc123"}
       end)
     end
 
